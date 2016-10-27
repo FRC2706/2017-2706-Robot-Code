@@ -1,40 +1,82 @@
 
 package org.usfirst.frc.team2706.robot;
 
+import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import org.usfirst.frc.team2706.robot.commands.ExampleCommand;
-import org.usfirst.frc.team2706.robot.subsystems.ExampleSubsystem;
+
+import org.usfirst.frc.team2706.robot.commands.ArcadeDriveWithJoystick;
+import org.usfirst.frc.team2706.robot.commands.TeleopPneumaticControl;
+import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithEncoders;
+import org.usfirst.frc.team2706.robot.commands.camera.AutomaticCameraControl;
+import org.usfirst.frc.team2706.robot.subsystems.AutonomousSelector;
+import org.usfirst.frc.team2706.robot.subsystems.Camera;
+import org.usfirst.frc.team2706.robot.subsystems.DriveTrain;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
- * The VM is configured to automatically run this class, and to call the
- * functions corresponding to each mode, as described in the IterativeRobot
- * documentation. If you change the name of this class or the package after
- * creating this project, you must also update the manifest file in the resource
- * directory.
+ * This class controls all of the robot initialization, every tick of the robot,
+ * and should be very bare bones to preserve readability and simplicity.
+ * Do not change the class name without updating the manifest file, and
+ * references to different subsystems should be static.
+ * Refer to your local gatekeeper if you have no idea what you are doing :)
  */
 public class Robot extends IterativeRobot {
-
-	public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
+	// Reference for the main vision camera on the robot
+	public static Camera camera;
+	
+	// The robot's main drive train
+	public static DriveTrain driveTrain;
+	
+	// The spinny dial on the robot that selects what autonomous mode we are going to do
+	public static AutonomousSelector hardwareChooser;
+	
+	// Stores all of the joysticks, and returns them as read only.
 	public static OI oi;
 
-    Command autonomousCommand;
-    SendableChooser chooser;
+	// Which command is going to be ran based on the hardwareChooser
+	Command autonomousCommand;
+	
+	// The camera has 3 different modes, controls which mode the camera is in
+	AutomaticCameraControl cameraCommand;
+	
+	// Uses the joysticks to control the robot in teleop mode
+    TeleopPneumaticControl teleopControl;
 
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
     public void robotInit() {
-		oi = new OI();
-        chooser = new SendableChooser();
-        chooser.addDefault("Default Auto", new ExampleCommand());
-//        chooser.addObject("My Auto", new MyAutoCommand());
-        SmartDashboard.putData("Auto mode", chooser);
+    	
+    	oi = new OI();
+		
+		// Instantiate the robot subsystems
+        driveTrain = new DriveTrain();      
+        camera = new Camera(Camera.CAMERA_IP);
+        
+        // Set up our autonomous modes with the hardware selector switch
+        hardwareChooser = new AutonomousSelector(
+        	/*  no switch: do nothing      */	 new ArcadeDriveWithJoystick(), 
+        	/* position 1: do nothing      */	 new ArcadeDriveWithJoystick(),
+        	/* position 2: move forwards  */	 new StraightDriveWithEncoders(0.5,6,25)
+     										);
+        
+        teleopControl = new TeleopPneumaticControl();
+
+		// Set up the Microsoft LifeCam and start streaming it to the Driver Station
+		CameraServer server = CameraServer.getInstance();
+		server.setQuality(50);
+		server.startAutomaticCapture("cam0");	
+    
+		cameraCommand = new AutomaticCameraControl();
+		
     }
 	
 	/**
@@ -43,7 +85,7 @@ public class Robot extends IterativeRobot {
 	 * the robot is disabled.
      */
     public void disabledInit(){
-
+    	teleopControl.cancel();
     }
 	
 	public void disabledPeriodic() {
@@ -60,20 +102,15 @@ public class Robot extends IterativeRobot {
 	 * or additional comparisons to the switch structure below with additional strings & commands.
 	 */
     public void autonomousInit() {
-        autonomousCommand = (Command) chooser.getSelected();
-        
-		/* String autoSelected = SmartDashboard.getString("Auto Selector", "Default");
-		switch(autoSelected) {
-		case "My Auto":
-			autonomousCommand = new MyAutoCommand();
-			break;
-		case "Default Auto":
-		default:
-			autonomousCommand = new ExampleCommand();
-			break;
-		} */
+    	driveTrain.reset();
+        cameraCommand.start();
     	
-    	// schedule the autonomous command (example)
+        // Great for safety just incase you set the wrong one in practice ;)
+    	System.out.println("Running " + hardwareChooser.getSelected() + "...");
+    	
+        autonomousCommand = hardwareChooser.getSelected();
+        
+    	// Schedule the autonomous command that was selected
         if (autonomousCommand != null) autonomousCommand.start();
     }
 
@@ -82,21 +119,28 @@ public class Robot extends IterativeRobot {
      */
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
+        log();
     }
 
     public void teleopInit() {
-		// This makes sure that the autonomous stops running when
-        // teleop starts running. If you want the autonomous to 
-        // continue until interrupted by another command, remove
-        // this line or comment it out.
+		/* This makes sure that the autonomous stops running when
+         teleop starts running. If you want the autonomous to 
+         continue until interrupted by another command, remove
+         this line or comment it out. */
         if (autonomousCommand != null) autonomousCommand.cancel();
+         cameraCommand.start();
+         cameraCommand.cancel(); // Uncomment/comment to disable/enable camera movement
+        Robot.camera.ResetCamera();
+        teleopControl.start();
     }
 
     /**
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
+    	Robot.camera.RobotTurnDegrees();
         Scheduler.getInstance().run();
+        log();
     }
     
     /**
@@ -104,5 +148,9 @@ public class Robot extends IterativeRobot {
      */
     public void testPeriodic() {
         LiveWindow.run();
+    }
+    
+    private void log() {
+        driveTrain.log();
     }
 }
