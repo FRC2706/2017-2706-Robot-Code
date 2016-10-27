@@ -12,7 +12,7 @@ We have a lot of programmers on the team this year, so we've split the code out 
 Subsystems classes are for the lowest end things like gyro, direct communication with motors, camera etc. These classes will typically be owned by the group working with the hardware, such as the Controls group for motors and sensors, Vision group for cameras, etc.
 
 
-## Commands
+### Commands
 
 The Commands folder / package is split into two types of commands:
 
@@ -22,9 +22,9 @@ The autonomous code is split into 3 parts, based on how low down the code is:
 
 - **Movements**: Moving forward, turning with or without camera, using different sensors to perform certain movements. This layer is good for advanced / veteran students.
 
-- **Plays**: Combine these movements to make small plays that have multiple purposes, for example last year we had shoot and each type of breach as a play separately. Some of these may double as teleop "macros". This layer is good for rookie students wanting to do auto mode.
+- **Plays**: Combine these movements to make small plays that have multiple purposes. For example, last year's "shoot" was actually a play that involved lowering the arm, spinning up the motors, and firing the kicker. This layer is good for rookie students wanting to do auto mode.
 
-- **AutoModes**: Combine plays to make the actual autonomous runs that we use in competition, make it as simple as possible by putting more code into the lower levels so its easy to add and edit these combos. This layer is good for rookies wanting to do auto mode.
+- **AutoModes**: String together multiple plays and movements to make the actual autonomous runs that we use in competition. Make it as simple as possible by putting more code into the lower levels so its easy to add and edit these combos. This layer is good for rookies wanting to do auto mode.
 
 **Teleop commands**:
 
@@ -38,4 +38,6 @@ The main goal of writing teleop code is handling joystick / button input and mak
 
 - Smooth out the motors using sensor loops so it's less jerky / easier to control.
 
-- We didn't do very much of this last year, so lots of room for creativity!
+- etc
+
+We didn't do very much of this last year, so lots of room for creativity!
