@@ -2,7 +2,7 @@ package org.usfirst.frc.team2706.robot.subsystems;
 
 import org.usfirst.frc.team2706.robot.Robot;
 import org.usfirst.frc.team2706.robot.RobotMap;
-import org.usfirst.frc.team2706.robot.commands.ArcadeDriveWithJoystick;
+import org.usfirst.frc.team2706.robot.commands.teleop.ArcadeDriveWithJoystick;
 
 import com.kauailabs.navx.frc.AHRS;
 
