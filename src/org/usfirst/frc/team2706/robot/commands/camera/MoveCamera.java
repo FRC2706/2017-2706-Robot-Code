@@ -17,7 +17,7 @@ public class MoveCamera extends Command {
 		// TODO Auto-generated method stub
 
 	}
-
+	//Gets the data from the camera and does stuff with it
 	@Override
 	protected void execute() {
 		try {
@@ -33,7 +33,7 @@ public class MoveCamera extends Command {
 			SetServoAngles(cachedLocationX,cachedLocationY);
 			if(Robot.camera.PRINT_STUFF)
 				System.out.println("Network call finished, current location is: " + cachedLocationX + "," + cachedLocationY);
-			} 
+			}  
 		}catch(NullPointerException e) {
 			if(Robot.camera.PRINT_STUFF)
 				System.out.println("Data retrieval failed, resorting to last known values");
@@ -62,6 +62,7 @@ public class MoveCamera extends Command {
 		// TODO Auto-generated method stub
 		
 	}
+	//Does math to determine where to go based on rotation and distance
 	public void SetServoAngles(float panAngle, float tiltAngle) {
 		double newPanVal = (panAngle >= 0.0 ? panAngle * panAngle : -1 * panAngle * panAngle) / 5;
 		double newTiltVal = (tiltAngle >= 0.0 ? tiltAngle * tiltAngle : -1 * tiltAngle * tiltAngle) / 5;

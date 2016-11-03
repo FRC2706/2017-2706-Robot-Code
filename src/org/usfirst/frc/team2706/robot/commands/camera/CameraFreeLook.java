@@ -37,6 +37,7 @@ public class CameraFreeLook extends Command {
 		// TODO Auto-generated method stub
 		return false;
 	}
+	//Control based on gamepad controls
 	public void TurnOnGamepad(float RawGamepadX, float RawGamepadY) {
 				float val1 = (float) ((float)((int)(RawGamepadX * 10)) / 10);
 				float val2 = (float) ((float)((int)(RawGamepadY * 10)) / 10);
