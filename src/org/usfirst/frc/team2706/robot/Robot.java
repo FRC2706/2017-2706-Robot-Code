@@ -1,11 +1,11 @@
 
 package org.usfirst.frc.team2706.robot;
 
-import org.usfirst.frc.team2706.robot.commands.ArcadeDriveWithJoystick;
-import org.usfirst.frc.team2706.robot.commands.ArcadeDriveWithRecordableJoystick;
-import org.usfirst.frc.team2706.robot.commands.TeleopPneumaticControl;
-import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithEncoders;
+import org.usfirst.frc.team2706.robot.commands.autonomous.automodes.ExampleAutoMode;
+import org.usfirst.frc.team2706.robot.commands.autonomous.movements.ArcadeDriveWithRecordableJoystick;
 import org.usfirst.frc.team2706.robot.commands.camera.AutomaticCameraControl;
+import org.usfirst.frc.team2706.robot.commands.teleop.ArcadeDriveWithJoystick;
+import org.usfirst.frc.team2706.robot.commands.teleop.TeleopPneumaticControl;
 import org.usfirst.frc.team2706.robot.subsystems.AutonomousSelector;
 import org.usfirst.frc.team2706.robot.subsystems.Camera;
 import org.usfirst.frc.team2706.robot.subsystems.DriveTrain;
@@ -59,11 +59,11 @@ public class Robot extends IterativeRobot {
         
         // Set up our autonomous modes with the hardware selector switch
         hardwareChooser = new AutonomousSelector(
-        	/*  no switch: do nothing		*/	 new ArcadeDriveWithJoystick(), 
-        	/* position 1: do nothing		*/	 new ArcadeDriveWithJoystick(),
-        	/* position 2: move forwards	*/	 new StraightDriveWithEncoders(0.5,6,25),
-        	/* position 3: replay joystick	*/   new ArcadeDriveWithRecordableJoystick()
-     										);
+        	/*  no switch: do nothing      */	 new ArcadeDriveWithJoystick(), 
+        	/* position 1: do nothing      */	 new ArcadeDriveWithJoystick(),
+      /* position 2: Run example automode  */	 new ExampleAutoMode(),
+      /* position 3: replay joystick	*/   new ArcadeDriveWithRecordableJoystick()
+     										    );
         
         teleopControl = new TeleopPneumaticControl();
 

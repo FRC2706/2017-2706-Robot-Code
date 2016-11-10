@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 
 public class Camera extends Subsystem {
+	
 	public static final String CAMERA_IP = "10.27.6.240";
 	public static final float DEFAULT_PAN = 1.1f/6f;
 	public static final float DEFAULT_TILT = 0.7f;
@@ -36,8 +37,7 @@ public class Camera extends Subsystem {
 	private CameraPIDSource cameraPIDSource;
 	
 public Camera(String ip) {
-	super();
-	
+	super();	
 	RPi_addr = ip;
 	turnXAxis = new Servo(RobotMap.MOTOR_CAMERA_PAN);
 	turnYAxis = new Servo(RobotMap.MOTOR_CAMERA_TILT);
@@ -113,12 +113,6 @@ public class TargetObject implements Comparable<TargetObject> {
 				String rawData = new String(rawBytes);
 				if(PRINT_STUFF)
 					System.out.println("I got back: " + rawData);
-
-//				if(rawData.length() == 1) {
-////					prList.add(new TargetObject());
-//					System.out.println("No Targets Found");
-//					return prList;
-//				} else {
 					String[] targets = rawData.split(":");
 					for(String target : targets) {
 						try {
@@ -180,11 +174,6 @@ public class TargetObject implements Comparable<TargetObject> {
 		if(pr.size() == 0) {
 			if(PRINT_STUFF)
 			System.out.println("Can't find a target");
-			/*TargetObject to = new TargetObject();
-			to.ctrX = (float) turnXAxis.getPosition();
-			to.ctrY = (float) turnYAxis.getPosition();
-			return to;
-		}*/
 			return null;
 		}
 		if (target == CENTER_TARGET) {
@@ -221,14 +210,8 @@ public class TargetObject implements Comparable<TargetObject> {
 	}
 
 	public float RobotTurnDegrees() {
-		float out;
-		//if(cachedTarget != null) {
-			out = - (float)(turnXAxis.getPosition() * 180 - 90f);
-	//	}
-		//else {
-		//	out = 60;
-	//	}
-	//	System.out.println(out);
+		float out = - (float)(turnXAxis.getPosition() * 180 - 90f); 
+		// Not instantly returned because we sometimes use System.out.println to check camera accuracy
 		return out;
 	}
 	public void ResetCamera() {

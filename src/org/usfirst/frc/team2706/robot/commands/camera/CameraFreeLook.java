@@ -5,7 +5,7 @@ import org.usfirst.frc.team2706.robot.Robot;
 import edu.wpi.first.wpilibj.command.Command;
 //Movement of Driver
 public class CameraFreeLook extends Command {
-	//System Variables - No point touching
+	// System Variables - No point touching
 	private float GamePadX = 0;
 	private float GamePadY = 0;
 	@Override
@@ -37,6 +37,7 @@ public class CameraFreeLook extends Command {
 		// TODO Auto-generated method stub
 		return false;
 	}
+	// Control based on gamepad controls
 	public void TurnOnGamepad(float RawGamepadX, float RawGamepadY) {
 				float val1 = (float) ((float)((int)(RawGamepadX * 10)) / 10);
 				float val2 = (float) ((float)((int)(RawGamepadY * 10)) / 10);
