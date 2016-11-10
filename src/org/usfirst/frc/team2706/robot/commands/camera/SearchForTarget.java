@@ -6,6 +6,8 @@ import org.usfirst.frc.team2706.robot.subsystems.Camera;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class SearchForTarget extends Command {
+	
+	//Constants for determining camera panning parameters
 	public static final float SEARCH_SPEED = 0.015f;
 	public static final float SEARCH_TILT_BOTTOM = 0.7f;
 	public static final float SEARCH_TILT_TOP = 0.4f;
@@ -41,6 +43,7 @@ public class SearchForTarget extends Command {
 		// TODO Auto-generated method stub
 		return false;
 	}
+	// Looks around, panning from bottom to top going left to right every level
 	private boolean turningRight;
 	public void Look() {
 		if(turningRight) {
