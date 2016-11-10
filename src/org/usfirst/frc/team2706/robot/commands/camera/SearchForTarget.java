@@ -43,7 +43,7 @@ public class SearchForTarget extends Command {
 		// TODO Auto-generated method stub
 		return false;
 	}
-	//Looks around, panning from bottom to top going left to right every level
+	// Looks around, panning from bottom to top going left to right every level
 	private boolean turningRight;
 	public void Look() {
 		if(turningRight) {

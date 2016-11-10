@@ -9,7 +9,8 @@ public class AutomaticCameraControl extends Command {
 	
 	private MoveCamera move;
 	private SearchForTarget search;
-	//System variables
+	
+	// System variables
 	private boolean lostTarget = false;
 	@Override
 	protected void end() {

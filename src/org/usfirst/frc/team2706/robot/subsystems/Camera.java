@@ -211,6 +211,7 @@ public class TargetObject implements Comparable<TargetObject> {
 
 	public float RobotTurnDegrees() {
 		float out = - (float)(turnXAxis.getPosition() * 180 - 90f); 
+		// Not instantly returned because we sometimes use System.out.println to check camera accuracy
 		return out;
 	}
 	public void ResetCamera() {
