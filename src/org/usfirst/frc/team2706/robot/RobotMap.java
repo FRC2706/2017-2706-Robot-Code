@@ -19,7 +19,7 @@ public class RobotMap {
     // CONSTANT_VALS [ Competition, Practice, Simulation]
 
     // Left gearbox
-    private static final int[] MOTOR_FRONT_LEFT_VALS = {2, 2, 3};
+    private static final int[] MOTOR_FRONT_LEFT_VALS = {0, 2, 3};
     public static final int MOTOR_FRONT_LEFT = getConstant("MOTOR_FRONT_LEFT");
 
     private static final boolean[] MOTOR_FRONT_LEFT_INVERTED_VALS = {true, true, false};
@@ -28,7 +28,7 @@ public class RobotMap {
 
 
     // Right gearbox
-    private static final int[] MOTOR_FRONT_RIGHT_VALS = {0, 5, 5};
+    private static final int[] MOTOR_FRONT_RIGHT_VALS = {2, 5, 5};
     public static final int MOTOR_FRONT_RIGHT = getConstant("MOTOR_FRONT_RIGHT");
 
     private static final boolean[] MOTOR_FRONT_RIGHT_INVERTED_VALS = {true, true, false};
@@ -37,7 +37,7 @@ public class RobotMap {
 
 
     // Left gearbox
-    private static final int[] MOTOR_REAR_LEFT_VALS = {2, 3, 3};
+    private static final int[] MOTOR_REAR_LEFT_VALS = {1, 3, 3};
     public static final int MOTOR_REAR_LEFT = getConstant("MOTOR_REAR_LEFT");
 
     private static final boolean[] MOTOR_REAR_LEFT_INVERTED_VALS = {true, true, false};
@@ -45,7 +45,7 @@ public class RobotMap {
 
 
     // Right gearbox
-    private static final int[] MOTOR_REAR_RIGHT_VALS = {1, 6, 6};
+    private static final int[] MOTOR_REAR_RIGHT_VALS = {3, 6, 6};
     public static final int MOTOR_REAR_RIGHT = getConstant("MOTOR_REAR_RIGHT");
 
     private static final boolean[] MOTOR_REAR_RIGHT_INVERTED_VALS = {true, true, false};
