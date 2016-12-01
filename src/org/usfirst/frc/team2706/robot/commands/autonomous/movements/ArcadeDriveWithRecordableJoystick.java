@@ -6,10 +6,8 @@ import org.usfirst.frc.team2706.robot.controls.RecordableJoystick;
 
 public class ArcadeDriveWithRecordableJoystick extends ArcadeDriveWithJoystick {
 	
-	public static final String JOY_LOC = "/home/lvuser/joystick";
-	
-	public ArcadeDriveWithRecordableJoystick() {
-		super(new RecordableJoystick(Robot.oi.getDriverJoystick(), JOY_LOC));
+	public ArcadeDriveWithRecordableJoystick(String loc) {
+		super(new RecordableJoystick(Robot.oi.getDriverJoystick(), loc));
 	}
 	
 	@Override

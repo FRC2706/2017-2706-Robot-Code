@@ -88,7 +88,7 @@ public class RecordableJoystick extends Joystick {
 
 	@Override
 	public boolean getRawButton(final int button) {
-		return states.get(index).buttons[button];
+		return states.get(index).buttons[button - 1];
 	}
 
 	@Override
