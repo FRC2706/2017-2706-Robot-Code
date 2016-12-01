@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,8 +26,14 @@ public class RecordableJoystick extends Joystick {
 
 		this.joy = joy;
 		
-		config = new Gson().fromJson(loadFile(new File(loc + "-config.json")), JoystickConfig.class);
-		states = Arrays.asList(new Gson().fromJson(loadFile(new File(loc + "-states.json")), JoystickState[].class));
+		if(new File(loc + "-config.json").isFile() && new File(loc + "-config.json").isFile()) {
+			config = new Gson().fromJson(loadFile(new File(loc + "-config.json")), JoystickConfig.class);
+			states = Arrays.asList(new Gson().fromJson(loadFile(new File(loc + "-states.json")), JoystickState[].class));
+		}
+		else {
+			config = null;
+			states = null;
+		}
 	}
 	
 	public Joystick getRealJoystick() {
@@ -134,7 +141,9 @@ public class RecordableJoystick extends Joystick {
 
 	public static int getPort(Joystick joy) {
 		try {
-			return joy.getClass().getDeclaredField("m_port").getInt(joy);
+			Field f = joy.getClass().getDeclaredField("m_port");
+			f.setAccessible(true);
+			return f.getInt(joy);
 		} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
 			e.printStackTrace();
 		}

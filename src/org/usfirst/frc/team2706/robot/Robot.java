@@ -12,7 +12,6 @@ import org.usfirst.frc.team2706.robot.subsystems.DriveTrain;
 
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -130,15 +129,6 @@ public class Robot extends IterativeRobot {
          cameraCommand.cancel(); // Uncomment/comment to disable/enable camera movement
         Robot.camera.ResetCamera();
         teleopControl.start();
-        
-        Joystick joy = oi.getDriverJoystick();
-        
-        System.out.println(joy.getAxisCount());
-        System.out.println(joy.getButtonCount());
-        System.out.println(joy.getPOVCount());
-        System.out.println(joy.getIsXbox());
-        System.out.println(joy.getType());
-        System.out.println(joy.getName());
     
     }
 
