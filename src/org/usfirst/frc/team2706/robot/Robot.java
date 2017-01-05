@@ -1,7 +1,6 @@
 
 package org.usfirst.frc.team2706.robot;
 
-import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -73,8 +72,7 @@ public class Robot extends IterativeRobot {
 
 		// Set up the Microsoft LifeCam and start streaming it to the Driver Station
 		CameraServer server = CameraServer.getInstance();
-		server.setQuality(50);
-		server.startAutomaticCapture("cam0");	
+		server.startAutomaticCapture(0);	
     
 		cameraCommand = new AutomaticCameraControl();
 		
