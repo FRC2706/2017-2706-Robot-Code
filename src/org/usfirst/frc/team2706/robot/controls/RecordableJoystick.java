@@ -55,7 +55,16 @@ public class RecordableJoystick extends Joystick {
 	}
 	
 	public boolean update() {
-		return ++index >= states.size();
+		index++;
+		return notDone();
+	}
+	
+	public boolean notDone() {
+		return index < states.size();
+	}
+	
+	public void reset() {
+		index = 0;
 	}
 
 	@Override

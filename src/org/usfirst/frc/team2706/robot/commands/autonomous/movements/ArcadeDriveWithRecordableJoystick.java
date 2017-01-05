@@ -17,4 +17,16 @@ public class ArcadeDriveWithRecordableJoystick extends ArcadeDriveWithJoystick {
 		if(!((RecordableJoystick)joystick).update())
 			this.cancel();
 	}
+	
+	
+	@Override
+	public boolean isFinished() {
+		return !((RecordableJoystick)joystick).notDone();
+	}
+	
+	@Override
+	public void end() {
+		super.end();
+		((RecordableJoystick)joystick).reset();
+	}
 }
