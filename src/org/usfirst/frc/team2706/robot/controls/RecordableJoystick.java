@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,7 +21,7 @@ public class RecordableJoystick extends Joystick {
 	private int index;
 
 	public RecordableJoystick(Joystick joy, String loc) {
-		super(getPort(joy));
+		super(joy.getPort());
 
 		this.joy = joy;
 		
@@ -83,8 +82,8 @@ public class RecordableJoystick extends Joystick {
 	}
 
 	@Override
-	public int getType() {
-		return config.type;
+	public HIDType getType() {
+		return HIDType.values()[config.type];
 	}
 	
 	@Override
@@ -146,17 +145,5 @@ public class RecordableJoystick extends Joystick {
 			this.buttons = buttons;
 			this.povs = povs;
 		}
-	}
-
-	public static int getPort(Joystick joy) {
-		try {
-			Field f = joy.getClass().getDeclaredField("m_port");
-			f.setAccessible(true);
-			return f.getInt(joy);
-		} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
-			e.printStackTrace();
-		}
-		
-		return 0;
 	}
 }
