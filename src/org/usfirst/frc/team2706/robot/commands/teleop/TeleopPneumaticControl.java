@@ -2,12 +2,12 @@ package org.usfirst.frc.team2706.robot.commands.teleop;
 
 import org.usfirst.frc.team2706.robot.Robot;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class TeleopPneumaticControl extends Command {
 
+	@SuppressWarnings("unused")
 	private GenericHID joystick = Robot.oi.getOperatorJoystick();
 	
 	//FloatControl floatControl = new FloatControl(true);
@@ -18,7 +18,7 @@ public class TeleopPneumaticControl extends Command {
 	protected void execute() {
 		
 		//Example mechanism controlling
-		boolean controlButtonLB = joystick.getRawButton(5);
+		/*boolean controlButtonLB = joystick.getRawButton(5);
 		boolean controlButtonRB = joystick.getRawButton(6);
 		
 		if(controlButtonLB) {
@@ -26,7 +26,7 @@ public class TeleopPneumaticControl extends Command {
 		}
 		if(controlButtonRB) {
 			//Do something or run a command
-		}
+		}*/
 	}
 
 	@Override
