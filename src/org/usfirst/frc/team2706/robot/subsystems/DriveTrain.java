@@ -52,8 +52,8 @@ public class DriveTrain extends Subsystem {
 		drive = new RobotDrive(front_left_motor, back_left_motor,
 							   front_right_motor, back_right_motor);
 		
-		left_encoder = new Encoder(8, 7);
-		right_encoder = new Encoder(0,1);
+		left_encoder = new Encoder(RobotMap.ENCODER_LEFT_A, RobotMap.ENCODER_LEFT_B);
+		right_encoder = new Encoder(RobotMap.ENCODER_RIGHT_A, RobotMap.ENCODER_RIGHT_B);
 
 		// Encoders may measure differently in the real world and in
 		// simulation. In this example the robot move at some random value
