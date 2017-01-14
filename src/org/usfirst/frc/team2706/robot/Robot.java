@@ -67,8 +67,7 @@ public class Robot extends IterativeRobot {
 
 		// Set up the Microsoft LifeCam and start streaming it to the Driver Station
 		CameraServer server = CameraServer.getInstance();
-		server.setQuality(50);
-		server.startAutomaticCapture("cam0");	
+		server.startAutomaticCapture(0);	
     
 		cameraCommand = new AutomaticCameraControl();
 		
