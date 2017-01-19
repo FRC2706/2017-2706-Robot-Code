@@ -9,6 +9,7 @@ import org.usfirst.frc.team2706.robot.subsystems.AutonomousSelector;
 import org.usfirst.frc.team2706.robot.subsystems.Camera;
 import org.usfirst.frc.team2706.robot.subsystems.DriveTrain;
 
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -65,8 +66,7 @@ public class Robot extends IterativeRobot {
         teleopControl = new TeleopPneumaticControl();
 
 		// Set up the Microsoft LifeCam and start streaming it to the Driver Station
-//		CameraServer server = CameraServer.getInstance();
-//		server.startAutomaticCapture(0);	
+        CameraServer.getInstance().startAutomaticCapture();
     
 		cameraCommand = new AutomaticCameraControl();
 		
