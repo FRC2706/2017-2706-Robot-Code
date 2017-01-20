@@ -5,6 +5,7 @@ import org.usfirst.frc.team2706.robot.commands.autonomous.automodes.ExampleAutoM
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.ArcadeDriveWithRecordableJoystick;
 import org.usfirst.frc.team2706.robot.commands.camera.AutomaticCameraControl;
 import org.usfirst.frc.team2706.robot.commands.teleop.ArcadeDriveWithJoystick;
+import org.usfirst.frc.team2706.robot.commands.teleop.RecordArcadeDriveWithJoystick;
 import org.usfirst.frc.team2706.robot.commands.teleop.TeleopPneumaticControl;
 import org.usfirst.frc.team2706.robot.subsystems.AutonomousSelector;
 import org.usfirst.frc.team2706.robot.subsystems.Camera;
@@ -44,6 +45,8 @@ public class Robot extends IterativeRobot {
 	
 	// Uses the joysticks to control the robot in teleop mode
     TeleopPneumaticControl teleopControl;
+    
+    RecordArcadeDriveWithJoystick recordAJoystick;
 
     /**
      * This function is run when the robot is first started up and should be
@@ -62,7 +65,7 @@ public class Robot extends IterativeRobot {
         	/*  no switch: do nothing      */	 new ArcadeDriveWithJoystick(), 
         	/* position 1: do nothing      */	 new ArcadeDriveWithJoystick(),
       /* position 2: Run example automode  */	 new ExampleAutoMode(),
-      /* position 3: replay joystick	*/   new ArcadeDriveWithRecordableJoystick("/home/lvuser/test/test")
+      /* position 3: replay joystick	*/   new ArcadeDriveWithRecordableJoystick("/home/lvuser/test/test2")
      										    );
         
         teleopControl = new TeleopPneumaticControl();
@@ -71,6 +74,8 @@ public class Robot extends IterativeRobot {
 		CameraServer.getInstance().startAutomaticCapture();
     
 		cameraCommand = new AutomaticCameraControl();
+		
+		//recordAJoystick = new RecordArcadeDriveWithJoystick("/home/lvuser/test/test2");
 		
     }
 	
@@ -127,6 +132,7 @@ public class Robot extends IterativeRobot {
          cameraCommand.cancel(); // Uncomment/comment to disable/enable camera movement
         Robot.camera.ResetCamera();
         teleopControl.start();
+        recordAJoystick.start();
     
     }
 
