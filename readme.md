@@ -38,6 +38,7 @@ The main goal of writing teleop code is handling joystick / button input and mak
 
 - Smooth out the motors using sensor loops so it's less jerky / easier to control.
 
+- Controlling teleop with the gamepads will now be done in OI, with commands in the mechanismcontrol package.
 - etc
 
 We didn't do very much of this last year, so lots of room for creativity!
