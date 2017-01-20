@@ -1,13 +1,16 @@
 package org.usfirst.frc.team2706.robot.commands.teleop;
 
 import org.usfirst.frc.team2706.robot.Robot;
+import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithEncoders;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class TeleopPneumaticControl extends Command {
 
 	@SuppressWarnings("unused")
+	private GenericHID driverJoystick = Robot.oi.getDriverJoystick();
 	private GenericHID joystick = Robot.oi.getOperatorJoystick();
 	
 	//FloatControl floatControl = new FloatControl(true);
@@ -18,16 +21,18 @@ public class TeleopPneumaticControl extends Command {
 	protected void execute() {
 		
 		//Example mechanism controlling
-		/*boolean controlButtonLB = joystick.getRawButton(5);
-		boolean controlButtonRB = joystick.getRawButton(6);
 		
-		if(controlButtonLB) {
-			// Do something or run a command
+	//	System.out.println(controlButtonLB);
+	//	boolean controlButtonRB = joystick.getRawButton(6);
+		
+		
+		//new StraightDriveWithEncoders(0.75,-8/12.0,5)
 		}
+		/*
 		if(controlButtonRB) {
-			//Do something or run a command
+			Robot.driveTrain.back_right_motor.set(0.5);
 		}*/
-	}
+	
 
 	@Override
 	protected boolean isFinished() {

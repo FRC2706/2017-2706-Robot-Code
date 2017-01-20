@@ -28,7 +28,7 @@ public class StraightDriveWithEncoders extends Command {
 	 * 
 	 * @param speed Speed in range [-1,1]
 	 * @param distance The encoder distance to travel
-	 * @param minDoneCycles The amount of cycles when the robot is within its target range to end the comman
+	 * @param minDoneCycles The amount of cycles when the robot is within its target range to end the command
 	 */
     public StraightDriveWithEncoders(double speed, double distance, int minDoneCycles) {
         requires(Robot.driveTrain);
@@ -91,9 +91,11 @@ public class StraightDriveWithEncoders extends Command {
     public boolean done;
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-    	System.out.println(done);
+    	//System.out.println(doneCount + "," + this.minDoneCycles);   
     	if(this.doneCount > this.minDoneCycles) {
+    		System.out.println("Command Ended!");
     		done = true;
+    	
     		return true;
     	
     	}
@@ -106,6 +108,7 @@ public class StraightDriveWithEncoders extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
+    	doneCount = 0;
     	// Disable PID output and stop robot to be safe
     	leftPID.disable();
     	rightPID.disable();
@@ -119,7 +122,7 @@ public class StraightDriveWithEncoders extends Command {
     }
     
     private boolean onTarget() {
-    	if(leftPID.getError() < 5.0/12 && rightPID.getError() < 5.0/12) {
+    	if(leftPID.getError() < 5/12 && rightPID.getError() < 5/12) {
     		doneCount++;
     		return true;
     	}

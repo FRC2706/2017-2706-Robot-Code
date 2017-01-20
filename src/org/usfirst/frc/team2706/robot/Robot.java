@@ -1,7 +1,11 @@
 
 package org.usfirst.frc.team2706.robot;
 
-import org.usfirst.frc.team2706.robot.commands.autonomous.automodes.ExampleAutoMode;
+import org.usfirst.frc.team2706.robot.commands.autonomous.automodes.CenterToLaunch;
+import org.usfirst.frc.team2706.robot.commands.autonomous.automodes.SideStartSideGear;
+import org.usfirst.frc.team2706.robot.commands.autonomous.movements.QuickRotate;
+import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithEncoders;
+import org.usfirst.frc.team2706.robot.commands.autonomous.plays.DrivePlaceGear;
 import org.usfirst.frc.team2706.robot.commands.camera.AutomaticCameraControl;
 import org.usfirst.frc.team2706.robot.commands.teleop.ArcadeDriveWithJoystick;
 import org.usfirst.frc.team2706.robot.commands.teleop.TeleopPneumaticControl;
@@ -9,7 +13,6 @@ import org.usfirst.frc.team2706.robot.subsystems.AutonomousSelector;
 import org.usfirst.frc.team2706.robot.subsystems.Camera;
 import org.usfirst.frc.team2706.robot.subsystems.DriveTrain;
 
-import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -50,24 +53,36 @@ public class Robot extends IterativeRobot {
      */
     public void robotInit() {
     	
-    	oi = new OI();
+    	
 		
 		// Instantiate the robot subsystems
         driveTrain = new DriveTrain();      
-        camera = new Camera(Camera.CAMERA_IP);
+       // camera = new Camera(Camera.CAMERA_IP);
         
+        oi = new OI();
         // Set up our autonomous modes with the hardware selector switch
         hardwareChooser = new AutonomousSelector(
-        	/*  no switch: do nothing      */	 new ArcadeDriveWithJoystick(), 
-        	/* position 1: do nothing      */	 new ArcadeDriveWithJoystick(),
-      /* position 2: Run example automode  */	 new ExampleAutoMode()
+               	    /*  no switch: do nothing      */	 new ArcadeDriveWithJoystick(), 
+                    /* position 1: do nothing      */	 new ArcadeDriveWithJoystick(),
+                 /* position 2: Drive to baseline  */	 new StraightDriveWithEncoders(0.65,5,25),
+     /* position 3: Drive to opposing launch line  */    new StraightDriveWithEncoders(0.65,20,0),
+        /* position 4: Center Position place gear  */    new DrivePlaceGear(0.5,4,2),
+/* position 5: Right position place gear > launch  */	 new SideStartSideGear(true,0.5,7,45,5,2,20),
+ /* position 6: Left position place gear > launch  */	 new SideStartSideGear(true,0.5,7,45,5,2,20),
+         /* position 7: Center and left to launch  */	 new CenterToLaunch(false,0.5,9,2,90,7,20),
+        /* position 8: Center and right to launch  */	 new CenterToLaunch(true,0.5,9,2,90,7,20),
+ /* position 9: Left/ gear double side hopper pop  */	 new QuickRotate(90)
+/* position 10: Right gear double side hopper pop  */
+      /* position 11: Left gear middle hopper pop  */
+     /* position 12: Right gear middle hopper pop  */
+      
      										    );
         
         teleopControl = new TeleopPneumaticControl();
 
 		// Set up the Microsoft LifeCam and start streaming it to the Driver Station
-		CameraServer server = CameraServer.getInstance();
-		server.startAutomaticCapture(0);	
+	//	CameraServer server = CameraServer.getInstance();
+		//server.startAutomaticCapture(0);	
     
 		cameraCommand = new AutomaticCameraControl();
 		
@@ -97,7 +112,7 @@ public class Robot extends IterativeRobot {
 	 */
     public void autonomousInit() {
     	driveTrain.reset();
-        cameraCommand.start();
+       // cameraCommand.start();
     	
         // Great for safety just incase you set the wrong one in practice ;)
     	System.out.println("Running " + hardwareChooser.getSelected() + "...");
@@ -122,9 +137,9 @@ public class Robot extends IterativeRobot {
          continue until interrupted by another command, remove
          this line or comment it out. */
         if (autonomousCommand != null) autonomousCommand.cancel();
-         cameraCommand.start();
+     /*    cameraCommand.start();
          cameraCommand.cancel(); // Uncomment/comment to disable/enable camera movement
-        Robot.camera.ResetCamera();
+        Robot.camera.ResetCamera();*/
         teleopControl.start();
     }
 
@@ -132,7 +147,7 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-    	Robot.camera.RobotTurnDegrees();
+    //	Robot.camera.RobotTurnDegrees();
         Scheduler.getInstance().run();
         log();
     }
