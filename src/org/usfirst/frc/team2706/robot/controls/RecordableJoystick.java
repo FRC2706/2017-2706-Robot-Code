@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Supplier;
 
 import com.google.gson.Gson;
 
@@ -20,12 +21,19 @@ public class RecordableJoystick extends Joystick {
 	
 	private final Joystick joy;
 
-	private final JoystickConfig config;
-	private final List<JoystickState> states;
+	private JoystickConfig config;
+	private List<JoystickState> states;
+	
+	private final IndexFinder indexFinder;
 
 	private int index;
+	private double time;
+	
+	private Supplier<Double> timeSupplier;
 	
 	private final String loc;
+	
+	private boolean looping;
 
 	public RecordableJoystick(Joystick joy, String loc, boolean replay) {
 		super(joy.getPort());
@@ -33,21 +41,7 @@ public class RecordableJoystick extends Joystick {
 		this.replay = replay;
 		this.joy = joy;
 		this.loc = loc;
-		
-		if(replay) {
-			if(new File(loc + "-config.json").isFile() && new File(loc + "-config.json").isFile()) {
-				config = new Gson().fromJson(loadFile(new File(loc + "-config.json")), JoystickConfig.class);
-				states = Arrays.asList(new Gson().fromJson(loadFile(new File(loc + "-states.json")), JoystickState[].class));
-			}
-			else {
-				config = null;
-				states = null;
-			}
-		}
-		else {
-			config = new JoystickConfig(joy.getAxisCount(), joy.getButtonCount(), joy.getPOVCount(), joy.getIsXbox(), joy.getType().value, joy.getName());
-			states = new ArrayList<JoystickState>();
-		}
+		this.indexFinder = new IndexFinder();
 	}
 	
 	public Joystick getRealJoystick() {
@@ -55,7 +49,9 @@ public class RecordableJoystick extends Joystick {
 	}
 
 	public void end() {
-		index = states.size();
+		looping = false;
+		
+		reset();
 		
 		if(!replay) {
 			saveFile(new Gson().toJson(config), new File(loc + "-config.json"));
@@ -102,15 +98,41 @@ public class RecordableJoystick extends Joystick {
 			povs[i] = getPOV(i);
 		}
 		
-		return new JoystickState(axes, buttons, povs);
+		return new JoystickState(axes, buttons, povs, time);
+	}
+	
+	public void init(Supplier<Double> timeSupplier) {
+		if(replay) {
+			if(new File(loc + "-config.json").isFile() && new File(loc + "-config.json").isFile()) {
+				config = new Gson().fromJson(loadFile(new File(loc + "-config.json")), JoystickConfig.class);
+				states = Arrays.asList(new Gson().fromJson(loadFile(new File(loc + "-states.json")), JoystickState[].class));
+			}
+			else {
+				config = null;
+				states = null;
+			}
+		}
+		else {
+			config = new JoystickConfig(joy.getAxisCount(), joy.getButtonCount(), joy.getPOVCount(), joy.getIsXbox(), joy.getType().value, joy.getName());
+			states = new ArrayList<JoystickState>();
+		}
+		
+		this.timeSupplier = timeSupplier;
+		this.looping = true;
+		
+		Thread indexFinder = new Thread(this.indexFinder);
+		indexFinder.setDaemon(true);
+		indexFinder.start();
 	}
 	
 	public boolean update() {
 		if(!replay) {
 			states.add(grabJoystickValues());
+			index++;
 		}
 		
-		index++;
+		System.out.println(index);
+		
 		return notDone();
 	}
 	
@@ -222,11 +244,39 @@ public class RecordableJoystick extends Joystick {
 		private final double axes[];
 		private final boolean buttons[];
 		private final int povs[];
+		private final double time;
 
-		private JoystickState(double axes[], boolean buttons[], int povs[]) {
+		private JoystickState(double axes[], boolean buttons[], int povs[], double time) {
 			this.axes = axes;
 			this.buttons = buttons;
 			this.povs = povs;
+			this.time = time;
+		}
+	}
+	
+	private class IndexFinder implements Runnable {
+		
+		@Override
+		public void run() {
+			while(looping) {
+				time = timeSupplier.get();
+				
+				if(replay) {
+					double closest = Long.MAX_VALUE;
+
+					for(int i = index; i < states.size(); i++) {
+						double timeToIndex = Math.abs(time - states.get(i).time);
+						
+						if(timeToIndex <= closest) {
+							closest = timeToIndex;
+						}
+						else {
+							index = Math.max(i - 1, 0);
+							break;
+						}
+					}
+				}
+			}
 		}
 	}
 }

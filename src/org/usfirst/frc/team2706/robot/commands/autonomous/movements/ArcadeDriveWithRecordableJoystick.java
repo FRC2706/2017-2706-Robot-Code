@@ -11,6 +11,13 @@ public class ArcadeDriveWithRecordableJoystick extends ArcadeDriveWithJoystick {
 	}
 	
 	@Override
+	public void initialize() {
+		super.initialize();
+		
+		((RecordableJoystick)joystick).init(this::timeSinceInitialized);
+	}
+	
+	@Override
 	public void execute() {
 		super.execute();
 		

@@ -75,7 +75,7 @@ public class Robot extends IterativeRobot {
     
 		cameraCommand = new AutomaticCameraControl();
 		
-		//recordAJoystick = new RecordArcadeDriveWithJoystick("/home/lvuser/test/test2");
+		recordAJoystick = new RecordArcadeDriveWithJoystick("/home/lvuser/test/test2");
 		
     }
 	
