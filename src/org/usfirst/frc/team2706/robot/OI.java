@@ -31,7 +31,8 @@ public class OI {
 			// Joystick for controlling the mechanisms of the robot
 			controlStick = new Joystick(1);
 	    	JoystickButton LB = new JoystickButton(driverStick,5);
-	    	LB.whenPressed(new StraightDriveWithEncoders(0.75,-8/12.0,5));
+	    	StraightDriveWithEncoders sdwe = new StraightDriveWithEncoders(0.75,-8/12.0,5,1);
+	    	LB.whenPressed(sdwe);
 	    }
 }
 

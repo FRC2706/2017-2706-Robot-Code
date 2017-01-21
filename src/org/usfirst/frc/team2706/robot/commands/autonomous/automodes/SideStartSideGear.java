@@ -8,10 +8,10 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class SideStartSideGear extends CommandGroup {
 	public SideStartSideGear(boolean rightSide, double speed, double fromWallDistance, double toGearDistance, double turnDegrees, double reverseDistance, double toLaunchPadDistance) {
-		this.addSequential(new StraightDriveWithEncoders(speed,fromWallDistance,25));
+		this.addSequential(new StraightDriveWithEncoders(speed,fromWallDistance,25,5));
 		this.addSequential(new QuickRotate(rightSide ? -turnDegrees : turnDegrees));
 		this.addSequential(new DrivePlaceGear(speed,toGearDistance,reverseDistance));
 		this.addSequential(new QuickRotate(rightSide ? turnDegrees : -turnDegrees));
-		this.addSequential(new StraightDriveWithEncoders(speed,toLaunchPadDistance,25));
+		this.addSequential(new StraightDriveWithEncoders(speed,toLaunchPadDistance,25,5));
 	}
 }

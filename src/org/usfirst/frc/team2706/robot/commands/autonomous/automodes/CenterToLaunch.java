@@ -11,8 +11,8 @@ public class CenterToLaunch extends CommandGroup {
 	public CenterToLaunch(boolean rightSide, double speed, double gearDistance, double reverseDistance, double turnAmount, double sideDistance, double toLaunchPad) {
 		this.addSequential(new DrivePlaceGear(speed,gearDistance,reverseDistance));
 		this.addSequential(new QuickRotate(rightSide ? turnAmount : -turnAmount));
-		this.addSequential(new StraightDriveWithEncoders(speed,sideDistance,25));
+		this.addSequential(new StraightDriveWithEncoders(speed,sideDistance,25,5));
 		this.addSequential(new QuickRotate(rightSide ? -turnAmount : turnAmount));
-		this.addSequential(new StraightDriveWithEncoders(speed,toLaunchPad,25));
+		this.addSequential(new StraightDriveWithEncoders(speed,toLaunchPad,25,5));
 	}
 }
