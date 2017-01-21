@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * This class controls all of the robot initialization, every tick of the robot,
@@ -46,6 +47,7 @@ public class Robot extends IterativeRobot {
 	// Uses the joysticks to control the robot in teleop mode
     TeleopPneumaticControl teleopControl;
     
+    // Records joystick states to file for later replaying
     RecordArcadeDriveWithJoystick recordAJoystick;
 
     /**
@@ -65,7 +67,7 @@ public class Robot extends IterativeRobot {
         	/*  no switch: do nothing      */	 new ArcadeDriveWithJoystick(), 
         	/* position 1: do nothing      */	 new ArcadeDriveWithJoystick(),
       /* position 2: Run example automode  */	 new ExampleAutoMode(),
-      /* position 3: replay joystick	*/   new ArcadeDriveWithRecordableJoystick("/home/lvuser/test/test2")
+      /* position 3: replay joystick	*/   new ArcadeDriveWithRecordableJoystick("/home/lvuser/test/test")
      										    );
         
         teleopControl = new TeleopPneumaticControl();
@@ -73,10 +75,7 @@ public class Robot extends IterativeRobot {
 		// Set up the Microsoft LifeCam and start streaming it to the Driver Station
 		CameraServer.getInstance().startAutomaticCapture();
     
-		cameraCommand = new AutomaticCameraControl();
-		
-		recordAJoystick = new RecordArcadeDriveWithJoystick("/home/lvuser/test/test2");
-		
+		cameraCommand = new AutomaticCameraControl();	
     }
 	
 	/**
@@ -132,8 +131,21 @@ public class Robot extends IterativeRobot {
          cameraCommand.cancel(); // Uncomment/comment to disable/enable camera movement
         Robot.camera.ResetCamera();
         teleopControl.start();
-        recordAJoystick.start();
-    
+        
+        if(SmartDashboard.getBoolean("record-joystick", false)) {
+        	
+        	String name = SmartDashboard.getString("record-joystick-name", "default");
+        	String folder = "/home/lvuser/joystick-recordings/" + name + "/";
+        	
+        	String driverLoc = folder + name + "-driver";
+        	@SuppressWarnings("unused")
+			String operatorLoc = folder + name + "-operator";
+        	
+        	System.out.println("Recording joystick to folder" + folder);
+        	
+        	recordAJoystick = new RecordArcadeDriveWithJoystick(driverLoc);
+        	recordAJoystick.start();
+        }
     }
 
     /**
