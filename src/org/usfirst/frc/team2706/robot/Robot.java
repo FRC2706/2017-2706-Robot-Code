@@ -81,8 +81,7 @@ public class Robot extends IterativeRobot {
         teleopControl = new TeleopPneumaticControl();
 
 		// Set up the Microsoft LifeCam and start streaming it to the Driver Station
-	//	CameraServer server = CameraServer.getInstance();
-		//server.startAutomaticCapture(0);	
+		//CameraServer.getInstance().startAutomaticCapture();
     
 		cameraCommand = new AutomaticCameraControl();
 		
