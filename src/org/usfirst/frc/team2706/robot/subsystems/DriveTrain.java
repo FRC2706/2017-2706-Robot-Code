@@ -263,7 +263,7 @@ public class DriveTrain extends Subsystem {
 		public void pidWrite(double output) {
 			double rotateVal = (normalize(getHeading() - initGyro) * 0.1);
 			
-			System.out.println("Rotate:\t"+rotateVal);
+		//	System.out.println("Rotate:\t"+rotateVal);
 			
 			// XXX: Motors must be opposite to avoid fighting
 			if(left)
@@ -320,7 +320,7 @@ public class DriveTrain extends Subsystem {
     		}
     	}
 		
-    	System.out.println("Drive:\t" + (left ? leftMotorSpeed : rightMotorSpeed));
+   // 	System.out.println("Drive:\t" + (left ? leftMotorSpeed : rightMotorSpeed));
     	
 		return left ? leftMotorSpeed : rightMotorSpeed;
     }
