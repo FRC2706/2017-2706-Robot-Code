@@ -1,17 +1,34 @@
 package org.usfirst.frc.team2706.robot.commands.teleop;
 
-import org.usfirst.frc.team2706.robot.Robot;
+import java.util.function.Supplier;
+
 import org.usfirst.frc.team2706.robot.controls.RecordableJoystick;
+
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class RecordArcadeDriveWithJoystick extends ArcadeDriveWithJoystick {
 	
-	public RecordArcadeDriveWithJoystick(String loc) {
-		super(new RecordableJoystick(Robot.oi.getDriverJoystick(), loc, false));
+	private final Supplier<String> nameSupplier;
+
+	public RecordArcadeDriveWithJoystick(Joystick joy, Supplier<String> nameSupplier) {
+		super(joy);
+		
+		this.nameSupplier = nameSupplier;
 	}
 	
 	@Override
 	public void initialize() {
-		super.initialize();
+    	String name = nameSupplier.get();
+    	String folder = "/home/lvuser/joystick-recordings/" + name + "/";
+    	
+    	String driverLoc = folder + name + "-driver";
+    	@SuppressWarnings("unused")
+		String operatorLoc = folder + name + "-operator";
+		
+		joystick = new RecordableJoystick(joystick, driverLoc, false);
+		
+		System.out.println("Recording joystick to folder " + SmartDashboard.getString("record-joystick-name", "default"));
 		
 		((RecordableJoystick)joystick).init(this::timeSinceInitialized);
 	}

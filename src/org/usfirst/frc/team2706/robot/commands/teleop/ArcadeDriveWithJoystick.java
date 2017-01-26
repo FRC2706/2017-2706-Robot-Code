@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class ArcadeDriveWithJoystick extends Command {
     
-	public final Joystick joystick;
+	protected Joystick joystick;
 	
 	public ArcadeDriveWithJoystick() {
 		this(Robot.oi.getDriverJoystick());

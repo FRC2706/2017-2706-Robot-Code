@@ -67,7 +67,7 @@ public class Robot extends IterativeRobot {
         	/*  no switch: do nothing      */	 new ArcadeDriveWithJoystick(), 
         	/* position 1: do nothing      */	 new ArcadeDriveWithJoystick(),
       /* position 2: Run example automode  */	 new ExampleAutoMode(),
-      /* position 3: replay joystick	*/   new ArcadeDriveWithRecordableJoystick("/home/lvuser/test/test")
+      /* position 3: replay joystick	*/   new ArcadeDriveWithRecordableJoystick(oi.getDriverJoystick(), () -> SmartDashboard.getString("record-joystick-name", "default"))
      										    );
         
         teleopControl = new TeleopPneumaticControl();
@@ -76,6 +76,7 @@ public class Robot extends IterativeRobot {
 		CameraServer.getInstance().startAutomaticCapture();
     
 		cameraCommand = new AutomaticCameraControl();	
+		recordAJoystick = new RecordArcadeDriveWithJoystick(oi.getDriverJoystick(), () -> SmartDashboard.getString("record-joystick-name", "default"));
     }
 	
 	/**
@@ -132,20 +133,7 @@ public class Robot extends IterativeRobot {
         Robot.camera.ResetCamera();
         teleopControl.start();
         
-        if(SmartDashboard.getBoolean("record-joystick", false)) {
-        	
-        	String name = SmartDashboard.getString("record-joystick-name", "default");
-        	String folder = "/home/lvuser/joystick-recordings/" + name + "/";
-        	
-        	String driverLoc = folder + name + "-driver";
-        	@SuppressWarnings("unused")
-			String operatorLoc = folder + name + "-operator";
-        	
-        	System.out.println("Recording joystick to folder" + folder);
-        	
-        	recordAJoystick = new RecordArcadeDriveWithJoystick(driverLoc);
-        	recordAJoystick.start();
-        }
+        if(SmartDashboard.getBoolean("record-joystick", false)) recordAJoystick.start();
     }
 
     /**
