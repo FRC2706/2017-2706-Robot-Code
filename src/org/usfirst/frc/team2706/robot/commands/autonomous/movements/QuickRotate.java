@@ -7,8 +7,6 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  * A very simple two-stage proportional control for quickly rotating the robot heading based on the robot gyro.
  *
- * Command parameters:
- *  targetHeading - the target heading value
  *  
  */
 public class QuickRotate extends Command {
@@ -36,6 +34,10 @@ public class QuickRotate extends Command {
 
 	private int done = 10;
 
+	/**
+	 * Rotates by the specified angle
+	 * @param targetHeading The angle the robot will rotate to (-360 to 360)
+	 */
     public QuickRotate(double targetHeading) {
     	super("QuickRotate");
 
