@@ -8,7 +8,6 @@ import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriv
 import org.usfirst.frc.team2706.robot.commands.autonomous.plays.DrivePlaceGear;
 import org.usfirst.frc.team2706.robot.commands.camera.AutomaticCameraControl;
 import org.usfirst.frc.team2706.robot.commands.teleop.ArcadeDriveWithJoystick;
-import org.usfirst.frc.team2706.robot.commands.teleop.TeleopPneumaticControl;
 import org.usfirst.frc.team2706.robot.subsystems.AutonomousSelector;
 import org.usfirst.frc.team2706.robot.subsystems.Camera;
 import org.usfirst.frc.team2706.robot.subsystems.DriveTrain;
@@ -43,25 +42,21 @@ public class Robot extends IterativeRobot {
 	
 	// The camera has 3 different modes, controls which mode the camera is in
 	AutomaticCameraControl cameraCommand;
-	
-	// Uses the joysticks to control the robot in teleop mode
-    TeleopPneumaticControl teleopControl;
 
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
     public void robotInit() {
-    	
-    	
 		
-		// Instantiate the robot subsystems
-        driveTrain = new DriveTrain();      
-       // camera = new Camera(Camera.CAMERA_IP);
+    	// Instantiate the robot subsystems
+    	driveTrain = new DriveTrain();      
+    	// camera = new Camera(Camera.CAMERA_IP);
         
-        oi = new OI();
-        // Set up our autonomous modes with the hardware selector switch
-        hardwareChooser = new AutonomousSelector(
+    	oi = new OI();
+    	
+    	// Set up our autonomous modes with the hardware selector switch
+    	hardwareChooser = new AutonomousSelector(
                	    /*  no switch: do nothing      */	 new ArcadeDriveWithJoystick(), 
                     /* position 1: do nothing      */	 new ArcadeDriveWithJoystick(),
                  /* position 2: Drive to baseline  */	 new StraightDriveWithEncoders(0.65,5,25,5),
@@ -77,8 +72,6 @@ public class Robot extends IterativeRobot {
      /* position 12: Right gear middle hopper pop  */
       
      										    );
-        
-        teleopControl = new TeleopPneumaticControl();
 
 		// Set up the Microsoft LifeCam and start streaming it to the Driver Station
 		//CameraServer.getInstance().startAutomaticCapture();
@@ -93,7 +86,6 @@ public class Robot extends IterativeRobot {
 	 * the robot is disabled.
      */
     public void disabledInit(){
-    	teleopControl.cancel();
     }
 	
 	public void disabledPeriodic() {
@@ -111,7 +103,6 @@ public class Robot extends IterativeRobot {
 	 */
     public void autonomousInit() {
     	driveTrain.reset();
-       // cameraCommand.start();
     	
         // Great for safety just incase you set the wrong one in practice ;)
     	System.out.println("Running " + hardwareChooser.getSelected() + "...");
@@ -136,17 +127,12 @@ public class Robot extends IterativeRobot {
          continue until interrupted by another command, remove
          this line or comment it out. */
         if (autonomousCommand != null) autonomousCommand.cancel();
-     /*    cameraCommand.start();
-         cameraCommand.cancel(); // Uncomment/comment to disable/enable camera movement
-        Robot.camera.ResetCamera();*/
-        teleopControl.start();
     }
 
     /**
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-    //	Robot.camera.RobotTurnDegrees();
         Scheduler.getInstance().run();
         log();
     }
