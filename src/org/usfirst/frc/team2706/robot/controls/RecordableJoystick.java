@@ -17,6 +17,8 @@ import edu.wpi.first.wpilibj.Joystick;
 
 public class RecordableJoystick extends Joystick {
 	
+	public static final String EMPTY_LOC = "/home/lvuser/joystick-recordings/empty/empty";
+	
 	private final boolean replay;
 	
 	private final Joystick joy;
@@ -74,6 +76,9 @@ public class RecordableJoystick extends Joystick {
 	}
 	
 	private void saveFile(String line, File file) {
+		// Create new file if the file doesn't exist already
+		file.getParentFile().mkdirs();
+		
 		try (BufferedWriter br = new BufferedWriter(new FileWriter(file))) {
 			br.write(line);
 		} catch (IOException e) {
@@ -108,8 +113,9 @@ public class RecordableJoystick extends Joystick {
 				states = Arrays.asList(new Gson().fromJson(loadFile(new File(loc + "-states.json")), JoystickState[].class));
 			}
 			else {
-				config = null;
-				states = null;
+				System.out.println(loc + "-config.json and/or " + loc + "-states.json do not exist...");
+				config = new Gson().fromJson(loadFile(new File(EMPTY_LOC + "-config.json")), JoystickConfig.class);
+				states = Arrays.asList(new Gson().fromJson(loadFile(new File(EMPTY_LOC + "-states.json")), JoystickState[].class));
 			}
 		}
 		else {
@@ -130,8 +136,6 @@ public class RecordableJoystick extends Joystick {
 			states.add(grabJoystickValues());
 			index++;
 		}
-		
-		System.out.println(index);
 		
 		return notDone();
 	}

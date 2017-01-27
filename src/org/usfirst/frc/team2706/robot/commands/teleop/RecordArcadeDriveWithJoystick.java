@@ -5,7 +5,6 @@ import java.util.function.Supplier;
 import org.usfirst.frc.team2706.robot.controls.RecordableJoystick;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class RecordArcadeDriveWithJoystick extends ArcadeDriveWithJoystick {
 	
@@ -28,7 +27,7 @@ public class RecordArcadeDriveWithJoystick extends ArcadeDriveWithJoystick {
 		
 		joystick = new RecordableJoystick(joystick, driverLoc, false);
 		
-		System.out.println("Recording joystick to folder " + SmartDashboard.getString("record-joystick-name", "default"));
+		System.out.println("Recording joystick to folder " + folder);
 		
 		((RecordableJoystick)joystick).init(this::timeSinceInitialized);
 	}

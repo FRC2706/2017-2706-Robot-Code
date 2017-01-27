@@ -6,7 +6,6 @@ import org.usfirst.frc.team2706.robot.commands.teleop.ArcadeDriveWithJoystick;
 import org.usfirst.frc.team2706.robot.controls.RecordableJoystick;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ArcadeDriveWithRecordableJoystick extends ArcadeDriveWithJoystick {
 	
@@ -29,7 +28,7 @@ public class ArcadeDriveWithRecordableJoystick extends ArcadeDriveWithJoystick {
 		
 		joystick = new RecordableJoystick(joystick, driverLoc, true);
 		
-		System.out.println("Replaying joystick from folder " + SmartDashboard.getString("record-joystick-name", "default"));
+		System.out.println("Replaying joystick from folder " + folder);
 		
 		((RecordableJoystick)joystick).init(this::timeSinceInitialized);
 	}
