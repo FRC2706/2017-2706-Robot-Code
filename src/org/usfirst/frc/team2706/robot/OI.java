@@ -12,10 +12,10 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 public class OI {
 	
 		// Joystick for driving the robot around
-		private Joystick driverStick;
+		private final Joystick driverStick;
 		
 		// Joystick for controlling the mechanisms of the robot
-		private Joystick controlStick;
+		private final Joystick controlStick;
 		
 	    public Joystick getDriverJoystick() {
 	        return driverStick;
@@ -24,12 +24,16 @@ public class OI {
 	    }
 	    
 	    public OI() {
-
+	    	this(new Joystick(0), new Joystick(1));
+	    }
+	    
+	    public OI(Joystick driverStick, Joystick controlStick)  {
 			// Joystick for driving the robot around
-			driverStick = new Joystick(0);
+			this.driverStick = driverStick;
 			
 			// Joystick for controlling the mechanisms of the robot
-			controlStick = new Joystick(1);
+			this.controlStick = new Joystick(1);
+	    	
 			JoystickButton LB = new JoystickButton(driverStick,5);
 			StraightDriveWithEncoders sdwe = new StraightDriveWithEncoders(0.75,-8/12.0,5,1);
 			LB.whenPressed(sdwe);

@@ -2,6 +2,8 @@ package org.usfirst.frc.team2706.robot.commands.teleop;
 
 import java.util.function.Supplier;
 
+import org.usfirst.frc.team2706.robot.OI;
+import org.usfirst.frc.team2706.robot.Robot;
 import org.usfirst.frc.team2706.robot.controls.RecordableJoystick;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -9,11 +11,15 @@ import edu.wpi.first.wpilibj.Joystick;
 public class RecordArcadeDriveWithJoystick extends ArcadeDriveWithJoystick {
 	
 	private final Supplier<String> nameSupplier;
+	
+	private Joystick operatorStick;
 
-	public RecordArcadeDriveWithJoystick(Joystick joy, Supplier<String> nameSupplier) {
-		super(joy);
+	public RecordArcadeDriveWithJoystick(Joystick driverStick, Joystick operatorStick, Supplier<String> nameSupplier) {
+		super(driverStick);
 		
 		this.nameSupplier = nameSupplier;
+		
+		this.operatorStick = operatorStick;
 	}
 	
 	@Override
@@ -22,10 +28,11 @@ public class RecordArcadeDriveWithJoystick extends ArcadeDriveWithJoystick {
     	String folder = "/home/lvuser/joystick-recordings/" + name + "/";
     	
     	String driverLoc = folder + name + "-driver";
-    	@SuppressWarnings("unused")
 		String operatorLoc = folder + name + "-operator";
 		
 		joystick = new RecordableJoystick(joystick, driverLoc, false);
+		operatorStick = new RecordableJoystick(operatorStick, operatorLoc, false);
+		Robot.oi = new OI(joystick, operatorStick);
 		
 		System.out.println("Recording joystick to folder " + folder);
 		
@@ -36,19 +43,20 @@ public class RecordArcadeDriveWithJoystick extends ArcadeDriveWithJoystick {
 	public void execute() {
 		super.execute();
 		
-		if(!((RecordableJoystick)joystick).update())
+		if(!((RecordableJoystick)joystick).update() && !((RecordableJoystick)operatorStick).update() )
 			this.cancel();
 	}
 	
 	
 	@Override
 	public boolean isFinished() {
-		return !((RecordableJoystick)joystick).notDone();
+		return !((RecordableJoystick)joystick).notDone() || !((RecordableJoystick)operatorStick).notDone();
 	}
 	
 	@Override
 	public void end() {
 		super.end();
 		((RecordableJoystick)joystick).end();
+		((RecordableJoystick)operatorStick).end();
 	}
 }

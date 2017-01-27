@@ -73,7 +73,7 @@ public class Robot extends IterativeRobot {
          /* position 7: Center and left to launch  */	 new CenterToLaunch(false,0.5,9,2,90,7,20),
         /* position 8: Center and right to launch  */	 new CenterToLaunch(true,0.5,9,2,90,7,20),
  /* position 9: Left/ gear double side hopper pop  */	 new QuickRotate(90),
-/* position 10: Right gear double side hopper pop  */	 new ArcadeDriveWithRecordableJoystick(oi.getDriverJoystick(),
+/* position 10: Right gear double side hopper pop  */	 new ArcadeDriveWithRecordableJoystick(oi.getDriverJoystick(), oi.getOperatorJoystick(),
 															() -> SmartDashboard.getString("record-joystick-name", "default"))
       /* position 11: Left gear middle hopper pop  */
      /* position 12: Right gear middle hopper pop  */
@@ -83,7 +83,8 @@ public class Robot extends IterativeRobot {
 		//CameraServer.getInstance().startAutomaticCapture();
     
 		cameraCommand = new AutomaticCameraControl();	
-		recordAJoystick = new RecordArcadeDriveWithJoystick(oi.getDriverJoystick(), () -> SmartDashboard.getString("record-joystick-name", "default"));
+		recordAJoystick = new RecordArcadeDriveWithJoystick(oi.getDriverJoystick(), oi.getOperatorJoystick(),
+				() -> SmartDashboard.getString("record-joystick-name", "default"));
     }
 	
 	/**
