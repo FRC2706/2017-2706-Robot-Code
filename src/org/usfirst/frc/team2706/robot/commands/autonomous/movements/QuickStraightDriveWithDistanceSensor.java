@@ -3,6 +3,7 @@ package org.usfirst.frc.team2706.robot.commands.autonomous.movements;
 import org.usfirst.frc.team2706.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Have the robot drive certain distance
@@ -14,12 +15,16 @@ public class QuickStraightDriveWithDistanceSensor extends Command {
 	private final double distance1;
 	private final double distance2;
 	
+	private final double alpha;
+	
 	private boolean done;
 	private boolean forward;
 	
 	private int desiredStopCycles;
 	
 	private int stopCycles;
+	
+	private double sensorAverage;
 	
 	/**
 	 * Drive at a specific speed for a certain amount of time
@@ -28,8 +33,9 @@ public class QuickStraightDriveWithDistanceSensor extends Command {
 	 * @param distance1 The min ultrasonic distance to travel in inches
 	 * @param distance2 The max ultrasonic distance to travel in inches
 	 * @param desiredStopCylces The amount of cycles the robot applies the reverse jolt or brakes
+	 * @param alpha The amount of weight given to the current value compared to the overall average (between 0 and 1)
 	 */
-    public QuickStraightDriveWithDistanceSensor(double speed, double distance1, double distance2, int desiredStopCycles) {
+    public QuickStraightDriveWithDistanceSensor(double speed, double distance1, double distance2, int desiredStopCycles, double alpha) {
         requires(Robot.driveTrain);
 
         this.speed = speed;
@@ -38,6 +44,8 @@ public class QuickStraightDriveWithDistanceSensor extends Command {
         this.distance2 = distance2;
         
         this.desiredStopCycles = desiredStopCycles;
+        
+        this.alpha = alpha;
     }
 
     // Called just before this Command runs the first time
@@ -48,12 +56,19 @@ public class QuickStraightDriveWithDistanceSensor extends Command {
 		
 		done = false;
 		stopCycles = 0;
+		
+//    	SmartDashboard.putNumber("Smoothed Distance", 0);
+//    	SmartDashboard.putNumber("Distance Sensor", 0);
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {  
-    	if(Robot.driveTrain.getDistanceToObstacle() > distance1
-    			&& Robot.driveTrain.getDistanceToObstacle() < distance2) {
+    	sensorAverage = alpha * Robot.driveTrain.getDistanceToObstacle() + (1 - alpha) * sensorAverage;
+    	
+//    	SmartDashboard.putNumber("Smoothed Distance", sensorAverage);
+//    	SmartDashboard.putNumber("Distance Sensor", Robot.driveTrain.getDistanceToObstacle());
+    	
+    	if(sensorAverage > distance1 && sensorAverage < distance2) {
     		// TODO: Use CANTalons to do an actual break
     		//		 instead of a jolt in the opposite direction
     		if(stopCycles < desiredStopCycles) {
@@ -64,12 +79,12 @@ public class QuickStraightDriveWithDistanceSensor extends Command {
     		else
     			done = true;
     	}
-    	else if(Robot.driveTrain.getDistanceToObstacle() < distance1) {
+    	else if(sensorAverage < distance1) {
     		forward = true;
     		double rotateVal = (Robot.driveTrain.normalize(Robot.driveTrain.getHeading() - Robot.driveTrain.initGyro) * 0.1);
 			Robot.driveTrain.arcadeDrive(-speed, -rotateVal);
     	}
-    	else if(Robot.driveTrain.getDistanceToObstacle() > distance2) {
+    	else if(sensorAverage > distance2) {
     		forward = false;
     		double rotateVal = (Robot.driveTrain.normalize(Robot.driveTrain.getHeading() - Robot.driveTrain.initGyro) * 0.1);
 			Robot.driveTrain.arcadeDrive(speed, -rotateVal);

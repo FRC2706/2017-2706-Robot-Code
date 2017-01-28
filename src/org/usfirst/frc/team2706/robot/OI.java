@@ -33,7 +33,7 @@ public class OI {
 			JoystickButton LB = new JoystickButton(driverStick,5);
 			
 			// TODO: Tune stopCycles and speed
-			QuickStraightDriveWithDistanceSensor sdwe = new QuickStraightDriveWithDistanceSensor(0.5, 13.0, 15.0, 4);
+			QuickStraightDriveWithDistanceSensor sdwe = new QuickStraightDriveWithDistanceSensor(0.5, 13.0, 15.0, 4, 0.8);
 			LB.whenPressed(sdwe);
 	    }
 }
