@@ -1,9 +1,12 @@
 package org.usfirst.frc.team2706.robot;
 
+import java.lang.reflect.Field;
+
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithEncoders;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.command.Scheduler;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -32,11 +35,23 @@ public class OI {
 			this.driverStick = driverStick;
 			
 			// Joystick for controlling the mechanisms of the robot
-			this.controlStick = new Joystick(1);
+			this.controlStick = controlStick;
 	    	
-			JoystickButton LB = new JoystickButton(driverStick,5);
+			JoystickButton LB = new JoystickButton(controlStick,5);
 			StraightDriveWithEncoders sdwe = new StraightDriveWithEncoders(0.75,-8/12.0,5,1);
 			LB.whenPressed(sdwe);
+	    }
+	    
+	    public void destroy() {
+	    	try {
+	    		Field f = Scheduler.getInstance().getClass().getDeclaredField("m_buttons");
+	    		f.setAccessible(true);
+	    		f.set(Scheduler.getInstance(), null);
+	    		f.setAccessible(false);
+	    	}
+	    	catch(IllegalAccessException | NoSuchFieldException | SecurityException e) {
+				e.printStackTrace();
+			}
 	    }
 }
 

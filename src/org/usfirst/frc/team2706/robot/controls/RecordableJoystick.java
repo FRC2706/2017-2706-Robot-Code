@@ -107,10 +107,12 @@ public class RecordableJoystick extends Joystick {
 	}
 	
 	public void init(Supplier<Double> timeSupplier) {
+		System.out.println("init");
 		if(replay) {
 			if(new File(loc + "-config.json").isFile() && new File(loc + "-config.json").isFile()) {
 				config = new Gson().fromJson(loadFile(new File(loc + "-config.json")), JoystickConfig.class);
 				states = Arrays.asList(new Gson().fromJson(loadFile(new File(loc + "-states.json")), JoystickState[].class));
+				System.out.println(config.isXbox);
 			}
 			else {
 				System.out.println(loc + "-config.json and/or " + loc + "-states.json do not exist...");
@@ -133,6 +135,10 @@ public class RecordableJoystick extends Joystick {
 	
 	public boolean update() {
 		if(!replay) {
+			if(states == null) {
+				System.out.println("states is null!");
+				states = new ArrayList<>();
+			}
 			states.add(grabJoystickValues());
 			index++;
 		}
@@ -206,8 +212,10 @@ public class RecordableJoystick extends Joystick {
 
 	@Override
 	public boolean getRawButton(final int button) {
-		if(replay)
+		if(replay) {
+			System.out.println(button + "/" + getButtonCount());
 			return states.get(index).buttons[button - 1];
+		}
 		else
 			return joy.getRawButton(button);
 	}
@@ -266,7 +274,7 @@ public class RecordableJoystick extends Joystick {
 				time = timeSupplier.get();
 				
 				if(replay) {
-					double closest = Long.MAX_VALUE;
+					double closest = Double.MAX_VALUE;
 
 					for(int i = index; i < states.size(); i++) {
 						double timeToIndex = Math.abs(time - states.get(i).time);
