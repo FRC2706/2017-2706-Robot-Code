@@ -1,6 +1,6 @@
 package org.usfirst.frc.team2706.robot;
 
-import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithEncoders;
+import org.usfirst.frc.team2706.robot.commands.autonomous.movements.QuickStraightDriveWithDistanceSensor;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -31,7 +31,9 @@ public class OI {
 			// Joystick for controlling the mechanisms of the robot
 			controlStick = new Joystick(1);
 			JoystickButton LB = new JoystickButton(driverStick,5);
-			StraightDriveWithEncoders sdwe = new StraightDriveWithEncoders(0.75,-8/12.0,5,1);
+			
+			// TODO: Tune stopCycles and speed
+			QuickStraightDriveWithDistanceSensor sdwe = new QuickStraightDriveWithDistanceSensor(0.5, 13.0, 15.0, 4);
 			LB.whenPressed(sdwe);
 	    }
 }
