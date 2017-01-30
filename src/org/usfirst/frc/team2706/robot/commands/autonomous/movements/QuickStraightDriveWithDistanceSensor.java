@@ -56,16 +56,16 @@ public class QuickStraightDriveWithDistanceSensor extends Command {
 		done = false;
 		stopCycles = 0;
 		
-//    	SmartDashboard.putNumber("Smoothed Distance", 0);
-//    	SmartDashboard.putNumber("Distance Sensor", 0);
+		// SmartDashboard.putNumber("Smoothed Distance", 0);
+		// SmartDashboard.putNumber("Distance Sensor", 0);
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {  
     	sensorAverage = alpha * Robot.driveTrain.getDistanceToObstacle() + (1 - alpha) * sensorAverage;
     	
-//    	SmartDashboard.putNumber("Smoothed Distance", sensorAverage);
-//    	SmartDashboard.putNumber("Distance Sensor", Robot.driveTrain.getDistanceToObstacle());
+    	// SmartDashboard.putNumber("Smoothed Distance", sensorAverage);
+    	// SmartDashboard.putNumber("Distance Sensor", Robot.driveTrain.getDistanceToObstacle());
     	
     	if(sensorAverage > distance1 && sensorAverage < distance2) {
     		// TODO: Use CANTalons to do an actual break
