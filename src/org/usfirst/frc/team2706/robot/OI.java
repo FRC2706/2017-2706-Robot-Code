@@ -2,10 +2,9 @@ package org.usfirst.frc.team2706.robot;
 
 import java.lang.reflect.Field;
 
-import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithEncoders;
+import org.usfirst.frc.team2706.robot.commands.autonomous.movements.QuickStraightDriveWithDistanceSensor;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.Scheduler;
 
 /**
@@ -22,7 +21,9 @@ public class OI {
 		
 	    public Joystick getDriverJoystick() {
 	        return driverStick;
-	    }	    public Joystick getOperatorJoystick() {
+	    }
+	    
+	    public Joystick getOperatorJoystick() {
 	        return controlStick;
 	    }
 	    
@@ -33,13 +34,15 @@ public class OI {
 	    public OI(Joystick driverStick, Joystick controlStick)  {
 			// Joystick for driving the robot around
 			this.driverStick = driverStick;
-			
+
 			// Joystick for controlling the mechanisms of the robot
 			this.controlStick = controlStick;
-	    	
-			JoystickButton LB = new JoystickButton(controlStick,5);
-			StraightDriveWithEncoders sdwe = new StraightDriveWithEncoders(0.75,-8/12.0,5,1);
+			
+			EJoystickButton LB = new EJoystickButton(controlStick, 5);	
+			// TODO: Tune stopCycles and speed
+			QuickStraightDriveWithDistanceSensor sdwe = new QuickStraightDriveWithDistanceSensor(0.5, 13.0, 15.0, 4, 0.8);
 			LB.whenPressed(sdwe);
+			LB.cancelWhenReleased(sdwe);
 	    }
 	    
 	    public void destroy() {
