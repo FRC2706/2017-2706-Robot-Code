@@ -162,7 +162,9 @@ public class RobotMap {
 
         return null;
     }
-
+    
+	float boat; // must be a float or else it sinks
+	
     private static Object[] getArray(Object val) {
         int arrlength = Array.getLength(val);
         Object[] outputArray = new Object[arrlength];

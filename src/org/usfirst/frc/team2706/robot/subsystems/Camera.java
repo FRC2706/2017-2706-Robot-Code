@@ -26,7 +26,6 @@ public class Camera extends Subsystem {
 	public static final float MAX_TILT = 0;
 	public static final float MAX_PAN_LEFT = 0;
 	public static final float MAX_PAN_RIGHT = 1;
-	float boat; // must be a float or else it sinks
 	public boolean PRINT_STUFF = false;
 	public Servo turnXAxis; 
 	public Servo turnYAxis;
