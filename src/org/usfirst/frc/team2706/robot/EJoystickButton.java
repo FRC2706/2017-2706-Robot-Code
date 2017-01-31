@@ -13,6 +13,8 @@ public class EJoystickButton extends JoystickButton {
 	
 	/**
 	 * Cancels a command when a button is released, used in OI
+	 * 
+	 * @param command the command to start
 	 */
 	public void cancelWhenReleased(final Command command) {
 		cancelWhenInactive(command);
