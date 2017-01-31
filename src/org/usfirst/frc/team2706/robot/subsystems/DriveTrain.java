@@ -6,7 +6,6 @@ import org.usfirst.frc.team2706.robot.commands.teleop.ArcadeDriveWithJoystick;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.PIDOutput;
@@ -14,6 +13,7 @@ import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -29,7 +29,7 @@ public class DriveTrain extends Subsystem {
 							front_right_motor, back_right_motor;
 	private RobotDrive drive;
 	private Encoder left_encoder, right_encoder;
-	private AnalogInput rangefinder;
+	private Ultrasonic distanceSensor;
 	private AHRS gyro;
 	
 	// TODO: maybe we don't need this
@@ -69,8 +69,8 @@ public class DriveTrain extends Subsystem {
 			right_encoder.setDistancePerPulse((4.0/12.0*Math.PI) / 360.0);
 		}
 
-		// @TODO: Use RobotMap values
-		rangefinder = new AnalogInput(6);
+		distanceSensor = new Ultrasonic(RobotMap.ULTRASONIC_PING_CHANNEL, RobotMap.ULTRASONIC_ECHO_CHANNEL);
+		distanceSensor.setAutomaticMode(true);
 		
 		// Set up navX gyro
 		gyro = new AHRS(SPI.Port.kMXP);
@@ -91,7 +91,7 @@ public class DriveTrain extends Subsystem {
 		LiveWindow.addActuator("Drive Train", "Back Right Motor", back_right_motor);
 		LiveWindow.addSensor("Drive Train", "Left Encoder", left_encoder);
 		LiveWindow.addSensor("Drive Train", "Right Encoder", right_encoder);
-		LiveWindow.addSensor("Drive Train", "Rangefinder", rangefinder);
+		LiveWindow.addSensor("Drive Train", "Distance Sensor", distanceSensor);
 		LiveWindow.addSensor("Drive Train", "Gyro", gyro);
 	}
 
@@ -111,6 +111,7 @@ public class DriveTrain extends Subsystem {
 		SmartDashboard.putNumber("Right Distance", right_encoder.getDistance());
 		SmartDashboard.putNumber("Left Speed (RPM)", left_encoder.getRate());
 		SmartDashboard.putNumber("Right Speed (RPM)", right_encoder.getRate());
+		SmartDashboard.putNumber("Distance Sensor", distanceSensor.getRangeInches());
 		SmartDashboard.putNumber("Gyro", gyro.getAngle());
 	}
 
@@ -123,6 +124,13 @@ public class DriveTrain extends Subsystem {
 		drive.tankDrive(left, right);
 	}
 
+	/**
+	 * @param joy The Xbox style joystick to use to drive arcade style.
+	 */
+	public void arcadeDrive(double forward, double turn) {
+		drive.arcadeDrive(forward, turn, true);
+	}
+	
 	/**
 	 * @param joy The Xbox style joystick to use to drive arcade style.
 	 */
@@ -178,7 +186,7 @@ public class DriveTrain extends Subsystem {
 		return gyroPIDSource;
 	}
 
-	public void inverGyroPIDSource(boolean invert) {
+	public void invertGyroPIDSource(boolean invert) {
 		gyroPIDSource.invert(invert);
 	}
 
@@ -202,11 +210,14 @@ public class DriveTrain extends Subsystem {
 	}
 	
 	/**
-	 * @return The distance to the obstacle detected by the rangefinder.
+	 * @return The distance to the obstacle detected by the distance sensor.
 	 */
 	public double getDistanceToObstacle() {
-		// Really meters in simulation since it's a rangefinder...
-		return rangefinder.getAverageVoltage();
+		return distanceSensor.getRangeInches();
+	}
+	
+	public PIDSource getDistanceSensorPIDSource() {
+		return distanceSensor;
 	}
 	
 	class GyroPIDSource implements PIDSource {
@@ -325,7 +336,7 @@ public class DriveTrain extends Subsystem {
 		return left ? leftMotorSpeed : rightMotorSpeed;
     }
     
-    private double normalize(double input) {
+    public double normalize(double input) {
     	double normalizedValue = input;
     	while (normalizedValue > 180)
     		normalizedValue -= 360;
