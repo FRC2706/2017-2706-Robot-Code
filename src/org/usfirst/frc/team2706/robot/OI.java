@@ -19,7 +19,9 @@ public class OI {
 		
 	    public Joystick getDriverJoystick() {
 	        return driverStick;
-	    }	    public Joystick getOperatorJoystick() {
+	    }
+	    
+	    public Joystick getOperatorJoystick() {
 	        return controlStick;
 	    }
 	    
@@ -28,13 +30,13 @@ public class OI {
 			// Joystick for driving the robot around
 			driverStick = new Joystick(0);
 			
-			// Joystick for controlling the mechanisms of the robot
-			controlStick = new Joystick(1);
-			JoystickButton LB = new JoystickButton(driverStick,5);
-			
+			JoystickButton LB = new JoystickButton(driverStick, 5);	
 			// TODO: Tune stopCycles and speed
 			QuickStraightDriveWithDistanceSensor sdwe = new QuickStraightDriveWithDistanceSensor(0.5, 13.0, 15.0, 4, 0.8);
 			LB.whenPressed(sdwe);
+			
+			// Joystick for controlling the mechanisms of the robot
+			controlStick = new Joystick(1);
 	    }
 }
 
