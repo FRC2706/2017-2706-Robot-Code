@@ -9,39 +9,24 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import org.usfirst.frc.team2706.robot.RobotMap;
-
-import edu.wpi.first.wpilibj.PIDSource;
-import edu.wpi.first.wpilibj.PIDSourceType;
-import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
-
+/**
+ * Does everything java related to the rPI camera, servo controllers have been deleted.
+ * @author Connor Adams
+ *
+ */
 public class Camera extends Subsystem {
 	
 	public static final String CAMERA_IP = "10.27.6.240";
-	public static final float DEFAULT_PAN = 1.1f/6f;
-	public static final float DEFAULT_TILT = 0.7f;
-	public static final float MAX_TILT = 0;
-	public static final float MAX_PAN_LEFT = 0;
-	public static final float MAX_PAN_RIGHT = 1;
 	public boolean PRINT_STUFF = false;
-	public Servo turnXAxis; 
-	public Servo turnYAxis;
 	public  String RPi_addr;
 	public final  int visionDataPort = 1182;
 	public static TargetObject cachedTarget;
 	
-	private CameraPIDSource cameraPIDSource;
-	
 public Camera(String ip) {
 	super();	
 	RPi_addr = ip;
-	turnXAxis = new Servo(RobotMap.MOTOR_CAMERA_PAN);
-	turnYAxis = new Servo(RobotMap.MOTOR_CAMERA_TILT);
-	
-	cameraPIDSource = new CameraPIDSource(this);
 }
 public class TargetObject implements Comparable<TargetObject> {
 	  public float boundingArea = -1;     // % of cam [0, 1.0]
@@ -155,7 +140,6 @@ public class TargetObject implements Comparable<TargetObject> {
 
 	@Override
 	protected void initDefaultCommand() {
-		// TODO Auto-generated method stub
 		
 	}
 	
@@ -187,11 +171,6 @@ public class TargetObject implements Comparable<TargetObject> {
 		else
 			return pr.get(target);
 	}
-	
-	public void RawSetServoAxis(float panAxis, float tiltAxis) {
-	turnXAxis.set(panAxis);
-	turnYAxis.set(tiltAxis);
-	}
 	public float GetAspectRatio() {
 		return cachedTarget.aspectRatio;
 	}
@@ -200,82 +179,6 @@ public class TargetObject implements Comparable<TargetObject> {
 	}
 	public boolean HasTarget() {
 		return cachedTarget == null ? false : true;
-	}
-	public float GetCtrX() {
-		return (float)turnXAxis.getPosition();
-	}
-	public float GetCtrY() {
-		return (float)turnYAxis.getPosition();
-	}
-
-	public float RobotTurnDegrees() {
-		float out = - (float)(turnXAxis.getPosition() * 180 - 90f); 
-		// Not instantly returned because we sometimes use System.out.println to check camera accuracy
-		return out;
-	}
-	public void ResetCamera() {
-		turnXAxis.set(DEFAULT_PAN);
-		turnYAxis.set(DEFAULT_TILT);
-	}
-	public void SetRawX(float Xvalue) {
-		turnXAxis.set(Xvalue);
-	}
-	public void SetRawY(float Yvalue) {
-		turnYAxis.set(Yvalue);
-	}
-	public void ProtectedSetServoAngles(float panValue, float tiltValue) {
-		if(turnXAxis.getPosition() > MAX_PAN_RIGHT && panValue > 0 || turnXAxis.getPosition() < MAX_PAN_LEFT && panValue < 1) {
-
-		}
-		else {
-			turnXAxis.set(turnXAxis.getPosition() - panValue);
-		}
-		if(turnYAxis.getPosition() <= MAX_TILT && tiltValue < 0) {
-
-		}
-		else {
-			turnYAxis.set(turnYAxis.getPosition() + tiltValue);
-		}
-	}
-	
-	/**
-	 * @return The robot's camera PIDSource
-	 */
-	public PIDSource getCameraPIDSource(boolean invert) {
-		cameraPIDSource.invert(invert);
-		return cameraPIDSource;
-	}
-	
-	class CameraPIDSource implements PIDSource {
-
-		private final Camera camera;
-		private boolean invert;
-		
-		private PIDSourceType pidSourceType = PIDSourceType.kDisplacement;
-		
-		public CameraPIDSource(Camera driveTrain) {
-			this.camera = driveTrain;
-		}
-		
-		@Override
-		public void setPIDSourceType(PIDSourceType pidSource) {
-			pidSourceType = pidSource;
-		};
-
-		@Override
-		public PIDSourceType getPIDSourceType() {
-			return pidSourceType;
-		}
-
-		@Override
-		public double pidGet() {
-			return invert ? -camera.RobotTurnDegrees() : camera.RobotTurnDegrees();
-		}
-		
-		
-		public void invert(boolean invert) {
-			this.invert = invert;
-		}
 	}
 }
 

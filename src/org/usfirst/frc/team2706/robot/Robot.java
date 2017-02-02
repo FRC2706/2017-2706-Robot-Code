@@ -6,7 +6,6 @@ import org.usfirst.frc.team2706.robot.commands.autonomous.automodes.SideStartSid
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.QuickRotate;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithEncoders;
 import org.usfirst.frc.team2706.robot.commands.autonomous.plays.DrivePlaceGear;
-import org.usfirst.frc.team2706.robot.commands.camera.AutomaticCameraControl;
 import org.usfirst.frc.team2706.robot.commands.teleop.ArcadeDriveWithJoystick;
 import org.usfirst.frc.team2706.robot.subsystems.AutonomousSelector;
 import org.usfirst.frc.team2706.robot.subsystems.Camera;
@@ -39,9 +38,6 @@ public class Robot extends IterativeRobot {
 
 	// Which command is going to be ran based on the hardwareChooser
 	Command autonomousCommand;
-	
-	// The camera has 3 different modes, controls which mode the camera is in
-	AutomaticCameraControl cameraCommand;
 
     /**
      * This function is run when the robot is first started up and should be
@@ -75,8 +71,6 @@ public class Robot extends IterativeRobot {
     	
 		// Set up the Microsoft LifeCam and start streaming it to the Driver Station
 		// CameraServer.getInstance().startAutomaticCapture();
-    
-		cameraCommand = new AutomaticCameraControl();
 		
     }
 	

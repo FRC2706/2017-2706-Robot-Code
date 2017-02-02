@@ -29,11 +29,10 @@ public class OI {
 			// Joystick for driving the robot around
 			driverStick = new Joystick(0);
 			
-			EJoystickButton LB = new EJoystickButton(driverStick, 5);	
+			EJoystickButton backLeftButton = new EJoystickButton(driverStick, 5);	
 			// TODO: Tune stopCycles and speed
 			QuickStraightDriveWithDistanceSensor sdwe = new QuickStraightDriveWithDistanceSensor(0.5, 13.0, 15.0, 4, 0.8);
-			LB.whenPressed(sdwe);
-			LB.cancelWhenReleased(sdwe);
+			backLeftButton.runWhileHeld(sdwe);
 
 			// Joystick for controlling the mechanisms of the robot
 			controlStick = new Joystick(1);
