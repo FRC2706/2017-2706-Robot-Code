@@ -21,6 +21,10 @@ public class ArcadeDriveWithJoystick extends Command {
         
         this.joystick = joystick;
     }
+    
+    public void setJoystick(Joystick joystick) {
+    	this.joystick = joystick;
+    }
 
     // Called just before this Command runs the first time
     protected void initialize() {

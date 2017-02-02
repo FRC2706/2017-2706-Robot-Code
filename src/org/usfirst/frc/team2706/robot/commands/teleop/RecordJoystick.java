@@ -39,13 +39,17 @@ public class RecordJoystick extends Command {
 		driverStick = new RecordableJoystick(driverStick, driverLoc, false);
 		operatorStick = new RecordableJoystick(operatorStick, operatorLoc, false);
 		
+		((RecordableJoystick)driverStick).init(this::timeSinceInitialized);
+		((RecordableJoystick)operatorStick).init(this::timeSinceInitialized);
+		
+		if(Robot.driveTrain.getDefaultCommand() instanceof ArcadeDriveWithJoystick) {
+			((ArcadeDriveWithJoystick)Robot.driveTrain.getDefaultCommand()).setJoystick(driverStick);
+		}
+		
 		Robot.oi.destroy();
 		Robot.oi = new OI(driverStick, operatorStick);
 		
 		System.out.println("Recording joystick to folder " + folder);
-		
-		((RecordableJoystick)driverStick).init(this::timeSinceInitialized);
-		((RecordableJoystick)operatorStick).init(this::timeSinceInitialized);
 	}
 	
 	@Override

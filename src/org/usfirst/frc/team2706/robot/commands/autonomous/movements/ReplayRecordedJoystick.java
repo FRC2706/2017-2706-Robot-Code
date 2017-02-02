@@ -4,6 +4,7 @@ import java.util.function.Supplier;
 
 import org.usfirst.frc.team2706.robot.OI;
 import org.usfirst.frc.team2706.robot.Robot;
+import org.usfirst.frc.team2706.robot.commands.teleop.ArcadeDriveWithJoystick;
 import org.usfirst.frc.team2706.robot.controls.RecordableJoystick;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -39,13 +40,17 @@ public class ReplayRecordedJoystick extends Command {
 		driverStick = new RecordableJoystick(driverStick, driverLoc, true);
 		operatorStick = new RecordableJoystick(operatorStick, operatorLoc, true);
 		
+		((RecordableJoystick)driverStick).init(this::timeSinceInitialized);
+		((RecordableJoystick)operatorStick).init(this::timeSinceInitialized);
+		
+		if(Robot.driveTrain.getDefaultCommand() instanceof ArcadeDriveWithJoystick) {
+			((ArcadeDriveWithJoystick)Robot.driveTrain.getDefaultCommand()).setJoystick(driverStick);
+		}
+		
 		Robot.oi.destroy();
 		Robot.oi = new OI(driverStick, operatorStick);
 		
 		System.out.println("Replaying joystick from folder " + folder);
-		
-		((RecordableJoystick)driverStick).init(this::timeSinceInitialized);
-		((RecordableJoystick)operatorStick).init(this::timeSinceInitialized);
 	}
 	
 	@Override

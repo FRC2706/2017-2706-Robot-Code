@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.Victor;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -36,6 +37,8 @@ public class DriveTrain extends Subsystem {
 	private GyroPIDSource gyroPIDSource;
 	
 	public double initGyro;
+	
+	private Command defaultCommand;
 
 	public DriveTrain() {
 		super();
@@ -100,9 +103,19 @@ public class DriveTrain extends Subsystem {
 	 * using the Xbox joystick.
 	 */
 	public void initDefaultCommand() {
-		setDefaultCommand(new ArcadeDriveWithJoystick());
+		if(defaultCommand == null) {
+			getDefaultCommand();
+		}
+		setDefaultCommand(defaultCommand);
 	}
 
+	public Command getDefaultCommand() {
+		if(defaultCommand == null) {
+			defaultCommand = new ArcadeDriveWithJoystick();
+		}
+		return defaultCommand;
+	}
+	
 	/**
 	 * The log method puts interesting information to the SmartDashboard.
 	 */
