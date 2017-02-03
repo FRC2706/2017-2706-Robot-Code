@@ -8,6 +8,7 @@ import org.usfirst.frc.team2706.robot.controls.RecordableJoystick;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class RecordJoystick extends Command {
 	
@@ -26,6 +27,12 @@ public class RecordJoystick extends Command {
 		
 		this.driverStick = driverStick;
 		this.operatorStick = operatorStick;
+		
+		if(!SmartDashboard.containsKey("record-joystick"))
+			SmartDashboard.putBoolean("record-joystick", false);
+		
+		if(!SmartDashboard.containsKey("record-joystick-name"))
+			SmartDashboard.putString("record-joystick-name", "default");
 	}
 	
 	@Override

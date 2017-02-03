@@ -111,7 +111,6 @@ public class RecordableJoystick extends Joystick {
 			if(new File(loc + "-config.json").isFile() && new File(loc + "-config.json").isFile()) {
 				config = new Gson().fromJson(loadFile(new File(loc + "-config.json")), JoystickConfig.class);
 				states = Arrays.asList(new Gson().fromJson(loadFile(new File(loc + "-states.json")), JoystickState[].class));
-				System.out.println(config.isXbox);
 			}
 			else {
 				System.out.println(loc + "-config.json and/or " + loc + "-states.json do not exist...");

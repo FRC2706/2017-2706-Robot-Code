@@ -85,9 +85,6 @@ public class Robot extends IterativeRobot {
 		cameraCommand = new AutomaticCameraControl();	
 		recordAJoystick = new RecordJoystick(oi.getDriverJoystick(), oi.getOperatorJoystick(),
 				() -> SmartDashboard.getString("record-joystick-name", "default"));
-		
-		// SmartDashboard.putBoolean("record-joystick", true);
-		// SmartDashboard.putString("record-joystick-name", "default");
     }
 	
 	/**
