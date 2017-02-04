@@ -129,12 +129,17 @@ public class RobotMap {
     private static final int[] FLOAT_B_VALS = {0, 0, 0};
     public static final int FLOAT_B = getConstant("FLOAT_B");
     
+    private static final int[] LEFT_ULTRASONIC_PING_CHANNEL_VALS = {4, 4, 4};
+    public static final int LEFT_ULTRASONIC_PING_CHANNEL = getConstant("LEFT_ULTRASONIC_PING_CHANNEL");
     
-    private static final int[] ULTRASONIC_PING_CHANNEL_VALS = {4, 4, 4};
-    public static final int ULTRASONIC_PING_CHANNEL = getConstant("ULTRASONIC_PING_CHANNEL");
+    private static final int[] LEFT_ULTRASONIC_ECHO_CHANNEL_VALS = {3, 3, 3};
+    public static final int LEFT_ULTRASONIC_ECHO_CHANNEL = getConstant("LEFT_ULTRASONIC_ECHO_CHANNEL");
     
-    private static final int[] ULTRASONIC_ECHO_CHANNEL_VALS = {3, 3, 3};
-    public static final int ULTRASONIC_ECHO_CHANNEL = getConstant("ULTRASONIC_ECHO_CHANNEL");
+    private static final int[] RIGHT_ULTRASONIC_PING_CHANNEL_VALS = {5, 5, 5};
+    public static final int RIGHT_ULTRASONIC_PING_CHANNEL = getConstant("RIGHT_ULTRASONIC_PING_CHANNEL");
+    
+    private static final int[] RIGHT_ULTRASONIC_ECHO_CHANNEL_VALS = {6, 6, 6};
+    public static final int RIGHT_ULTRASONIC_ECHO_CHANNEL = getConstant("RIGHT_ULTRASONIC_ECHO_CHANNEL");
     
 
     private static final String ROBOT_ID_LOC = "/home/lvuser/robot-type.conf";

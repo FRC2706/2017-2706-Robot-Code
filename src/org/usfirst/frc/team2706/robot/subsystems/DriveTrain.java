@@ -29,11 +29,13 @@ public class DriveTrain extends Subsystem {
 							front_right_motor, back_right_motor;
 	private RobotDrive drive;
 	private Encoder left_encoder, right_encoder;
-	private Ultrasonic distanceSensor;
+	private Ultrasonic leftDistanceSensor, rightDistanceSensor;
 	private AHRS gyro;
 	
 	// TODO: maybe we don't need this
 	private GyroPIDSource gyroPIDSource;
+	
+	private UltrasonicPIDSource ultrasonicPIDSource;
 	
 	public double initGyro;
 
@@ -69,8 +71,12 @@ public class DriveTrain extends Subsystem {
 			right_encoder.setDistancePerPulse((4.0/12.0*Math.PI) / 360.0);
 		}
 
-		distanceSensor = new Ultrasonic(RobotMap.ULTRASONIC_PING_CHANNEL, RobotMap.ULTRASONIC_ECHO_CHANNEL);
-		distanceSensor.setAutomaticMode(true);
+		leftDistanceSensor = new Ultrasonic(RobotMap.LEFT_ULTRASONIC_PING_CHANNEL, RobotMap.LEFT_ULTRASONIC_ECHO_CHANNEL);
+		rightDistanceSensor = new Ultrasonic(RobotMap.RIGHT_ULTRASONIC_PING_CHANNEL, RobotMap.RIGHT_ULTRASONIC_ECHO_CHANNEL);
+	
+		leftDistanceSensor.setAutomaticMode(true);
+		
+		ultrasonicPIDSource = new UltrasonicPIDSource(leftDistanceSensor, rightDistanceSensor);
 		
 		// Set up navX gyro
 		gyro = new AHRS(SPI.Port.kMXP);
@@ -91,7 +97,8 @@ public class DriveTrain extends Subsystem {
 		LiveWindow.addActuator("Drive Train", "Back Right Motor", back_right_motor);
 		LiveWindow.addSensor("Drive Train", "Left Encoder", left_encoder);
 		LiveWindow.addSensor("Drive Train", "Right Encoder", right_encoder);
-		LiveWindow.addSensor("Drive Train", "Distance Sensor", distanceSensor);
+		LiveWindow.addSensor("Drive Train", "Left Distance Sensor", leftDistanceSensor);
+		LiveWindow.addSensor("Drive Train", "Right Distance Sensor", rightDistanceSensor);
 		LiveWindow.addSensor("Drive Train", "Gyro", gyro);
 	}
 
@@ -111,7 +118,8 @@ public class DriveTrain extends Subsystem {
 		SmartDashboard.putNumber("Right Distance", right_encoder.getDistance());
 		SmartDashboard.putNumber("Left Speed (RPM)", left_encoder.getRate());
 		SmartDashboard.putNumber("Right Speed (RPM)", right_encoder.getRate());
-		SmartDashboard.putNumber("Distance Sensor", distanceSensor.getRangeInches());
+		SmartDashboard.putNumber("Left Distance Sensor", leftDistanceSensor.getRangeInches());
+		SmartDashboard.putNumber("Right Distance Sensor", rightDistanceSensor.getRangeInches());
 		SmartDashboard.putNumber("Gyro", gyro.getAngle());
 	}
 
@@ -213,11 +221,38 @@ public class DriveTrain extends Subsystem {
 	 * @return The distance to the obstacle detected by the distance sensor.
 	 */
 	public double getDistanceToObstacle() {
-		return distanceSensor.getRangeInches();
+		return (leftDistanceSensor.getRangeInches() + rightDistanceSensor.getRangeInches()) / 2;
 	}
 	
 	public PIDSource getDistanceSensorPIDSource() {
-		return distanceSensor;
+		return ultrasonicPIDSource;
+	}
+	
+	class UltrasonicPIDSource implements PIDSource {
+
+		private final Ultrasonic left, right;
+		
+		public UltrasonicPIDSource(Ultrasonic left, Ultrasonic right) {
+			this.left = left;
+			this.right = right;
+		}
+		
+		@Override
+		public void setPIDSourceType(PIDSourceType pidSource) {
+			left.setPIDSourceType(pidSource);
+			right.setPIDSourceType(pidSource);
+		}
+
+		@Override
+		public PIDSourceType getPIDSourceType() {
+			return left.getPIDSourceType();
+		}
+
+		@Override
+		public double pidGet() {
+			return (left.getRangeInches() + right.getRangeInches()) / 2;
+		}
+		
 	}
 	
 	class GyroPIDSource implements PIDSource {
