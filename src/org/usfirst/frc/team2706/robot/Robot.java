@@ -42,9 +42,6 @@ public class Robot extends IterativeRobot {
 
 	// Which command is going to be ran based on the hardwareChooser
 	Command autonomousCommand;
-	
-	// The camera has 3 different modes, controls which mode the camera is in
-	AutomaticCameraControl cameraCommand;
     
     // Records joystick states to file for later replaying
     RecordJoystick recordAJoystick;
@@ -81,8 +78,7 @@ public class Robot extends IterativeRobot {
     	
 		// Set up the Microsoft LifeCam and start streaming it to the Driver Station
 		// CameraServer.getInstance().startAutomaticCapture();
-    
-		cameraCommand = new AutomaticCameraControl();	
+    	
 		recordAJoystick = new RecordJoystick(oi.getDriverJoystick(), oi.getOperatorJoystick(),
 				() -> SmartDashboard.getString("record-joystick-name", "default"));
     }
@@ -155,5 +151,6 @@ public class Robot extends IterativeRobot {
     
     private void log() {
         driveTrain.log();
+    	hardwareChooser.log();
     }
 }

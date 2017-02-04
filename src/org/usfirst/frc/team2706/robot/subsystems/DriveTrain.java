@@ -217,7 +217,12 @@ public class DriveTrain extends Subsystem {
 	public double getDistance() {
 		return (left_encoder.getDistance() + right_encoder.getDistance())/2;
 	}
-
+	public double getLeftDistanceToObstacle() {
+		return leftDistanceSensor.getRangeInches();
+	}
+	public double getRightDistanceToObstacle() {
+		return rightDistanceSensor.getRangeInches();
+	}
 	/**
 	 * @return The robot's encoder PIDSource
 	 */
