@@ -3,13 +3,13 @@ package org.usfirst.frc.team2706.robot;
 
 import org.usfirst.frc.team2706.robot.commands.autonomous.automodes.CenterToLaunch;
 import org.usfirst.frc.team2706.robot.commands.autonomous.automodes.SideStartSideGear;
-import org.usfirst.frc.team2706.robot.commands.autonomous.movements.ArcadeDriveWithRecordableJoystick;
+import org.usfirst.frc.team2706.robot.commands.autonomous.movements.ReplayRecordedJoystick;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.QuickRotate;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithEncoders;
 import org.usfirst.frc.team2706.robot.commands.autonomous.plays.DrivePlaceGear;
 import org.usfirst.frc.team2706.robot.commands.camera.AutomaticCameraControl;
 import org.usfirst.frc.team2706.robot.commands.teleop.ArcadeDriveWithJoystick;
-import org.usfirst.frc.team2706.robot.commands.teleop.RecordArcadeDriveWithJoystick;
+import org.usfirst.frc.team2706.robot.commands.teleop.RecordJoystick;
 import org.usfirst.frc.team2706.robot.subsystems.AutonomousSelector;
 import org.usfirst.frc.team2706.robot.subsystems.Camera;
 import org.usfirst.frc.team2706.robot.subsystems.DriveTrain;
@@ -47,7 +47,7 @@ public class Robot extends IterativeRobot {
 	AutomaticCameraControl cameraCommand;
     
     // Records joystick states to file for later replaying
-    RecordArcadeDriveWithJoystick recordAJoystick;
+    RecordJoystick recordAJoystick;
 
     /**
      * This function is run when the robot is first started up and should be
@@ -73,17 +73,18 @@ public class Robot extends IterativeRobot {
          /* position 7: Center and left to launch  */	 new CenterToLaunch(false,0.5,9,2,90,7,20),
         /* position 8: Center and right to launch  */	 new CenterToLaunch(true,0.5,9,2,90,7,20),
  /* position 9: Left/ gear double side hopper pop  */	 new QuickRotate(90),
-/* position 10: Right gear double side hopper pop  */	 new ArcadeDriveWithRecordableJoystick(oi.getDriverJoystick(),
-															() -> SmartDashboard.getString("record-joystick-name", "default"))
+/* position 10: Right gear double side hopper pop  */	 new ReplayRecordedJoystick(oi.getDriverJoystick(), oi.getOperatorJoystick(),
+															() -> SmartDashboard.getString("record-joystick-name", "default"), false)
       /* position 11: Left gear middle hopper pop  */
      /* position 12: Right gear middle hopper pop  */
      										    );
-
+    	
 		// Set up the Microsoft LifeCam and start streaming it to the Driver Station
-		//CameraServer.getInstance().startAutomaticCapture();
+		// CameraServer.getInstance().startAutomaticCapture();
     
 		cameraCommand = new AutomaticCameraControl();	
-		recordAJoystick = new RecordArcadeDriveWithJoystick(oi.getDriverJoystick(), () -> SmartDashboard.getString("record-joystick-name", "default"));
+		recordAJoystick = new RecordJoystick(oi.getDriverJoystick(), oi.getOperatorJoystick(),
+				() -> SmartDashboard.getString("record-joystick-name", "default"));
     }
 	
 	/**

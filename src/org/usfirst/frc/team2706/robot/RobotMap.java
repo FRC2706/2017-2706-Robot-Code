@@ -128,9 +128,19 @@ public class RobotMap {
 
     private static final int[] FLOAT_B_VALS = {0, 0, 0};
     public static final int FLOAT_B = getConstant("FLOAT_B");
-
-    // @TODO: Get Gyro channel, and rangefinder channel11
-
+    
+    private static final int[] LEFT_ULTRASONIC_PING_CHANNEL_VALS = {4, 4, 4};
+    public static final int LEFT_ULTRASONIC_PING_CHANNEL = getConstant("LEFT_ULTRASONIC_PING_CHANNEL");
+    
+    private static final int[] LEFT_ULTRASONIC_ECHO_CHANNEL_VALS = {3, 3, 3};
+    public static final int LEFT_ULTRASONIC_ECHO_CHANNEL = getConstant("LEFT_ULTRASONIC_ECHO_CHANNEL");
+    
+    private static final int[] RIGHT_ULTRASONIC_PING_CHANNEL_VALS = {5, 5, 5};
+    public static final int RIGHT_ULTRASONIC_PING_CHANNEL = getConstant("RIGHT_ULTRASONIC_PING_CHANNEL");
+    
+    private static final int[] RIGHT_ULTRASONIC_ECHO_CHANNEL_VALS = {6, 6, 6};
+    public static final int RIGHT_ULTRASONIC_ECHO_CHANNEL = getConstant("RIGHT_ULTRASONIC_ECHO_CHANNEL");
+    
 
     private static final String ROBOT_ID_LOC = "/home/lvuser/robot-type.conf";
 
@@ -157,7 +167,9 @@ public class RobotMap {
 
         return null;
     }
-
+    
+	float boat; // must be a float or else it sinks
+	
     private static Object[] getArray(Object val) {
         int arrlength = Array.getLength(val);
         Object[] outputArray = new Object[arrlength];
