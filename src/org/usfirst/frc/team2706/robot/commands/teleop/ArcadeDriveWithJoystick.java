@@ -2,7 +2,7 @@ package org.usfirst.frc.team2706.robot.commands.teleop;
 
 import org.usfirst.frc.team2706.robot.Robot;
 
-import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -10,16 +10,20 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class ArcadeDriveWithJoystick extends Command {
     
-	public final GenericHID joystick;
+	protected Joystick joystick;
 	
 	public ArcadeDriveWithJoystick() {
 		this(Robot.oi.getDriverJoystick());
 	}
 	
-    public ArcadeDriveWithJoystick(GenericHID joystick) {
+    public ArcadeDriveWithJoystick(Joystick joystick) {
         requires(Robot.driveTrain);
         
         this.joystick = joystick;
+    }
+    
+    public void setJoystick(Joystick joystick) {
+    	this.joystick = joystick;
     }
 
     // Called just before this Command runs the first time
