@@ -5,7 +5,7 @@ import org.usfirst.frc.team2706.robot.Robot;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
- * Have the robot drive certain distance
+ * Have the robot drive certain distance using solely distance sensors, no PID needed
  */
 public class QuickStraightDriveWithDistanceSensor extends Command {
     
