@@ -27,4 +27,10 @@
   
   <import file="${wpilib.ant.dir}/build.xml"/>
 
+  <target name="deploy" depends="copy-libs, athena-project-build.deploy"/>
+  
+  <target name="copy-libs">
+	<unzip dest="${user.home}/wpilib/user/java/" src="lib/robot-libs.zip"/>	
+  </target>
+
 </project> 
