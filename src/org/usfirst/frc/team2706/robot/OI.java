@@ -47,7 +47,6 @@ public class OI {
 			EJoystickButton backLeftButton = new EJoystickButton(driverStick, 5);	
 			backLeftButton.runWhileHeld(new AlignAndDistance(24));
 			
-			
 			// Joystick for controlling the mechanisms of the robot
 			this.controlStick = controlStick;
 	    }
