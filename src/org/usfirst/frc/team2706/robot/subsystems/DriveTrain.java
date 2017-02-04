@@ -21,381 +21,377 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
- * The DriveTrain subsystem incorporates the sensors and actuators attached to
- * the robots chassis. These include four drive motors, a left and right encoder
- * and a gyro.
+ * The DriveTrain subsystem incorporates the sensors and actuators attached to the robots chassis.
+ * These include four drive motors, a left and right encoder and a gyro.
  */
 public class DriveTrain extends Subsystem {
-	private Victor front_left_motor, back_left_motor,
-							front_right_motor, back_right_motor;
-	private RobotDrive drive;
-	private Encoder left_encoder, right_encoder;
-	private Ultrasonic leftDistanceSensor, rightDistanceSensor;
-	private AHRS gyro;
-	
-	// TODO: maybe we don't need this
-	private GyroPIDSource gyroPIDSource;
-	
-	private UltrasonicPIDSource ultrasonicPIDSource;
-	
-	public double initGyro;
-	
-	private Command defaultCommand;
+    private Victor front_left_motor, back_left_motor, front_right_motor, back_right_motor;
+    private RobotDrive drive;
+    private Encoder left_encoder, right_encoder;
+    private Ultrasonic leftDistanceSensor, rightDistanceSensor;
+    private AHRS gyro;
 
-	public DriveTrain() {
-		super();
-		front_left_motor = new Victor(RobotMap.MOTOR_FRONT_LEFT);
-		back_left_motor = new Victor(RobotMap.MOTOR_REAR_LEFT);
-		front_right_motor = new Victor(RobotMap.MOTOR_FRONT_RIGHT);
-		back_right_motor = new Victor(RobotMap.MOTOR_REAR_RIGHT);
-		
-		front_left_motor.setInverted(RobotMap.MOTOR_FRONT_LEFT_INVERTED);
-		back_left_motor.setInverted(RobotMap.MOTOR_REAR_LEFT_INVERTED);
-		front_right_motor.setInverted(RobotMap.MOTOR_FRONT_RIGHT_INVERTED);
-		back_right_motor.setInverted(RobotMap.MOTOR_REAR_RIGHT_INVERTED);
-		
-		drive = new RobotDrive(front_left_motor, back_left_motor,
-							   front_right_motor, back_right_motor);
-		
-		left_encoder = new Encoder(RobotMap.ENCODER_LEFT_A, RobotMap.ENCODER_LEFT_B);
-		right_encoder = new Encoder(RobotMap.ENCODER_RIGHT_A, RobotMap.ENCODER_RIGHT_B);
+    // TODO: maybe we don't need this
+    private GyroPIDSource gyroPIDSource;
 
-		// Encoders may measure differently in the real world and in
-		// simulation. In this example the robot move at some random value
-		// per tick in the real world, but the simulated encoders
-		// simulate 360 tick encoders. This if statement allows for the
-		// real robot to handle this difference in devices.
-		if (Robot.isReal()) {
-			left_encoder.setDistancePerPulse(RobotMap.ENCODER_LEFT_DPP);
-			right_encoder.setDistancePerPulse(RobotMap.ENCODER_RIGHT_DPP);
-		} else {
-			// Circumference in ft = 4in/12(in/ft)*PI
-			left_encoder.setDistancePerPulse((4.0/12.0*Math.PI) / 360.0);
-			right_encoder.setDistancePerPulse((4.0/12.0*Math.PI) / 360.0);
-		}
+    private UltrasonicPIDSource ultrasonicPIDSource;
 
-		leftDistanceSensor = new Ultrasonic(RobotMap.LEFT_ULTRASONIC_PING_CHANNEL, RobotMap.LEFT_ULTRASONIC_ECHO_CHANNEL);
-		rightDistanceSensor = new Ultrasonic(RobotMap.RIGHT_ULTRASONIC_PING_CHANNEL, RobotMap.RIGHT_ULTRASONIC_ECHO_CHANNEL);
-	
-		leftDistanceSensor.setAutomaticMode(true);
-		
-		ultrasonicPIDSource = new UltrasonicPIDSource(leftDistanceSensor, rightDistanceSensor);
-		
-		// Set up navX gyro
-		gyro = new AHRS(SPI.Port.kMXP);
-		while(gyro.isCalibrating()) {
-			;
-		}
-		
-		gyroPIDSource = new GyroPIDSource(this);
-		
-		reset();
-		
+    public double initGyro;
 
-		
-		// Let's show everything on the LiveWindow
-		LiveWindow.addActuator("Drive Train", "Front Left Motor", front_left_motor);
-		LiveWindow.addActuator("Drive Train", "Back Left Motor",  back_left_motor);
-		LiveWindow.addActuator("Drive Train", "Front Right Motor",  front_right_motor);
-		LiveWindow.addActuator("Drive Train", "Back Right Motor", back_right_motor);
-		LiveWindow.addSensor("Drive Train", "Left Encoder", left_encoder);
-		LiveWindow.addSensor("Drive Train", "Right Encoder", right_encoder);
-		LiveWindow.addSensor("Drive Train", "Left Distance Sensor", leftDistanceSensor);
-		LiveWindow.addSensor("Drive Train", "Right Distance Sensor", rightDistanceSensor);
-		LiveWindow.addSensor("Drive Train", "Gyro", gyro);
-	}
+    private Command defaultCommand;
 
-	/**
-	 * When no other command is running let the operator drive around
-	 * using the Xbox joystick.
-	 */
-	public void initDefaultCommand() {
-		if(defaultCommand == null) {
-			getDefaultCommand();
-		}
-		setDefaultCommand(defaultCommand);
-	}
+    public DriveTrain() {
+        super();
+        front_left_motor = new Victor(RobotMap.MOTOR_FRONT_LEFT);
+        back_left_motor = new Victor(RobotMap.MOTOR_REAR_LEFT);
+        front_right_motor = new Victor(RobotMap.MOTOR_FRONT_RIGHT);
+        back_right_motor = new Victor(RobotMap.MOTOR_REAR_RIGHT);
 
-	public Command getDefaultCommand() {
-		if(defaultCommand == null) {
-			defaultCommand = new ArcadeDriveWithJoystick();
-		}
-		return defaultCommand;
-	}
-	
-	/**
-	 * The log method puts interesting information to the SmartDashboard.
-	 */
-	public void log() {
-		SmartDashboard.putNumber("Left Distance", left_encoder.getDistance());
-		SmartDashboard.putNumber("Right Distance", right_encoder.getDistance());
-		SmartDashboard.putNumber("Left Speed (RPM)", left_encoder.getRate());
-		SmartDashboard.putNumber("Right Speed (RPM)", right_encoder.getRate());
-		SmartDashboard.putNumber("Left Distance Sensor", leftDistanceSensor.getRangeInches());
-		SmartDashboard.putNumber("Right Distance Sensor", rightDistanceSensor.getRangeInches());
-		SmartDashboard.putNumber("Gyro", gyro.getAngle());
-	}
+        front_left_motor.setInverted(RobotMap.MOTOR_FRONT_LEFT_INVERTED);
+        back_left_motor.setInverted(RobotMap.MOTOR_REAR_LEFT_INVERTED);
+        front_right_motor.setInverted(RobotMap.MOTOR_FRONT_RIGHT_INVERTED);
+        back_right_motor.setInverted(RobotMap.MOTOR_REAR_RIGHT_INVERTED);
 
-	/**
-	 * Tank style driving for the DriveTrain.
-	 * @param left Speed in range [-1,1]
-	 * @param right Speed in range [-1,1]
-	 */
-	public void drive(double left, double right) {
-		drive.tankDrive(left, right);
-	}
+        drive = new RobotDrive(front_left_motor, back_left_motor, front_right_motor,
+                        back_right_motor);
 
-	/**
-	 * @param joy The Xbox style joystick to use to drive arcade style.
-	 */
-	public void arcadeDrive(double forward, double turn) {
-		drive.arcadeDrive(forward, turn, true);
-	}
-	
-	/**
-	 * @param joy The Xbox style joystick to use to drive arcade style.
-	 */
-	public void drive(GenericHID joy) {
-		drive.arcadeDrive(RobotMap.INVERT_JOYSTICK_Y ? -joy.getRawAxis(5) : joy.getRawAxis(5), 
-				RobotMap.INVERT_JOYSTICK_X ? -joy.getRawAxis(4) : joy.getRawAxis(4), true);
-	}
+        left_encoder = new Encoder(RobotMap.ENCODER_LEFT_A, RobotMap.ENCODER_LEFT_B);
+        right_encoder = new Encoder(RobotMap.ENCODER_RIGHT_A, RobotMap.ENCODER_RIGHT_B);
 
-	/**
-	 * Reset the robots sensors to the zero states.
-	 */
-	public void reset() {
-		left_encoder.reset();
-		right_encoder.reset();
-		resetGyro();
-	}
-	
-	/**
-	 * Reset the robot gyro to the zero state.
-	 */
-	public void resetGyro() {
-		gyro.reset();
-	}
-	
-	/**
-	 * @return The robots heading in degrees.
-	 */
-	public double getHeading() {
-		return gyro.getAngle();
-	}
-	
-	/**
-	 * @param invert True to invert second motor direction for rotating
-	 * 
-	 * @return The robot's drive PIDOutput
-	 */
-	public PIDOutput getDrivePIDOutput(boolean invert, boolean left) {
-		if(left) {
-			DrivePIDOutput out = new DrivePIDOutput(front_left_motor, back_left_motor, left, invert);
-			return out;
-		}
-		else {
-			DrivePIDOutput out = new DrivePIDOutput(front_right_motor, back_right_motor, left, invert);
-			return out;
-		}
-	}
-	
-	/**
-	 * @return The robot's gyro PIDSource
-	 */
-	public PIDSource getGyroPIDSource(boolean invert) {
-		gyroPIDSource.invert(invert);
-		return gyroPIDSource;
-	}
+        // Encoders may measure differently in the real world and in
+        // simulation. In this example the robot move at some random value
+        // per tick in the real world, but the simulated encoders
+        // simulate 360 tick encoders. This if statement allows for the
+        // real robot to handle this difference in devices.
+        if (Robot.isReal()) {
+            left_encoder.setDistancePerPulse(RobotMap.ENCODER_LEFT_DPP);
+            right_encoder.setDistancePerPulse(RobotMap.ENCODER_RIGHT_DPP);
+        } else {
+            // Circumference in ft = 4in/12(in/ft)*PI
+            left_encoder.setDistancePerPulse((4.0 / 12.0 * Math.PI) / 360.0);
+            right_encoder.setDistancePerPulse((4.0 / 12.0 * Math.PI) / 360.0);
+        }
 
-	public void invertGyroPIDSource(boolean invert) {
-		gyroPIDSource.invert(invert);
-	}
+        leftDistanceSensor = new Ultrasonic(RobotMap.LEFT_ULTRASONIC_PING_CHANNEL,
+                        RobotMap.LEFT_ULTRASONIC_ECHO_CHANNEL);
+        rightDistanceSensor = new Ultrasonic(RobotMap.RIGHT_ULTRASONIC_PING_CHANNEL,
+                        RobotMap.RIGHT_ULTRASONIC_ECHO_CHANNEL);
 
-	/**
-	 * @return The distance driven (average of left and right encoders).
-	 */
-	public double getDistance() {
-		return (left_encoder.getDistance() + right_encoder.getDistance())/2;
-	}
-	public double getLeftDistanceToObstacle() {
-		return leftDistanceSensor.getRangeInches();
-	}
-	public double getRightDistanceToObstacle() {
-		return rightDistanceSensor.getRangeInches();
-	}
-	/**
-	 * @return The robot's encoder PIDSource
-	 */
-	public PIDSource getEncoderPIDSource(boolean left) {
-		if(left) {
-			return left_encoder;
-		}
-		else {
-			return right_encoder;
-		}
-	}
-	
-	/**
-	 * @return The distance to the obstacle detected by the distance sensor.
-	 */
-	public double getDistanceToObstacle() {
-		return (leftDistanceSensor.getRangeInches() + rightDistanceSensor.getRangeInches()) / 2;
-	}
-	
-	public PIDSource getDistanceSensorPIDSource() {
-		return ultrasonicPIDSource;
-	}
-	
-	class UltrasonicPIDSource implements PIDSource {
+        leftDistanceSensor.setAutomaticMode(true);
 
-		private final Ultrasonic left, right;
-		
-		public UltrasonicPIDSource(Ultrasonic left, Ultrasonic right) {
-			this.left = left;
-			this.right = right;
-		}
-		
-		@Override
-		public void setPIDSourceType(PIDSourceType pidSource) {
-			left.setPIDSourceType(pidSource);
-			right.setPIDSourceType(pidSource);
-		}
+        ultrasonicPIDSource = new UltrasonicPIDSource(leftDistanceSensor, rightDistanceSensor);
 
-		@Override
-		public PIDSourceType getPIDSourceType() {
-			return left.getPIDSourceType();
-		}
+        // Set up navX gyro
+        gyro = new AHRS(SPI.Port.kMXP);
+        while (gyro.isCalibrating()) {
+            ;
+        }
 
-		@Override
-		public double pidGet() {
-			return (left.getRangeInches() + right.getRangeInches()) / 2;
-		}
-		
-	}
-	
-	class GyroPIDSource implements PIDSource {
+        gyroPIDSource = new GyroPIDSource(this);
 
-		private final DriveTrain driveTrain;
-		private boolean invert;
-		
-		public GyroPIDSource(DriveTrain driveTrain) {
-			this.driveTrain = driveTrain;
-		}
-		
-		@Override
-		public void setPIDSourceType(PIDSourceType pidSource) {
-			driveTrain.gyro.setPIDSourceType(pidSource);
-		};
+        reset();
 
-		@Override
-		public PIDSourceType getPIDSourceType() {
-			return driveTrain.gyro.getPIDSourceType();
-		}
 
-		@Override
-		public double pidGet() {
-			double heading = driveTrain.getHeading();
-			if(heading > 358.0)
-				heading = 0;
-			
-			return invert ? -heading : heading;
-		}
-		
-		
-		public void invert(boolean invert) {
-			this.invert = invert;
-		}
-	}
-	
-	public class DrivePIDOutput implements PIDOutput {
 
-		private final Victor front;
-		private final Victor rear;
-		
-		private boolean invert;
-		
-		private final boolean left;
-		
-		public DrivePIDOutput(Victor front, Victor rear, boolean left, boolean invert) {
-			this.front = front;
-			this.rear = rear;
-			this.left = left;
-			this.invert = invert;
-		}
-		
-		@Override
-		public void pidWrite(double output) {
-			double rotateVal = (normalize(getHeading() - initGyro) * 0.1);
-			
-		//	System.out.println("Rotate:\t"+rotateVal);
-			
-			// XXX: Motors must be opposite to avoid fighting
-			if(left)
-				if(invert) {
-					drive.arcadeDrive(output, rotateVal);
-//					front.set(asSpeed(output, rotateVal, true));
-//					rear.set(asSpeed(output, rotateVal, true));
-				}
-				else {
-					drive.arcadeDrive(-output, -rotateVal);
-//					front.set(asSpeed(-output, -rotateVal, true));
-//					rear.set(asSpeed(-output, -rotateVal, true));
-				}
-			else
-				if(invert) {
-					front.set(asSpeed(output, rotateVal, false));
-					rear.set(asSpeed(output, rotateVal, false));
-				}
-				else {
-					front.set(asSpeed(-output, -rotateVal, false));
-					rear.set(asSpeed(-output, -rotateVal, false));
-				}
-		}		
-		
-		public void setInvert(boolean invert) {
-			this.invert = invert;
-		}
-	}
-	
-    
-    private double asSpeed(double moveValue, double rotateValue, boolean left) {
-
-    	double leftMotorSpeed = 0;
-    	double rightMotorSpeed = 0;
-    	
-    	if (moveValue > 0.0) {
-    		if (rotateValue > 0.0) {
-    			leftMotorSpeed = moveValue - rotateValue;
-    			rightMotorSpeed = Math.max(moveValue, rotateValue);
-    		}
-    		else {
-    			leftMotorSpeed = Math.max(moveValue, -rotateValue);
-    			rightMotorSpeed = moveValue + rotateValue;
-    		}
-    	}
-    	else {
-    		if (rotateValue > 0.0) {
-    			leftMotorSpeed = -Math.max(-moveValue, rotateValue);
-    			rightMotorSpeed = moveValue + rotateValue;
-    		}
-    		else {
-    			leftMotorSpeed = moveValue - rotateValue;
-    			rightMotorSpeed = -Math.max(-moveValue, -rotateValue);
-    		}
-    	}
-		
-   // 	System.out.println("Drive:\t" + (left ? leftMotorSpeed : rightMotorSpeed));
-    	
-		return left ? leftMotorSpeed : rightMotorSpeed;
+        // Let's show everything on the LiveWindow
+        LiveWindow.addActuator("Drive Train", "Front Left Motor", front_left_motor);
+        LiveWindow.addActuator("Drive Train", "Back Left Motor", back_left_motor);
+        LiveWindow.addActuator("Drive Train", "Front Right Motor", front_right_motor);
+        LiveWindow.addActuator("Drive Train", "Back Right Motor", back_right_motor);
+        LiveWindow.addSensor("Drive Train", "Left Encoder", left_encoder);
+        LiveWindow.addSensor("Drive Train", "Right Encoder", right_encoder);
+        LiveWindow.addSensor("Drive Train", "Left Distance Sensor", leftDistanceSensor);
+        LiveWindow.addSensor("Drive Train", "Right Distance Sensor", rightDistanceSensor);
+        LiveWindow.addSensor("Drive Train", "Gyro", gyro);
     }
-    
+
+    /**
+     * When no other command is running let the operator drive around using the Xbox joystick.
+     */
+    public void initDefaultCommand() {
+        if (defaultCommand == null) {
+            getDefaultCommand();
+        }
+        setDefaultCommand(defaultCommand);
+    }
+
+    public Command getDefaultCommand() {
+        if (defaultCommand == null) {
+            defaultCommand = new ArcadeDriveWithJoystick();
+        }
+        return defaultCommand;
+    }
+
+    /**
+     * The log method puts interesting information to the SmartDashboard.
+     */
+    public void log() {
+        SmartDashboard.putNumber("Left Distance", left_encoder.getDistance());
+        SmartDashboard.putNumber("Right Distance", right_encoder.getDistance());
+        SmartDashboard.putNumber("Left Speed (RPM)", left_encoder.getRate());
+        SmartDashboard.putNumber("Right Speed (RPM)", right_encoder.getRate());
+        SmartDashboard.putNumber("Left Distance Sensor", leftDistanceSensor.getRangeInches());
+        SmartDashboard.putNumber("Right Distance Sensor", rightDistanceSensor.getRangeInches());
+        SmartDashboard.putNumber("Gyro", gyro.getAngle());
+    }
+
+    /**
+     * Tank style driving for the DriveTrain.
+     * 
+     * @param left Speed in range [-1,1]
+     * @param right Speed in range [-1,1]
+     */
+    public void drive(double left, double right) {
+        drive.tankDrive(left, right);
+    }
+
+    /**
+     * @param joy The Xbox style joystick to use to drive arcade style.
+     */
+    public void arcadeDrive(double forward, double turn) {
+        drive.arcadeDrive(forward, turn, true);
+    }
+
+    /**
+     * @param joy The Xbox style joystick to use to drive arcade style.
+     */
+    public void drive(GenericHID joy) {
+        drive.arcadeDrive(RobotMap.INVERT_JOYSTICK_Y ? -joy.getRawAxis(5) : joy.getRawAxis(5),
+                        RobotMap.INVERT_JOYSTICK_X ? -joy.getRawAxis(4) : joy.getRawAxis(4), true);
+    }
+
+    /**
+     * Reset the robots sensors to the zero states.
+     */
+    public void reset() {
+        left_encoder.reset();
+        right_encoder.reset();
+        resetGyro();
+    }
+
+    /**
+     * Reset the robot gyro to the zero state.
+     */
+    public void resetGyro() {
+        gyro.reset();
+    }
+
+    /**
+     * @return The robots heading in degrees.
+     */
+    public double getHeading() {
+        return gyro.getAngle();
+    }
+
+    /**
+     * @param invert True to invert second motor direction for rotating
+     * 
+     * @return The robot's drive PIDOutput
+     */
+    public PIDOutput getDrivePIDOutput(boolean invert, boolean left) {
+        if (left) {
+            DrivePIDOutput out =
+                            new DrivePIDOutput(front_left_motor, back_left_motor, left, invert);
+            return out;
+        } else {
+            DrivePIDOutput out =
+                            new DrivePIDOutput(front_right_motor, back_right_motor, left, invert);
+            return out;
+        }
+    }
+
+    /**
+     * @return The robot's gyro PIDSource
+     */
+    public PIDSource getGyroPIDSource(boolean invert) {
+        gyroPIDSource.invert(invert);
+        return gyroPIDSource;
+    }
+
+    public void invertGyroPIDSource(boolean invert) {
+        gyroPIDSource.invert(invert);
+    }
+
+    /**
+     * @return The distance driven (average of left and right encoders).
+     */
+    public double getDistance() {
+        return (left_encoder.getDistance() + right_encoder.getDistance()) / 2;
+    }
+
+    public double getLeftDistanceToObstacle() {
+        return leftDistanceSensor.getRangeInches();
+    }
+
+    public double getRightDistanceToObstacle() {
+        return rightDistanceSensor.getRangeInches();
+    }
+
+    /**
+     * @return The robot's encoder PIDSource
+     */
+    public PIDSource getEncoderPIDSource(boolean left) {
+        if (left) {
+            return left_encoder;
+        } else {
+            return right_encoder;
+        }
+    }
+
+    /**
+     * @return The distance to the obstacle detected by the distance sensor.
+     */
+    public double getDistanceToObstacle() {
+        return (leftDistanceSensor.getRangeInches() + rightDistanceSensor.getRangeInches()) / 2;
+    }
+
+    public PIDSource getDistanceSensorPIDSource() {
+        return ultrasonicPIDSource;
+    }
+
+    class UltrasonicPIDSource implements PIDSource {
+
+        private final Ultrasonic left, right;
+
+        public UltrasonicPIDSource(Ultrasonic left, Ultrasonic right) {
+            this.left = left;
+            this.right = right;
+        }
+
+        @Override
+        public void setPIDSourceType(PIDSourceType pidSource) {
+            left.setPIDSourceType(pidSource);
+            right.setPIDSourceType(pidSource);
+        }
+
+        @Override
+        public PIDSourceType getPIDSourceType() {
+            return left.getPIDSourceType();
+        }
+
+        @Override
+        public double pidGet() {
+            return (left.getRangeInches() + right.getRangeInches()) / 2;
+        }
+
+    }
+
+    class GyroPIDSource implements PIDSource {
+
+        private final DriveTrain driveTrain;
+        private boolean invert;
+
+        public GyroPIDSource(DriveTrain driveTrain) {
+            this.driveTrain = driveTrain;
+        }
+
+        @Override
+        public void setPIDSourceType(PIDSourceType pidSource) {
+            driveTrain.gyro.setPIDSourceType(pidSource);
+        };
+
+        @Override
+        public PIDSourceType getPIDSourceType() {
+            return driveTrain.gyro.getPIDSourceType();
+        }
+
+        @Override
+        public double pidGet() {
+            double heading = driveTrain.getHeading();
+            if (heading > 358.0)
+                heading = 0;
+
+            return invert ? -heading : heading;
+        }
+
+
+        public void invert(boolean invert) {
+            this.invert = invert;
+        }
+    }
+
+    public class DrivePIDOutput implements PIDOutput {
+
+        private final Victor front;
+        private final Victor rear;
+
+        private boolean invert;
+
+        private final boolean left;
+
+        public DrivePIDOutput(Victor front, Victor rear, boolean left, boolean invert) {
+            this.front = front;
+            this.rear = rear;
+            this.left = left;
+            this.invert = invert;
+        }
+
+        @Override
+        public void pidWrite(double output) {
+            double rotateVal = (normalize(getHeading() - initGyro) * 0.1);
+
+            // System.out.println("Rotate:\t"+rotateVal);
+
+            // XXX: Motors must be opposite to avoid fighting
+            if (left)
+                if (invert) {
+                    drive.arcadeDrive(output, rotateVal);
+                    // front.set(asSpeed(output, rotateVal, true));
+                    // rear.set(asSpeed(output, rotateVal, true));
+                } else {
+                    drive.arcadeDrive(-output, -rotateVal);
+                    // front.set(asSpeed(-output, -rotateVal, true));
+                    // rear.set(asSpeed(-output, -rotateVal, true));
+                }
+            else if (invert) {
+                front.set(asSpeed(output, rotateVal, false));
+                rear.set(asSpeed(output, rotateVal, false));
+            } else {
+                front.set(asSpeed(-output, -rotateVal, false));
+                rear.set(asSpeed(-output, -rotateVal, false));
+            }
+        }
+
+        public void setInvert(boolean invert) {
+            this.invert = invert;
+        }
+    }
+
+
+    private double asSpeed(double moveValue, double rotateValue, boolean left) {
+        double leftMotorSpeed = 0;
+        double rightMotorSpeed = 0;
+
+        if (moveValue > 0.0) {
+            if (rotateValue > 0.0) {
+                leftMotorSpeed = moveValue - rotateValue;
+                rightMotorSpeed = Math.max(moveValue, rotateValue);
+            } else {
+                leftMotorSpeed = Math.max(moveValue, -rotateValue);
+                rightMotorSpeed = moveValue + rotateValue;
+            }
+        } else {
+            if (rotateValue > 0.0) {
+                leftMotorSpeed = -Math.max(-moveValue, rotateValue);
+                rightMotorSpeed = moveValue + rotateValue;
+            } else {
+                leftMotorSpeed = moveValue - rotateValue;
+                rightMotorSpeed = -Math.max(-moveValue, -rotateValue);
+            }
+        }
+
+        // System.out.println("Drive:\t" + (left ? leftMotorSpeed : rightMotorSpeed));
+
+        return left ? leftMotorSpeed : rightMotorSpeed;
+    }
+
     public double normalize(double input) {
-    	double normalizedValue = input;
-    	while (normalizedValue > 180)
-    		normalizedValue -= 360;
-    	while (normalizedValue < -180)
-    		normalizedValue +=360;
-    	
-		return normalizedValue;
-	}	
+        double normalizedValue = input;
+        while (normalizedValue > 180)
+            normalizedValue -= 360;
+        while (normalizedValue < -180)
+            normalizedValue += 360;
+
+        return normalizedValue;
+    }
 }

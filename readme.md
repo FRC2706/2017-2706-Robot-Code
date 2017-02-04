@@ -7,6 +7,11 @@ We have a lot of programmers on the team this year, so we've split the code out 
 
 ## Code Structure
 
+### Styling
+
+We use Google's code styling standard. To use the Eclipse's autoformatter, go open the source file to be formatted, and press Ctrl + Shift + F.
+
+
 ### Subsystems
 
 Subsystems classes are for the lowest end things like gyro, direct communication with motors, camera etc. These classes will typically be owned by the group working with the hardware, such as the Controls group for motors and sensors, Vision group for cameras, etc.
