@@ -12,36 +12,57 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class ReplayRecordedJoystick extends Command {
 	
+	private final boolean deserializeInConstructor;
+	
 	private final Supplier<String> nameSupplier;
 	
 	private Joystick driverStick;
 	private Joystick operatorStick;
 
-	public ReplayRecordedJoystick(Joystick driverStick, Joystick operatorStick, String name) {
-		this(driverStick, operatorStick, () -> name);
+	public ReplayRecordedJoystick(Joystick driverStick, Joystick operatorStick, String name, boolean deserializeInConstructor) {
+		this(driverStick, operatorStick, () -> name, deserializeInConstructor);
 	}
 	
-	public ReplayRecordedJoystick(Joystick driverStick, Joystick operatorStick, Supplier<String> nameSupplier) {
+	public ReplayRecordedJoystick(Joystick driverStick, Joystick operatorStick, Supplier<String> nameSupplier, boolean deserializeInConstructor) {
 		
 		this.nameSupplier = nameSupplier;
 		
 		this.driverStick = driverStick;
 		this.operatorStick = operatorStick;
+		
+		this.deserializeInConstructor = deserializeInConstructor;
+		
+		if(deserializeInConstructor) {
+    		String name = nameSupplier.get();
+    		String folder = "/home/lvuser/joystick-recordings/" + name + "/";
+    		
+    		String driverLoc = folder + name + "-driver";
+			String operatorLoc = folder + name + "-operator";
+			
+			this.driverStick = new RecordableJoystick(driverStick, driverLoc, true);
+			this.operatorStick = new RecordableJoystick(operatorStick, operatorLoc, true);
+		
+			((RecordableJoystick)this.driverStick).init(this::timeSinceInitialized);
+			((RecordableJoystick)this.operatorStick).init(this::timeSinceInitialized);
+		}
 	}
 	
 	@Override
 	public void initialize() {
-    	String name = nameSupplier.get();
-    	String folder = "/home/lvuser/joystick-recordings/" + name + "/";
-    	
-    	String driverLoc = folder + name + "-driver";
-		String operatorLoc = folder + name + "-operator";
 		
-		driverStick = new RecordableJoystick(driverStick, driverLoc, true);
-		operatorStick = new RecordableJoystick(operatorStick, operatorLoc, true);
+		String name = nameSupplier.get();
+		String folder = "/home/lvuser/joystick-recordings/" + name + "/";
 		
-		((RecordableJoystick)driverStick).init(this::timeSinceInitialized);
-		((RecordableJoystick)operatorStick).init(this::timeSinceInitialized);
+		if(!deserializeInConstructor) {	
+    		String driverLoc = folder + name + "-driver";
+			String operatorLoc = folder + name + "-operator";
+			
+			driverStick = new RecordableJoystick(driverStick, driverLoc, true);
+			operatorStick = new RecordableJoystick(operatorStick, operatorLoc, true);
+		
+			((RecordableJoystick)driverStick).init(this::timeSinceInitialized);
+			((RecordableJoystick)operatorStick).init(this::timeSinceInitialized);
+		}
 		
 		if(Robot.driveTrain.getDefaultCommand() instanceof ArcadeDriveWithJoystick) {
 			((ArcadeDriveWithJoystick)Robot.driveTrain.getDefaultCommand()).setJoystick(driverStick);
