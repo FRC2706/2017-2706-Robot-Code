@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
- * Have the robot drive certain distance
  */
 public class StraightDriveWithDistanceSensor extends Command {
     
