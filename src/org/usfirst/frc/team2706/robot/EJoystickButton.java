@@ -5,6 +5,11 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 
+/**
+ * Hacky extension of the JoystickButton to allow
+ * cancelling a command when a button is released,
+ * which was previously not possible
+ */
 public class EJoystickButton extends JoystickButton {
 	
 	/**

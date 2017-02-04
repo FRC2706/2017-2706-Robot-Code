@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
  * Does everything java related to the rPI camera, servo controllers have been deleted.
- * @author Connor Adams
  *
  */
 public class Camera extends Subsystem {

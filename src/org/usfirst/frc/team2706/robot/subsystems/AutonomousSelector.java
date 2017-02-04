@@ -7,6 +7,10 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
+/**
+ * Controlls the 12 switch dial on the robot to select an autonomous mode.
+ * The autonomous modes on each of the switches are defined in Robot.java
+ */
 public class AutonomousSelector extends Subsystem {
 
 	// Can't be static?

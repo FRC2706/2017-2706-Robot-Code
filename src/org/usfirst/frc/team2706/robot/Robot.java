@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
  * Refer to your local gatekeeper if you have no idea what you are doing :)
  */
 public class Robot extends IterativeRobot {
+	
 	// Reference for the main vision camera on the robot
 	public static Camera camera;
 	
