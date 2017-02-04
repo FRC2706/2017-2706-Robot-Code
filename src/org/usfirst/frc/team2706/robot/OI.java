@@ -1,6 +1,6 @@
 package org.usfirst.frc.team2706.robot;
 
-import org.usfirst.frc.team2706.robot.commands.autonomous.movements.QuickStraightDriveWithDistanceSensor;
+import org.usfirst.frc.team2706.robot.commands.autonomous.plays.AlignAndDistance;
 
 import edu.wpi.first.wpilibj.Joystick;
 
@@ -30,10 +30,8 @@ public class OI {
 			driverStick = new Joystick(0);
 			
 			EJoystickButton backLeftButton = new EJoystickButton(driverStick, 5);	
-			// TODO: Tune stopCycles and speed
-			QuickStraightDriveWithDistanceSensor sdwe = new QuickStraightDriveWithDistanceSensor(0.5, 13.0, 15.0, 4, 0.8);
-			backLeftButton.runWhileHeld(sdwe);
-
+			backLeftButton.runWhileHeld(new AlignAndDistance(24));
+			
 			// Joystick for controlling the mechanisms of the robot
 			controlStick = new Joystick(1);
 	    }

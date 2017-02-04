@@ -63,7 +63,7 @@ public class Robot extends IterativeRobot {
  /* position 6: Left position place gear > launch  */	 new SideStartSideGear(true,0.5,7,45,5,2,20),
          /* position 7: Center and left to launch  */	 new CenterToLaunch(false,0.5,9,2,90,7,20),
         /* position 8: Center and right to launch  */	 new CenterToLaunch(true,0.5,9,2,90,7,20),
- /* position 9: Left/ gear double side hopper pop  */	 new QuickRotate(90)
+ /* position 9: Left/ gear double side hopper pop  */	 new QuickRotate(180)
 /* position 10: Right gear double side hopper pop  */
       /* position 11: Left gear middle hopper pop  */
      /* position 12: Right gear middle hopper pop  */
@@ -141,5 +141,6 @@ public class Robot extends IterativeRobot {
     
     private void log() {
         driveTrain.log();
+    	hardwareChooser.log();
     }
 }

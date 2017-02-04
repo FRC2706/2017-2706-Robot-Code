@@ -51,7 +51,7 @@ public class QuickStraightDriveWithDistanceSensor extends Command {
     protected void initialize() {
     	Robot.driveTrain.reset();
 
-		Robot.driveTrain.initGyro = Robot.driveTrain.getHeading();
+		Robot.driveTrain.initGyro = 0;
 		
 		done = false;
 		stopCycles = 0;
