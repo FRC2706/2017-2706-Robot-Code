@@ -3,10 +3,12 @@ package org.usfirst.frc.team2706.robot;
 
 import org.usfirst.frc.team2706.robot.commands.autonomous.automodes.CenterToLaunch;
 import org.usfirst.frc.team2706.robot.commands.autonomous.automodes.SideStartSideGear;
+import org.usfirst.frc.team2706.robot.commands.autonomous.movements.ReplayRecordedJoystick;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.QuickRotate;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithEncoders;
 import org.usfirst.frc.team2706.robot.commands.autonomous.plays.DrivePlaceGear;
 import org.usfirst.frc.team2706.robot.commands.teleop.ArcadeDriveWithJoystick;
+import org.usfirst.frc.team2706.robot.commands.teleop.RecordJoystick;
 import org.usfirst.frc.team2706.robot.subsystems.AutonomousSelector;
 import org.usfirst.frc.team2706.robot.subsystems.Camera;
 import org.usfirst.frc.team2706.robot.subsystems.DriveTrain;
@@ -15,6 +17,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * This class controls all of the robot initialization, every tick of the robot,
@@ -39,6 +42,9 @@ public class Robot extends IterativeRobot {
 
 	// Which command is going to be ran based on the hardwareChooser
 	Command autonomousCommand;
+    
+    // Records joystick states to file for later replaying
+    RecordJoystick recordAJoystick;
 
     /**
      * This function is run when the robot is first started up and should be
@@ -63,16 +69,18 @@ public class Robot extends IterativeRobot {
  /* position 6: Left position place gear > launch  */	 new SideStartSideGear(true,0.5,7,45,5,2,20),
          /* position 7: Center and left to launch  */	 new CenterToLaunch(false,0.5,9,2,90,7,20),
         /* position 8: Center and right to launch  */	 new CenterToLaunch(true,0.5,9,2,90,7,20),
- /* position 9: Left/ gear double side hopper pop  */	 new QuickRotate(180)
-/* position 10: Right gear double side hopper pop  */
+ /* position 9: Left/ gear double side hopper pop  */	 new QuickRotate(90),
+/* position 10: Right gear double side hopper pop  */	 new ReplayRecordedJoystick(oi.getDriverJoystick(), oi.getOperatorJoystick(),
+															() -> SmartDashboard.getString("record-joystick-name", "default"), false)
       /* position 11: Left gear middle hopper pop  */
      /* position 12: Right gear middle hopper pop  */
-      
      										    );
     	
 		// Set up the Microsoft LifeCam and start streaming it to the Driver Station
 		// CameraServer.getInstance().startAutomaticCapture();
-		
+    	
+		recordAJoystick = new RecordJoystick(oi.getDriverJoystick(), oi.getOperatorJoystick(),
+				() -> SmartDashboard.getString("record-joystick-name", "default"));
     }
 	
 	/**
@@ -122,6 +130,8 @@ public class Robot extends IterativeRobot {
          continue until interrupted by another command, remove
          this line or comment it out. */
         if (autonomousCommand != null) autonomousCommand.cancel();
+        
+        if(SmartDashboard.getBoolean("record-joystick", false)) recordAJoystick.start();
     }
 
     /**
