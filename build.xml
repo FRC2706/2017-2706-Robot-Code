@@ -30,9 +30,7 @@
   <target name="deploy" depends="copy-libs, athena-project-build.deploy"/>
   
   <target name="copy-libs">
-    <copy todir="${user.home}/wpilib/user/java/" >  
-      <fileset dir="lib/robot-libs/" includes="**"/>  
-    </copy> 
+	<unzip dest="${user.home}/wpilib/user/java/" src="lib/robot-libs.zip"/>	
   </target>
 
 </project> 
