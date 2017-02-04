@@ -5,12 +5,28 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 
+/**
+ * Hacky extension of the JoystickButton to allow
+ * cancelling a command when a button is released,
+ * which was previously not possible
+ */
 public class EJoystickButton extends JoystickButton {
 	
+	/**
+	 * Copy of the JoystickButton constructor, just supers the data
+	 */
 	public EJoystickButton(GenericHID joystick, int buttonNumber) {
 		super(joystick, buttonNumber);
 	}
-	
+	/**
+	 * Runs the command when the button is pressed down initially, and cancels it when the button is released
+	 * 
+	 * @param command the command to start
+	 */
+	public void runWhileHeld(final Command command) {
+		whenPressed(command);
+		cancelWhenInactive(command);
+	}
 	/**
 	 * Cancels a command when a button is released, used in OI
 	 * 

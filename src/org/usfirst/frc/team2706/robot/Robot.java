@@ -7,7 +7,6 @@ import org.usfirst.frc.team2706.robot.commands.autonomous.movements.ReplayRecord
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.QuickRotate;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithEncoders;
 import org.usfirst.frc.team2706.robot.commands.autonomous.plays.DrivePlaceGear;
-import org.usfirst.frc.team2706.robot.commands.camera.AutomaticCameraControl;
 import org.usfirst.frc.team2706.robot.commands.teleop.ArcadeDriveWithJoystick;
 import org.usfirst.frc.team2706.robot.commands.teleop.RecordJoystick;
 import org.usfirst.frc.team2706.robot.subsystems.AutonomousSelector;
@@ -28,6 +27,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * Refer to your local gatekeeper if you have no idea what you are doing :)
  */
 public class Robot extends IterativeRobot {
+	
 	// Reference for the main vision camera on the robot
 	public static Camera camera;
 	
