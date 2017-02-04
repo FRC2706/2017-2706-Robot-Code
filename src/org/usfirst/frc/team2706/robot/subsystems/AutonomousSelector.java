@@ -6,6 +6,7 @@ import java.util.List;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Controlls the 12 switch dial on the robot to select an autonomous mode.
@@ -51,7 +52,9 @@ public class AutonomousSelector extends Subsystem {
 		
 		return 0;
 	}
-	
+	public void log() {
+		SmartDashboard.putNumber("Autonomous Selector", getVoltageAsIndex());
+	}
 	private class Range {
 		
 		public final double min, max;
@@ -61,4 +64,5 @@ public class AutonomousSelector extends Subsystem {
 			this.max = max;
 		}
 	}
+	
 }
