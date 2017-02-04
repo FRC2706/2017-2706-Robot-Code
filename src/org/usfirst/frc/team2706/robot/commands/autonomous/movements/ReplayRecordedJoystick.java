@@ -10,6 +10,9 @@ import org.usfirst.frc.team2706.robot.controls.RecordableJoystick;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Command;
 
+/**
+ * Replays a {@link RecordableJoystick} for the driver and operator Joystick 
+ */
 public class ReplayRecordedJoystick extends Command {
 	
 	private final boolean deserializeInConstructor;
@@ -19,10 +22,26 @@ public class ReplayRecordedJoystick extends Command {
 	private Joystick driverStick;
 	private Joystick operatorStick;
 
+	/**
+	 * Uses a String as the Supplier for the name
+	 * @see #ReplayRecordableJoystick(Joystick, Joystick, Supplier) The main constructor
+	 */
 	public ReplayRecordedJoystick(Joystick driverStick, Joystick operatorStick, String name, boolean deserializeInConstructor) {
 		this(driverStick, operatorStick, () -> name, deserializeInConstructor);
 	}
 	
+	/**
+	 * Replays the driver and operator Joysticks from files based on 
+	 * the name from the Supplier given
+	 * 
+	 * @param driverStick The driver Joystick to replay
+	 * @param operatorStick The operator Joystick to replay
+	 * @param nameSupplier The Supplier that is used to find file locations 
+	 * when the command is enabled
+	 * @param deserializeInConstructor When true, does not wait until the command 
+	 * is enabled to find the location of the files, this is important for competitions
+	 * where delays in the start of autonomous are a bigger issue
+	 */
 	public ReplayRecordedJoystick(Joystick driverStick, Joystick operatorStick, Supplier<String> nameSupplier, boolean deserializeInConstructor) {
 		
 		this.nameSupplier = nameSupplier;
@@ -76,16 +95,15 @@ public class ReplayRecordedJoystick extends Command {
 	
 	@Override
 	public void execute() {	
-		if(!((RecordableJoystick)driverStick).update() &
-				!((RecordableJoystick)operatorStick).update())
-			this.cancel();
+		((RecordableJoystick)driverStick).update();
+		((RecordableJoystick)operatorStick).update();
 	}
 	
 	
 	@Override
 	public boolean isFinished() {
-		return !((RecordableJoystick)driverStick).notDone() |
-				!((RecordableJoystick)operatorStick).notDone();
+		return ((RecordableJoystick)driverStick).done() &&
+				((RecordableJoystick)operatorStick).done();
 	}
 	
 	@Override
@@ -97,4 +115,9 @@ public class ReplayRecordedJoystick extends Command {
 		Robot.oi.destroy();
 		Robot.oi = new OI(driverStick, operatorStick);
 	}
+	
+    @Override
+    public void interrupted() {
+        end();
+    }
 }

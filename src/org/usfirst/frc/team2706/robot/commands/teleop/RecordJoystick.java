@@ -10,6 +10,9 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+/**
+ * Records a {@link RecordableJoystick} for the driver and operator Joystick 
+ */
 public class RecordJoystick extends Command {
 	
 	private final Supplier<String> nameSupplier;
@@ -17,10 +20,23 @@ public class RecordJoystick extends Command {
 	private Joystick driverStick;
 	private Joystick operatorStick;
 
+	/**
+	 * Uses a String as the Supplier for the name
+	 * @see #RecordJoystick(Joystick, Joystick, Supplier) The main constructor
+	 */
 	public RecordJoystick(Joystick driverStick, Joystick operatorStick, String name) {
 		this(driverStick, operatorStick, () -> name);
 	}
 	
+	/**
+	 * Records the driver and operator Joysticks to files based on 
+	 * the name from the Supplier given
+	 * 
+	 * @param driverStick The driver Joystick to record
+	 * @param operatorStick The operator Joystick to record
+	 * @param nameSupplier The Supplier that is used to find file locations 
+	 * when the command is enabled
+	 */
 	public RecordJoystick(Joystick driverStick, Joystick operatorStick, Supplier<String> nameSupplier) {
 		
 		this.nameSupplier = nameSupplier;
@@ -61,16 +77,15 @@ public class RecordJoystick extends Command {
 	
 	@Override
 	public void execute() {	
-		if(!((RecordableJoystick)driverStick).update() &
-				!((RecordableJoystick)operatorStick).update())
-			this.cancel();
+		((RecordableJoystick)driverStick).update();
+		((RecordableJoystick)operatorStick).update();
 	}
 	
 	
 	@Override
 	public boolean isFinished() {
-		return !((RecordableJoystick)driverStick).notDone() |
-				!((RecordableJoystick)operatorStick).notDone();
+		return ((RecordableJoystick)driverStick).done() &&
+				((RecordableJoystick)operatorStick).done();
 	}
 	
 	@Override
@@ -83,4 +98,9 @@ public class RecordJoystick extends Command {
 		Robot.oi = new OI(((RecordableJoystick)driverStick).getRealJoystick(),
 				((RecordableJoystick)operatorStick).getRealJoystick());
 	}
+	
+    @Override
+    public void interrupted() {
+        end();
+    }
 }

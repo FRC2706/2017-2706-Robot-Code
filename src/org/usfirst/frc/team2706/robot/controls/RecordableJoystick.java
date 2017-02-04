@@ -15,8 +15,15 @@ import com.google.gson.Gson;
 
 import edu.wpi.first.wpilibj.Joystick;
 
+/**
+ * Can be used as a Joystick object, it saves Joystick values to a file while recording,
+ * that can later be replayed in autonomous mode.
+ */
 public class RecordableJoystick extends Joystick {
 	
+	/**
+	 * The location of the joystick if the given file cannot be found
+	 */
 	public static final String EMPTY_LOC = "/home/lvuser/joystick-recordings/empty/empty";
 	
 	private final boolean replay;
@@ -37,6 +44,14 @@ public class RecordableJoystick extends Joystick {
 	
 	private boolean looping;
 
+	/**
+	 * Sets up recording or replaying from or to a real Joystick
+	 * 
+	 * @param joy The real joystick that provides values
+	 * if there are no values saved, or if recording
+	 * @param loc The location to load or save the data from the Joystick
+	 * @param replay Is true if replaying false if recording
+	 */
 	public RecordableJoystick(Joystick joy, String loc, boolean replay) {
 		super(joy.getPort());
 
@@ -46,10 +61,19 @@ public class RecordableJoystick extends Joystick {
 		this.indexFinder = new IndexFinder();
 	}
 	
+	/**
+	 * Gets the real Joystick that provides values
+	 * if there are no values saved, or if recording
+	 * 
+	 * @return The real Joystick
+	 */
 	public Joystick getRealJoystick() {
 		return joy;
 	}
 
+	/**
+	 * Stops recording or replaying and if recording, saves the values to files
+	 */
 	public void end() {
 		looping = false;
 		
@@ -106,6 +130,13 @@ public class RecordableJoystick extends Joystick {
 		return new JoystickState(axes, buttons, povs, time);
 	}
 	
+	/**
+	 * Sets up for recording/replaying. 
+	 * If replaying, load the files to replay
+	 * 
+	 * @param timeSupplier The supplier to get the time since the command is initialized. 
+	 * Use {@code Command::timeSinceInitialized} for this.
+	 */
 	public void init(Supplier<Double> timeSupplier) {
 		if(replay) {
 			if(new File(loc + "-config.json").isFile() && new File(loc + "-config.json").isFile()) {
@@ -131,19 +162,28 @@ public class RecordableJoystick extends Joystick {
 		indexFinder.start();
 	}
 	
-	public boolean update() {
+	/**
+	 * If replaying, updates the values to be replayed
+	 */
+	public void update() {
 		if(!replay) {
 			states.add(grabJoystickValues());
 			index++;
 		}
-		
-		return notDone();
 	}
 	
-	public boolean notDone() {
-		return !replay || index < states.size();
+	/**
+	 * Whether there are no more states to be replayed or false if recording
+	 * 
+	 * @return Whether finished or not
+	 */
+	public boolean done() {
+		return replay && index >= states.size();
 	}
 	
+	/**
+	 * Resets states played to the start
+	 */
 	public void reset() {
 		index = 0;
 	}

@@ -26,25 +26,37 @@ public class OI {
 	    public Joystick getOperatorJoystick() {
 	        return controlStick;
 	    }
-	    
+	   
+	    /**
+	     * Initializes Oi using the two default real joysticks
+	     */
 	    public OI() {
 	    	this(new Joystick(0), new Joystick(1));
 	    }
 	    
+	    /**
+	     * Initializes Oi with non-default joysticks
+	     * 
+	     * @param driverStick The driver joystick to use
+	     * @param controlStick The operator joystick to use
+	     */
 	    public OI(Joystick driverStick, Joystick controlStick)  {
 			// Joystick for driving the robot around
 			this.driverStick = driverStick;
 
-			// Joystick for controlling the mechanisms of the robot
-			this.controlStick = controlStick;
-			
-			EJoystickButton LB = new EJoystickButton(controlStick, 5);	
+			EJoystickButton LB = new EJoystickButton(driverStick, 5);	
 			// TODO: Tune stopCycles and speed
 			QuickStraightDriveWithDistanceSensor sdwe = new QuickStraightDriveWithDistanceSensor(0.5, 13.0, 15.0, 4, 0.8);
 			LB.whenPressed(sdwe);
 			LB.cancelWhenReleased(sdwe);
+			
+			// Joystick for controlling the mechanisms of the robot
+			this.controlStick = controlStick;
 	    }
 	    
+	    /**
+	     * Removes ButtonSchedulers that run commands that were added in Oi
+	     */
 	    public void destroy() {
 	    	try {
 	    		Field f = Scheduler.getInstance().getClass().getDeclaredField("m_buttons");
