@@ -39,6 +39,9 @@ public class DriveTrain extends Subsystem {
     public double initGyro;
 
     private Command defaultCommand;
+    
+    // The spinny dial on the robot that selects what autonomous mode we are going to do
+    private AutonomousSelector selectorSwitch;
 
     public DriveTrain() {
         super();
@@ -91,7 +94,7 @@ public class DriveTrain extends Subsystem {
 
         reset();
 
-
+        selectorSwitch = new AutonomousSelector();
 
         // Let's show everything on the LiveWindow
         LiveWindow.addActuator("Drive Train", "Front Left Motor", front_left_motor);
@@ -103,6 +106,7 @@ public class DriveTrain extends Subsystem {
         LiveWindow.addSensor("Drive Train", "Left Distance Sensor", leftDistanceSensor);
         LiveWindow.addSensor("Drive Train", "Right Distance Sensor", rightDistanceSensor);
         LiveWindow.addSensor("Drive Train", "Gyro", gyro);
+        LiveWindow.addSensor("Drive Train", "Autonomous Selector", selectorSwitch);
     }
 
     /**
@@ -133,6 +137,7 @@ public class DriveTrain extends Subsystem {
         SmartDashboard.putNumber("Left Distance Sensor", leftDistanceSensor.getRangeInches());
         SmartDashboard.putNumber("Right Distance Sensor", rightDistanceSensor.getRangeInches());
         SmartDashboard.putNumber("Gyro", gyro.getAngle());
+        SmartDashboard.putNumber("Autonomous Selector", selectorSwitch.getVoltageAsIndex());
     }
 
     /**
@@ -183,6 +188,15 @@ public class DriveTrain extends Subsystem {
         return gyro.getAngle();
     }
 
+    public void setAutonomousCommandList(Command...commands) {
+        selectorSwitch.free();
+        selectorSwitch = new AutonomousSelector(commands);
+    }
+    
+    public Command getAutonomousCommand() {
+        return selectorSwitch.getSelected();
+    }
+    
     /**
      * @param invert True to invert second motor direction for rotating
      * 

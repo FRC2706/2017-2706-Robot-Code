@@ -3,13 +3,12 @@ package org.usfirst.frc.team2706.robot;
 
 import org.usfirst.frc.team2706.robot.commands.autonomous.automodes.CenterToLaunch;
 import org.usfirst.frc.team2706.robot.commands.autonomous.automodes.SideStartSideGear;
-import org.usfirst.frc.team2706.robot.commands.autonomous.movements.ReplayRecordedJoystick;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.QuickRotate;
+import org.usfirst.frc.team2706.robot.commands.autonomous.movements.ReplayRecordedJoystick;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithEncoders;
 import org.usfirst.frc.team2706.robot.commands.autonomous.plays.DrivePlaceGear;
 import org.usfirst.frc.team2706.robot.commands.teleop.ArcadeDriveWithJoystick;
 import org.usfirst.frc.team2706.robot.commands.teleop.RecordJoystick;
-import org.usfirst.frc.team2706.robot.subsystems.AutonomousSelector;
 import org.usfirst.frc.team2706.robot.subsystems.Camera;
 import org.usfirst.frc.team2706.robot.subsystems.DriveTrain;
 
@@ -33,9 +32,6 @@ public class Robot extends IterativeRobot {
     // The robot's main drive train
     public static DriveTrain driveTrain;
 
-    // The spinny dial on the robot that selects what autonomous mode we are going to do
-    public static AutonomousSelector hardwareChooser;
-
     // Stores all of the joysticks, and returns them as read only.
     public static OI oi;
 
@@ -58,7 +54,7 @@ public class Robot extends IterativeRobot {
         oi = new OI();
 
         // Set up our autonomous modes with the hardware selector switch
-        hardwareChooser = new AutonomousSelector(
+        driveTrain.setAutonomousCommandList(
                     /*  no switch: do nothing      */    new ArcadeDriveWithJoystick(), 
                     /* position 1: do nothing      */    new ArcadeDriveWithJoystick(),
                  /* position 2: Drive to baseline  */    new StraightDriveWithEncoders(0.65,5,25,5),
@@ -106,9 +102,9 @@ public class Robot extends IterativeRobot {
         driveTrain.reset();
 
         // Great for safety just incase you set the wrong one in practice ;)
-        System.out.println("Running " + hardwareChooser.getSelected() + "...");
+        System.out.println("Running " + driveTrain.getAutonomousCommand().getName() + "...");
 
-        autonomousCommand = hardwareChooser.getSelected();
+        autonomousCommand = driveTrain.getAutonomousCommand();
 
         // Schedule the autonomous command that was selected
         if (autonomousCommand != null)
@@ -153,6 +149,5 @@ public class Robot extends IterativeRobot {
 
     private void log() {
         driveTrain.log();
-        hardwareChooser.log();
     }
 }
