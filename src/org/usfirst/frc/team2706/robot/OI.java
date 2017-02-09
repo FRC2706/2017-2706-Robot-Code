@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
  * This class is the glue that binds the controls on the physical operator interface to the commands
  * and command groups that allow control of the robot.
  */
-public class OI {
+public class OI { //Operator Interface
 
     // Joystick for driving the robot around
     private final Joystick driverStick;
@@ -50,6 +50,7 @@ public class OI {
         // Joystick for controlling the mechanisms of the robot
         this.controlStick = controlStick;
     }
+   
 
     /**
      * Removes ButtonSchedulers that run commands that were added in Oi

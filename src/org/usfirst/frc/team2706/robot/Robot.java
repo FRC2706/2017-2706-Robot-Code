@@ -12,6 +12,7 @@ import org.usfirst.frc.team2706.robot.commands.teleop.RecordJoystick;
 import org.usfirst.frc.team2706.robot.subsystems.AutonomousSelector;
 import org.usfirst.frc.team2706.robot.subsystems.Camera;
 import org.usfirst.frc.team2706.robot.subsystems.DriveTrain;
+import org.usfirst.frc.team2706.robot.subsystems.Bling;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -38,6 +39,9 @@ public class Robot extends IterativeRobot {
 
     // Stores all of the joysticks, and returns them as read only.
     public static OI oi;
+    
+    //This will be the bling subsystem controller
+    public static Bling blingSystem;
 
     // Which command is going to be ran based on the hardwareChooser
     Command autonomousCommand;
@@ -56,7 +60,11 @@ public class Robot extends IterativeRobot {
         // camera = new Camera(Camera.CAMERA_IP);
 
         oi = new OI();
-
+        
+        //New bling system class
+        blingSystem = new Bling();
+        blingSystem.batteryInd(1.0); //Display battery voltage.
+        
         // Set up our autonomous modes with the hardware selector switch
         hardwareChooser = new AutonomousSelector(
                         /* no switch: do nothing */ new ArcadeDriveWithJoystick(),
@@ -113,8 +121,9 @@ public class Robot extends IterativeRobot {
      */
     public void autonomousInit() {
         driveTrain.reset();
+        blingSystem.auto(); //Get the bling doing autonomous patterns.
 
-        // Great for safety just incase you set the wrong one in practice ;)
+        // Great for safety just in case you set the wrong one in practice ;)
         System.out.println("Running " + hardwareChooser.getSelected() + "...");
 
         autonomousCommand = hardwareChooser.getSelected();
@@ -143,6 +152,7 @@ public class Robot extends IterativeRobot {
 
         if (SmartDashboard.getBoolean("record-joystick", false))
             recordAJoystick.start();
+        blingSystem.startTelOp();
     }
 
     /**
