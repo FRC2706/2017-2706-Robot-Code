@@ -18,12 +18,7 @@ public class RotateDriveWithGyro extends Command {
 
     private final double angle;
 
-    private final int minDoneCycles;
-
-    private final PIDController leftPID;
-    private final PIDController rightPID;
-
-    private int doneCount;
+    private final PIDController PID;
 
     private final double P = 1, I = 0, D = 0, F = 0;
 
@@ -33,19 +28,15 @@ public class RotateDriveWithGyro extends Command {
      * @param speed Speed in range [-1,1]
      * @param angle The angle to rotate to
      */
-    public RotateDriveWithGyro(double speed, double angle, int minDoneCycles) {
+    public RotateDriveWithGyro(double speed, double angle) {
         requires(Robot.driveTrain);
 
         this.speed = speed;
 
         this.angle = angle;
 
-        this.minDoneCycles = minDoneCycles;
-        leftPID = new PIDController(P, I, D, F, Robot.driveTrain.getGyroPIDSource(false),
+        PID = new PIDController(P, I, D, F, Robot.driveTrain.getGyroPIDSource(false),
                         Robot.driveTrain.getDrivePIDOutput(false, true));
-
-        rightPID = new PIDController(P, I, D, F, Robot.driveTrain.getGyroPIDSource(false),
-                        Robot.driveTrain.getDrivePIDOutput(true, false));
     }
 
     // Called just before this Command runs the first time
@@ -54,52 +45,34 @@ public class RotateDriveWithGyro extends Command {
 
 
 
-        leftPID.setInputRange(-360.0, 360.0);
-        rightPID.setInputRange(-360.0, 360.0);
+        PID.setInputRange(-360.0, 360.0);
 
         // Make input infinite
-        leftPID.setContinuous();
-        rightPID.setContinuous();
+        PID.setContinuous();
         if (speed > 0) {
             // Set output speed range
-            leftPID.setOutputRange(-speed, speed);
-            rightPID.setOutputRange(-speed, speed);
+            PID.setOutputRange(-speed, speed);
         } else {
-            leftPID.setOutputRange(speed, -speed);
-            rightPID.setOutputRange(speed, -speed);
+            PID.setOutputRange(speed, -speed);
         }
         // Will accept within 1 degrees of target
-        leftPID.setAbsoluteTolerance(4);
-        rightPID.setAbsoluteTolerance(4);
+        PID.setAbsoluteTolerance(4);
 
-        leftPID.setSetpoint(angle);
-        rightPID.setSetpoint(angle);
+        PID.setSetpoint(angle);
 
         // Start going to location
-        leftPID.enable();
-        rightPID.enable();
-    }
-
-    // Called repeatedly when this Command is scheduled to run
-    protected void execute() {
-        // TODO: Use WPI onTarget()
-        onTarget();
+        PID.enable();
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        if (this.doneCount > this.minDoneCycles)
-            return true;
-        else
-            return false;
-
+       return PID.onTarget();
     }
 
     // Called once after isFinished returns true
     protected void end() {
         // Disable PID output and stop robot to be safe
-        leftPID.disable();
-        rightPID.disable();
+        PID.disable();
 
         Robot.driveTrain.drive(0, 0);
     }
@@ -108,21 +81,6 @@ public class RotateDriveWithGyro extends Command {
     // subsystems is scheduled to run
     protected void interrupted() {
         end();
-    }
-
-    private boolean onTarget() {
-        if (leftPID.getError() < 4.0 && rightPID.getError() < 4.0) {
-            doneCount++;
-            return true;
-        } else {
-            doneCount = 0;
-            return false;
-        }
-
-    }
-
-    public int getDoneCount() {
-        return doneCount;
     }
 
     public void Turn() {

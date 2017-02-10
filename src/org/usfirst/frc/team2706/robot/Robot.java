@@ -62,9 +62,9 @@ public class Robot extends IterativeRobot {
                         /* no switch: do nothing */ new ArcadeDriveWithJoystick(),
                         /* position 1: do nothing */ new ArcadeDriveWithJoystick(),
                         /* position 2: Drive to baseline */ new StraightDriveWithEncoders(0.65, 5,
-                                        25, 5),
+                                        25),
                         /* position 3: Drive to opposing launch line */ new StraightDriveWithEncoders(
-                                        0.65, 20, 0, 5),
+                                        0.65, 20, 0),
                         /* position 4: Center Position place gear */ new DrivePlaceGear(0.5, 4, 2),
                         /* position 5: Right position place gear > launch */ new SideStartSideGear(
                                         true, 0.5, 7, 45, 5, 2, 20),
