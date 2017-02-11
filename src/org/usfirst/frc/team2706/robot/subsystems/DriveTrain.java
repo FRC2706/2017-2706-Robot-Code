@@ -184,20 +184,12 @@ public class DriveTrain extends Subsystem {
     }
 
     /**
-     * @param invert True to invert second motor direction for rotating
+     * @param useGyroStraightening True to invert second motor direction for rotating
      * 
      * @return The robot's drive PIDOutput
      */
-    public PIDOutput getDrivePIDOutput(boolean invert, boolean left) {
-        if (left) {
-            DrivePIDOutput out =
-                            new DrivePIDOutput(front_left_motor, back_left_motor, left, invert);
-            return out;
-        } else {
-            DrivePIDOutput out =
-                            new DrivePIDOutput(front_right_motor, back_right_motor, left, invert);
-            return out;
-        }
+    public PIDOutput getDrivePIDOutput(boolean useGyroStraightening, boolean invert) {
+        return new DrivePIDOutput(drive, useGyroStraightening, invert);
     }
 
     /**
@@ -311,18 +303,16 @@ public class DriveTrain extends Subsystem {
     }
 
     public class DrivePIDOutput implements PIDOutput {
-
-        private final Victor front;
-        private final Victor rear;
+        
+        private final RobotDrive drive;
 
         private boolean invert;
 
-        private final boolean left;
+        private final boolean useGyroStraightening;
 
-        public DrivePIDOutput(Victor front, Victor rear, boolean left, boolean invert) {
-            this.front = front;
-            this.rear = rear;
-            this.left = left;
+        public DrivePIDOutput(RobotDrive drive, boolean useGyroStraightening, boolean invert) {
+            this.drive = drive;
+            this.useGyroStraightening = useGyroStraightening;
             this.invert = invert;
         }
 
@@ -332,57 +322,23 @@ public class DriveTrain extends Subsystem {
 
             // System.out.println("Rotate:\t"+rotateVal);
 
-            // XXX: Motors must be opposite to avoid fighting
-            if (left)
+            if (useGyroStraightening)
                 if (invert) {
                     drive.arcadeDrive(output, rotateVal);
-                    // front.set(asSpeed(output, rotateVal, true));
-                    // rear.set(asSpeed(output, rotateVal, true));
                 } else {
                     drive.arcadeDrive(-output, -rotateVal);
-                    // front.set(asSpeed(-output, -rotateVal, true));
-                    // rear.set(asSpeed(-output, -rotateVal, true));
                 }
-            else if (invert) {
-                front.set(asSpeed(output, rotateVal, false));
-                rear.set(asSpeed(output, rotateVal, false));
-            } else {
-                front.set(asSpeed(-output, -rotateVal, false));
-                rear.set(asSpeed(-output, -rotateVal, false));
-            }
+            else 
+                if (invert) {
+                    drive.setLeftRightMotorOutputs(-output, output);
+                } else {
+                    drive.setLeftRightMotorOutputs(output, output);
+                }
         }
 
         public void setInvert(boolean invert) {
             this.invert = invert;
         }
-    }
-
-
-    private double asSpeed(double moveValue, double rotateValue, boolean left) {
-        double leftMotorSpeed = 0;
-        double rightMotorSpeed = 0;
-
-        if (moveValue > 0.0) {
-            if (rotateValue > 0.0) {
-                leftMotorSpeed = moveValue - rotateValue;
-                rightMotorSpeed = Math.max(moveValue, rotateValue);
-            } else {
-                leftMotorSpeed = Math.max(moveValue, -rotateValue);
-                rightMotorSpeed = moveValue + rotateValue;
-            }
-        } else {
-            if (rotateValue > 0.0) {
-                leftMotorSpeed = -Math.max(-moveValue, rotateValue);
-                rightMotorSpeed = moveValue + rotateValue;
-            } else {
-                leftMotorSpeed = moveValue - rotateValue;
-                rightMotorSpeed = -Math.max(-moveValue, -rotateValue);
-            }
-        }
-
-        // System.out.println("Drive:\t" + (left ? leftMotorSpeed : rightMotorSpeed));
-
-        return left ? leftMotorSpeed : rightMotorSpeed;
     }
 
     public double normalize(double input) {
