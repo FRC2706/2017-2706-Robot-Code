@@ -202,11 +202,16 @@ public class DriveTrain extends Subsystem {
     public void invertGyroPIDSource(boolean invert) {
         gyroPIDSource.invert(invert);
     }
+    /**
+     * Takes values of the two distance sensors and finds the angle the robot is on with the wall
+     * @return -90 to 90 degrees
+     */
     public double GetAngleWithDistanceSensors() {
-        double opposite = Math.max(getLeftDistanceToObstacle(), getRightDistanceToObstacle())
-                        - Math.min(getLeftDistanceToObstacle(), getRightDistanceToObstacle());
-        double adjacent = RobotMap.DISTANCE_SENSOR_SEPARATION_CM;
-        double theta = Math.atan(opposite / adjacent);
+        double opposite = getRightDistanceToObstacle() - getLeftDistanceToObstacle();
+        // Converts centimeters to inches so the two measurements match up
+        double adjacent = RobotMap.DISTANCE_SENSOR_SEPARATION_CM / 2.54;
+        // Inverse tangent to take two sides of the triangle and get the angle
+        double theta = Math.toDegrees(Math.atan2(opposite, adjacent));
         System.out.println(theta);
         return theta;
     }
@@ -224,7 +229,7 @@ public class DriveTrain extends Subsystem {
     public double getRightDistanceToObstacle() {
         return rightDistanceSensor.getRangeInches();
     }
-
+ 
     /**
      * @return The robot's encoder PIDSource
      */
