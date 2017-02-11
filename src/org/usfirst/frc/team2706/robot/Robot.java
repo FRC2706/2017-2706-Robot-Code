@@ -11,7 +11,9 @@ import org.usfirst.frc.team2706.robot.commands.teleop.ArcadeDriveWithJoystick;
 import org.usfirst.frc.team2706.robot.commands.teleop.RecordJoystick;
 import org.usfirst.frc.team2706.robot.subsystems.AutonomousSelector;
 import org.usfirst.frc.team2706.robot.subsystems.Camera;
+import org.usfirst.frc.team2706.robot.subsystems.Climber;
 import org.usfirst.frc.team2706.robot.subsystems.DriveTrain;
+import org.usfirst.frc.team2706.robot.subsystems.GearHandler;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -35,6 +37,12 @@ public class Robot extends IterativeRobot {
 
     // The spinny dial on the robot that selects what autonomous mode we are going to do
     public static AutonomousSelector hardwareChooser;
+    
+    //The gear handler arm
+    public static GearHandler gearHandler;
+    
+    //The climber
+    public static Climber climber;
 
     // Stores all of the joysticks, and returns them as read only.
     public static OI oi;
@@ -54,6 +62,10 @@ public class Robot extends IterativeRobot {
         // Instantiate the robot subsystems
         driveTrain = new DriveTrain();
         // camera = new Camera(Camera.CAMERA_IP);
+        
+        gearHandler = new GearHandler();
+        
+        climber = new Climber();
 
         oi = new OI();
 
