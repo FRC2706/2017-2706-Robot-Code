@@ -58,12 +58,13 @@ public class Robot extends IterativeRobot {
         // Instantiate the robot subsystems
         driveTrain = new DriveTrain();
         // camera = new Camera(Camera.CAMERA_IP);
+        
+      //New bling system class.
+        blingSystem = new Bling();
+        blingSystem.batteryInd(1.0); //Display battery voltage.
 
         oi = new OI();
         
-        //New bling system class
-        blingSystem = new Bling();
-        blingSystem.batteryInd(1.0); //Display battery voltage.
         
         // Set up our autonomous modes with the hardware selector switch
         hardwareChooser = new AutonomousSelector(

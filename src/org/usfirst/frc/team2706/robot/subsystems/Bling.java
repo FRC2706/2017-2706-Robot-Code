@@ -12,32 +12,31 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class Bling extends Subsystem {
 SerialPort blingPort = new SerialPort(9600, SerialPort.Port.kMXP);
 int pixels = 120; //The number of pixels on one LED strip
+boolean batCritical = false; /*Will be true if the battery level is critical, in which case it will override all
+*other signals to display the critical battery warning
+*/
 
 //Let's make the colour and command codes
 Map<String, String> colours = new HashMap<String, String>(){{
-put("RED", "0xff0000");
-put("GREEN", "0x008000");
-put("YELLOW", "0xffff00");
-put("PURPLE", "0x800080");
-put("ORANGE", "0xffa500");
-put("BLUE", "0x0000ff");
-put("VIOLET", "0xee82ee");
-put("MERGE", "0x5200cc");
-put("TAN", "0xffd9b3");
-put("PINK", "0xD60C9F");
-put("WHITE", "0xFFFFFF");
-put("TURQUOISE", "0x00FFFF");
-put("BLACK", "0x000000");
+put("RED", "16711680");
+put("GREEN", "32768");
+put("YELLOW", "65535");
+put("PURPLE", "8388736");
+put("ORANGE", "16753920");
+put("BLUE", "255");
+put("VIOLET", "15631086");
+put("MERGE", "5374156");
+put("TAN", "16767411");
+put("PINK", "14027935");
+put("WHITE", "16777215");
+put("TURQUOISE", "65535");
+put("BLACK", "0");
 }};
 	public Bling(){
 	    blingPort.setTimeout(0.5); //Will wait a max of half a second.
 	    blingPort.writeString("I");
 		String readString = blingPort.readString(); //Get output from the arduino.
-		blingPort.writeString("E2Z");
 		System.out.println(readString + "\nThe previous line contained the output from the arduino.");
-		
-		StickRumble rumbler = new StickRumble(0.5, 0.3, 2);
-		rumbler.start();
 		
 	}
 	
@@ -47,7 +46,8 @@ put("BLACK", "0x000000");
 	 */
 	public void auto(){ //Will run during autonomous period
 		blingPort.writeString("I");
-		if (blingPort.readString() == "R")blingPort.writeString("E0Z");
+		blingPort.writeString("E0Z"); //Clear the LED strip
+		blingPort.writeString("E1Z");
 	}
 	
 	/**
@@ -55,6 +55,7 @@ put("BLACK", "0x000000");
 	 */
 	public void startTelOp(){ //Start the teleop period for the bling
 		blingPort.writeString("I");
+		blingPort.writeString("E0Z"); //Clear the LED strip
 	}
 	
 	/**
@@ -68,13 +69,15 @@ put("BLACK", "0x000000");
     	/*Display the battery voltage of the robot's battery
     	*Voltage will be a double representing what the battery is outputting. 
     	*/
-	    blingPort.writeString("I"); //Clear the LED strip
+	    blingPort.writeString("I"); //Let them know we need to send another command
+	    blingPort.writeString("E0Z"); //Clear the LED strip
 	    String bColour;
-	    if (percent <= 0.25) bColour = "RED";
-	    else if (percent <= 0.5) bColour = "YEL";
-	    else if (percent <= 0.75) bColour = "PUR";
-	    else bColour = "GRN";
-	    blingPort.writeString("F6C" + bColour + "P" + Math.round(percent * pixels) + "E6Z");
+	    if (percent <= 0.25) bColour = colours.get("RED");
+	    else if (percent <= 0.5) bColour = colours.get("YELLOW");
+	    else if (percent <= 0.75) bColour = colours.get("PURPLE");
+	    else bColour = colours.get("GREEN");
+	    blingPort.writeString("F12C" + bColour + "D" + Math.round(percent * 100) + "E12Z"); //Use multi-colour display
+	    System.out.println("F12" + "D" + Math.round(percent * 100) + "E12Z");
 	}
 	/**
 	 * Show a distance indication on the LED strip out of 3 metres.
@@ -83,13 +86,16 @@ put("BLACK", "0x000000");
 	 */
 	public void showDistance(double distance){
 	    blingPort.writeString("I");
+	    blingPort.writeString("E0Z"); //Clear the LED strip
 	    if (distance > 3.0) return; //Only showing 3 metres from the object.
 	    double percentDist = distance/3;
+	    System.out.println(Math.round(percentDist * pixels));
 	    String dColour;
-	    if (distance > 2) dColour = "RED";
-	    else if (distance > 1) dColour = "YEL";
-	    else dColour = "GRN";
-	    blingPort.writeString("F7C" + dColour + "P" + Math.round(percentDist * pixels) + "E7Z"); //Colour flash with different colours
+	    if (distance > 2) dColour = colours.get("RED");
+	    else if (distance > 1) dColour = colours.get("YELLOW");
+	    else dColour = colours.get("GREEN");
+	    System.out.println(dColour);
+	    blingPort.writeString("F7C" + dColour + "P0" + "Q" + Math.round(percentDist * pixels) + "E7Z"); //Colour flash with different colours
 	}
 	/**
 	 * This function lets you show whether or not the robot is ready
@@ -98,33 +104,39 @@ put("BLACK", "0x000000");
 	 * : A boolean that indicates whether or not the robot is ready. True if yes.
 	 */
 	public void showReadyToReceiveGear(boolean ready){
-	    if (ready) display("Green", 3, -1, 2, 100);
+	    if (ready && !batCritical) display("Green", 3, -1, 2, 100, 0, 120); //Do not interfere with critical battery warning.
 	}
 	/**
 	 * This is used to display a basic pattern on the bling
 	 * LED lights. 
+	 * @param pattern : The type of motion or animation pattern you would like to display.
 	 * @param colour
 	 * : Colour, either as a present such as "RED", "GREEN", "WHITE" (either caps or no caps)
-	 * or in RGB888 (eg. "0x0000FF" (Solid blue)).
+	 * or in decimal format. Use a programmer calculator to determine decimal format.
 	 * <a href = "http://www.barth-dev.de/online/rgb565-color-picker/">Colour Picker</a>  
 	 * 
 	 * Presets: GREEN, RED, BLUE, YELLOW, ORANGE, PURPLE, TAN, VIOLET, MERGE, PINK, WHITE, TURQUOISE, BLACK
-	 * @param pattern
-	 * : The type of motion or animation pattern you would like to display.
-	 * @param duration
-	 * : The amount of seconds the whole thing lasts.
-	 * @param delay
-	 * : The delay between animation segments in seconds, if applicable.
+	 * @param duration : The amount of seconds the whole thing lasts.
+	 * @param delay : The delay between animation segments in seconds, if applicable.
+	 * @param pixelStart : The percent of the bar where the pixel pattern will start.
+	 * @param pixelEnd : The percent of the bar where the pattern will end.
 	 */
-	public void display(String colour, int pattern, double duration, double delay, int brightness){
+	public void display(String colour, int pattern, double duration, double delay, 
+	                int brightness, int pixelStart, int pixelEnd){
 	    String gColour = colour.replace(" ", ""); //Get rid of all the spaces
 	    gColour = gColour.toUpperCase(); //Make sure that any letters are uppercase.
 	    
 	    if ((gColour.charAt(0)) != '0'){ //Preset colour that we need to convert to RGB888.
 	     gColour = colours.get(gColour);
 	    }
+	   
+	    int startPixel = Math.round((pixelStart * pixels)/100);
+	    int endPixel = Math.round((pixelEnd * pixels)/100);
+	   
 	    blingPort.writeString("I");
-	    blingPort.writeString("F" + pattern + "C" + gColour + "B" + brightness + "D" + duration + "E" + pattern + "Z");
+	    blingPort.writeString("E0Z"); //Clear the LED strip
+	    blingPort.writeString("F" + pattern + "C" + gColour + "B" + brightness + "D" + duration + 
+	                    "P" + startPixel + "Q" + endPixel + "E" + pattern + "Z");
 	}
 
     @Override
