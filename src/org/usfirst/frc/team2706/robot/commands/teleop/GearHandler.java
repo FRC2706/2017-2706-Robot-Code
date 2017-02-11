@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class GearHandler extends Command {
 
-    private DoubleSolenoid solenoid = new DoubleSolenoid(0,0);
+    private DoubleSolenoid solenoid = new DoubleSolenoid(4,5);
     private Joystick stick ;
     private boolean closed;
     
