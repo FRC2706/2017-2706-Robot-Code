@@ -8,23 +8,16 @@ import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
-public class Climber extends Command {
+public class Climb extends Command {
 
-    private SpeedController motor = new Talon(6);
-    private Joystick stick ;
+    
     private boolean finished = false;
 
-    public Climber() {
-//      stick = Robot.oi.getDriverJoystick();
+    public Climb() {
     }
 
     protected void execute(){
-//      if (stick.getRawButton(1)){
-            motor.set(0.5);
-//      } else {
-//          motor.set(0.0);
-//      }
-    //  finished = true;
+            Robot.climber.Climb();
     }
 
     @Override
@@ -33,6 +26,6 @@ public class Climber extends Command {
     }
     
     protected void end(){
-        motor.set(0.0);
+        Robot.climber.Stop();
     }
 }
