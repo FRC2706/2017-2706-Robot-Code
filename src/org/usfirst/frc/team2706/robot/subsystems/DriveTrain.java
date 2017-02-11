@@ -199,7 +199,6 @@ public class DriveTrain extends Subsystem {
             return out;
         }
     }
-
     /**
      * @return The robot's gyro PIDSource
      */
@@ -211,7 +210,14 @@ public class DriveTrain extends Subsystem {
     public void invertGyroPIDSource(boolean invert) {
         gyroPIDSource.invert(invert);
     }
-
+    public double GetAngleWithDistanceSensors() {
+        double opposite = Math.max(getLeftDistanceToObstacle(), getRightDistanceToObstacle())
+                        - Math.min(getLeftDistanceToObstacle(), getRightDistanceToObstacle());
+        double adjacent = RobotMap.DISTANCE_SENSOR_SEPARATION_CM;
+        double theta = Math.atan(opposite / adjacent);
+        System.out.println(theta);
+        return theta;
+    }
     /**
      * @return The distance driven (average of left and right encoders).
      */

@@ -2,7 +2,8 @@ package org.usfirst.frc.team2706.robot;
 
 import java.lang.reflect.Field;
 
-import org.usfirst.frc.team2706.robot.commands.autonomous.plays.AlignAndDistance;
+import org.usfirst.frc.team2706.robot.commands.autonomous.movements.QuickRotate;
+import org.usfirst.frc.team2706.robot.commands.autonomous.movements.RotateDriveWithGyro;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -45,7 +46,7 @@ public class OI {
         this.driverStick = driverStick;
 
         EJoystickButton backLeftButton = new EJoystickButton(driverStick, 5);
-        backLeftButton.runWhileHeld(new AlignAndDistance(24));
+        backLeftButton.runWhileHeld(new RotateDriveWithGyro(0.7,Robot.driveTrain.GetAngleWithDistanceSensors(),25));
 
         // Joystick for controlling the mechanisms of the robot
         this.controlStick = controlStick;

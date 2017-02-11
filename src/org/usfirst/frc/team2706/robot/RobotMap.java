@@ -145,6 +145,9 @@ public class RobotMap {
     public static final int RIGHT_ULTRASONIC_ECHO_CHANNEL =
                     getConstant("RIGHT_ULTRASONIC_ECHO_CHANNEL");
 
+    private static final double[] DISTANCE_SENSOR_SEPARATION_CM_VALS = {38.5,38.5,38.5};
+    public static final double DISTANCE_SENSOR_SEPARATION_CM = 
+                    getConstant("DISTANCE_SENSOR_SEPARATION_CM");
 
     private static final String ROBOT_ID_LOC = "/home/lvuser/robot-type.conf";
 
