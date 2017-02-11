@@ -3,8 +3,6 @@ package org.usfirst.frc.team2706.robot;
 import java.lang.reflect.Field;
 
 import org.usfirst.frc.team2706.robot.commands.autonomous.plays.AlignAndDistance;
-import org.usfirst.frc.team2706.robot.controls.StickRumble;
-import org.usfirst.frc.team2706.robot.subsystems.testBling;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -52,18 +50,6 @@ public class OI { //Operator Interface
         EJoystickButton backLeftButton = new EJoystickButton(driverStick, 5);
         backLeftButton.runWhileHeld(new AlignAndDistance(24));
         
-        System.out.println("Got to the stick definitions");
-        EJoystickButton A = new EJoystickButton(driverStick, 1),
-        B = new EJoystickButton(driverStick, 2),
-        C = new EJoystickButton(driverStick, 3),
-        D = new EJoystickButton(driverStick, 4);
-        
-        A.whenPressed(new testBling(1));
-        B.whenPressed(new testBling(2));
-        C.whenPressed(new testBling(3));
-        D.whenPressed(new testBling(4));
-        //StickRumble rumbler = new StickRumble(0.5, 0.3, 2);
-        //rumbler.start();
         
 
     }
