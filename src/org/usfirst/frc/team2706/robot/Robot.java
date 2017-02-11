@@ -59,12 +59,11 @@ public class Robot extends IterativeRobot {
         driveTrain = new DriveTrain();
         // camera = new Camera(Camera.CAMERA_IP);
         
-      //New bling system class.
+        // New bling system class.
         blingSystem = new Bling();
         blingSystem.batteryInd(1.0); //Display battery voltage.
 
         oi = new OI();
-        
         
         // Set up our autonomous modes with the hardware selector switch
         hardwareChooser = new AutonomousSelector(
@@ -122,6 +121,7 @@ public class Robot extends IterativeRobot {
      */
     public void autonomousInit() {
         driveTrain.reset();
+        
         blingSystem.auto(); //Get the bling doing autonomous patterns.
 
         // Great for safety just in case you set the wrong one in practice ;)
@@ -153,7 +153,8 @@ public class Robot extends IterativeRobot {
 
         if (SmartDashboard.getBoolean("record-joystick", false))
             recordAJoystick.start();
-        blingSystem.startTelOp();
+        
+            blingSystem.startTelOp();
     }
 
     /**
