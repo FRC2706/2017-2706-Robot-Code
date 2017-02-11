@@ -14,14 +14,10 @@ public class StraightDriveWithEncoders extends Command {
 
     private final double distance;
 
-    private final int minDoneCycles;
-
     private final double error;
 
-    private final PIDController leftPID;
-    private final PIDController rightPID;
+    private final PIDController PID;
 
-    private int doneCount;
     private final double P = 1.0, I = 0.03, D = 0.25;
 
     /**
@@ -29,27 +25,19 @@ public class StraightDriveWithEncoders extends Command {
      * 
      * @param speed Speed in range [-1,1]
      * @param distance The encoder distance to travel
-     * @param minDoneCycles The amount of cycles when the robot is within its target range to end
-     *        the command
      * @param error The range that the robot is happy ending the command in
      */
-    public StraightDriveWithEncoders(double speed, double distance, int minDoneCycles,
-                    double error) {
+    public StraightDriveWithEncoders(double speed, double distance, double error) {
         requires(Robot.driveTrain);
 
         this.speed = speed;
 
         this.distance = distance;
 
-        this.minDoneCycles = minDoneCycles;
-
         this.error = error / 12.0;
 
-        leftPID = new PIDController(P, I, D, Robot.driveTrain.getEncoderPIDSource(true),
-                        Robot.driveTrain.getDrivePIDOutput(false, true));
-
-        rightPID = new PIDController(P, I, D, Robot.driveTrain.getEncoderPIDSource(false),
-                        Robot.driveTrain.getDrivePIDOutput(false, false));
+        PID = new PIDController(P, I, D, Robot.driveTrain.getEncoderPIDSource(true),
+                        Robot.driveTrain.getDrivePIDOutput(true, false));
     }
 
     // Called just before this Command runs the first time
@@ -57,58 +45,36 @@ public class StraightDriveWithEncoders extends Command {
         Robot.driveTrain.reset();
 
         // Make input infinite
-        leftPID.setContinuous();
-        rightPID.setContinuous();
+        PID.setContinuous();
 
         // Set output speed range
         if (speed > 0) {
-            leftPID.setOutputRange(-speed, speed);
-            rightPID.setOutputRange(-speed, speed);
+            PID.setOutputRange(-speed, speed);
         } else {
-            leftPID.setOutputRange(speed, -speed);
-            rightPID.setOutputRange(speed, -speed);
+            PID.setOutputRange(speed, -speed);
         }
 
         Robot.driveTrain.initGyro = Robot.driveTrain.getHeading();
 
-        leftPID.setSetpoint(distance);
-        rightPID.setSetpoint(distance);
+        PID.setSetpoint(distance);
 
 
         // Will accept within 5 inch of target
-        leftPID.setAbsoluteTolerance(error);
-        rightPID.setAbsoluteTolerance(error);
+        PID.setAbsoluteTolerance(error);
 
         // Start going to location
-        leftPID.enable();
-        // rightPID.enable();
-    }
-
-    // Called repeatedly when this Command is scheduled to run
-    protected void execute() {
-        // TODO: Use WPI onTarget()
-        onTarget();
+        PID.enable();
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        if (this.doneCount > this.minDoneCycles) {
-            System.out.println("Command Ended!");
-
-            return true;
-
-        } else {
-            return false;
-        }
-
+        return PID.onTarget();
     }
 
     // Called once after isFinished returns true
     protected void end() {
-        doneCount = 0;
         // Disable PID output and stop robot to be safe
-        leftPID.disable();
-        rightPID.disable();
+        PID.disable();
         Robot.driveTrain.drive(0, 0);
     }
 
@@ -116,20 +82,5 @@ public class StraightDriveWithEncoders extends Command {
     // subsystems is scheduled to run
     protected void interrupted() {
         end();
-    }
-
-    private boolean onTarget() {
-        if (Math.abs(leftPID.getError()) < error && Math.abs(rightPID.getError()) < error) {
-            doneCount++;
-            return true;
-        } else {
-            doneCount = 0;
-            return false;
-        }
-
-    }
-
-    public int getDoneCount() {
-        return doneCount;
     }
 }
