@@ -146,7 +146,7 @@ public class Bling extends Subsystem {
      * @param pixelStart : The percent of the bar where the pixel pattern will start.
      * @param pixelEnd : The percent of the bar where the pattern will end.
      */
-    public void display(String colour, int pattern, double duration, double delay, int brightness,
+    public void customDisplay(String colour, int pattern, double duration, double delay, int brightness,
                     int pixelStart, int pixelEnd) {
 
         String gColour = colour.replace(" ", ""); // Get rid of all the spaces
