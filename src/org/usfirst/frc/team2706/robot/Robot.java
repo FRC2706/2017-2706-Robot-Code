@@ -39,8 +39,8 @@ public class Robot extends IterativeRobot {
 
     // Stores all of the joysticks, and returns them as read only.
     public static OI oi;
-    
-    //This will be the bling subsystem controller
+
+    // This will be the bling subsystem controller
     public static Bling blingSystem;
 
     // Which command is going to be ran based on the hardwareChooser
@@ -58,13 +58,13 @@ public class Robot extends IterativeRobot {
         // Instantiate the robot subsystems
         driveTrain = new DriveTrain();
         // camera = new Camera(Camera.CAMERA_IP);
-        
+
         // New bling system class.
         blingSystem = new Bling();
-        blingSystem.batteryInd(1.0); //Display battery voltage.
+        blingSystem.batteryInd(1.0); // Display battery voltage.
 
         oi = new OI();
-        
+
         // Set up our autonomous modes with the hardware selector switch
         hardwareChooser = new AutonomousSelector(
                         /* no switch: do nothing */ new ArcadeDriveWithJoystick(),
@@ -121,8 +121,9 @@ public class Robot extends IterativeRobot {
      */
     public void autonomousInit() {
         driveTrain.reset();
-        
-        blingSystem.auto(); //Get the bling doing autonomous patterns.
+
+        // Get the bling doing autonomous patterns.
+        blingSystem.auto(); 
 
         // Great for safety just in case you set the wrong one in practice ;)
         System.out.println("Running " + hardwareChooser.getSelected() + "...");
@@ -153,8 +154,8 @@ public class Robot extends IterativeRobot {
 
         if (SmartDashboard.getBoolean("record-joystick", false))
             recordAJoystick.start();
-        
-            blingSystem.startTelOp();
+
+        blingSystem.startTeleOp();
     }
 
     /**

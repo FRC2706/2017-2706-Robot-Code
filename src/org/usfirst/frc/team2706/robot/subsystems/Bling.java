@@ -110,13 +110,9 @@ public class Bling extends Subsystem {
             dColour = colours.get("YELLOW");
         else
             dColour = colours.get("GREEN");
-        System.out.println(dColour);
-        blingPort.writeString(
-                        "F7C" + dColour + "P0" + "Q" + Math.round(percentDist * pixels) + "E7Z"); // Colour
-                                                                                                  // flash
-                                                                                                  // with
-                                                                                                  // different
-                                                                                                  // colours
+        
+        // Colour flash
+        blingPort.writeString("F7C" + dColour + "P0" + "Q" + Math.round(percentDist * pixels) + "E7Z");
     }
 
     /**
@@ -127,7 +123,7 @@ public class Bling extends Subsystem {
     public void showReadyToReceiveGear(boolean ready) {
         // Do not interfere with critical battery warning.
         if (ready && !batCritical)
-            display("Green", 3, -1, 2, 100, 0, 120);
+            customDisplay("Green", 3, -1, 2, 100, 0, 120);
     }
 
     /**
