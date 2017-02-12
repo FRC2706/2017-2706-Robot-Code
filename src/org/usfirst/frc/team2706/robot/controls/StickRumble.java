@@ -63,7 +63,7 @@ public class StickRumble extends Command{
             operatorJoy.setRumble(RumbleType.kLeftRumble, 1.0);
             operatorJoy.setRumble(RumbleType.kRightRumble, 1.0);
         }
-        else{
+        else {
             joystick.setRumble(RumbleType.kRightRumble, 0.0);
             joystick.setRumble(RumbleType.kLeftRumble, 0.0);
             operatorJoy.setRumble(RumbleType.kLeftRumble, 0.0);
