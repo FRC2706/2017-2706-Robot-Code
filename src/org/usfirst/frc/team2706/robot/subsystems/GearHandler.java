@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /** 
- * This is a subsystem for the gear handler arm thing
+ * Coordinates commands for the Gear Handler Arm mechanisms. 
  */
 public class GearHandler extends Subsystem {
 

@@ -6,13 +6,12 @@ import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
- *
+ * Coordinates commands for the climber mechanism.
  */
 public class Climber extends Subsystem {
 
     private SpeedController motor = new Talon(6);
     private boolean finished = false;
-
 
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.
