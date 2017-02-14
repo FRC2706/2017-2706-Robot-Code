@@ -145,7 +145,14 @@ public class RobotMap {
     public static final int RIGHT_ULTRASONIC_ECHO_CHANNEL =
                     getConstant("RIGHT_ULTRASONIC_ECHO_CHANNEL");
 
+    // Gear handler Arms
+    private static final int[] SOLENOID_FORWARD_CHANNEL_VALS = {4, 4, 4};
+    public static final int SOLENOID_FORWARD_CHANNEL= getConstant("SOLENOID_FORWARD_CHANNEL");
 
+    private static final int[] SOLENOID_REVERSE_CHANNEL_VALS = {5, 5, 5};
+    public static final int SOLENOID_REVERSE_CHANNEL= getConstant("SOLENOID_REVERSE_CHANNEL");
+    
+    
     private static final String ROBOT_ID_LOC = "/home/lvuser/robot-type.conf";
 
     private static int getRobotID() {

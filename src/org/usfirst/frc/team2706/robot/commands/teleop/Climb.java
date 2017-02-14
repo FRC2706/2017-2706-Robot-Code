@@ -10,22 +10,18 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class Climb extends Command {
 
-    
-    private boolean finished = false;
-
-    public Climb() {
-    }
-
-    protected void execute(){
-            Robot.climber.Climb();
+    protected void execute() {
+        Robot.climber.Climb();
     }
 
     @Override
     protected boolean isFinished() {
-        return finished;
+        // sfinished is always false because we are using EJoystickButton.whileHeld 
+        // which will call end() when the button is released
+        return false;
     }
-    
-    protected void end(){
+
+    protected void end() {
         Robot.climber.Stop();
     }
 }
