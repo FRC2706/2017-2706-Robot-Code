@@ -11,6 +11,8 @@ public class DriveWithDecelerationCurve extends Command {
 
     private final double minimumSpeed;
     private final double maximumSpeed;
+    
+    private final boolean invert;
 
     private double a;
     private double stopFromTargetDistance;
@@ -29,10 +31,11 @@ public class DriveWithDecelerationCurve extends Command {
      * @param maximumSpeed The fastest the robot will drive at
      * @param alpha The weight given to the current sensor data, verses the previous weighted
      *        average
+     * @param invert Whether to invert the output given to the motors
      */
     public DriveWithDecelerationCurve(double desiredDistanceToObstacle,
                     double maximumDistanceFromObstacle, double minimumSpeed, double maximumSpeed,
-                    double alpha) {
+                    double alpha, boolean invert) {
         requires(Robot.driveTrain);
 
         this.desiredDistanceToObstacle = desiredDistanceToObstacle;
@@ -40,6 +43,7 @@ public class DriveWithDecelerationCurve extends Command {
         this.minimumSpeed = minimumSpeed;
         this.maximumSpeed = maximumSpeed;
         this.alpha = alpha;
+        this.invert = invert;
     }
 
     // Called just before this Command runs the first time
@@ -69,12 +73,16 @@ public class DriveWithDecelerationCurve extends Command {
 
         // Make sure to stop driving once the stopFromTargetDistance is reached
         if (distanceToObstacle < stopFromTargetDistance)
-            driveSpeed = 0;
+            driveSpeed = minimumSpeed;
 
         // Drive backwards in same pattern if target is behind robot
         if ((desiredDistanceToObstacle - Robot.driveTrain.getDistanceToObstacle()) < 0)
             driveSpeed = -driveSpeed;
 
+        // Invert output in case the ultrasonics are on the front
+        if(invert)
+            driveSpeed = -driveSpeed;
+        
         double rotateVal = (Robot.driveTrain.normalize(
                         Robot.driveTrain.getHeading() - Robot.driveTrain.initGyro) * 0.1);
         Robot.driveTrain.arcadeDrive(-driveSpeed, -rotateVal);
