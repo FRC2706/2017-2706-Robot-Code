@@ -17,6 +17,6 @@ public class AlignAndDistance extends CommandGroup {
         this.addSequential(new StraightenWithDistanceSensor(0.6, 0.8, 0.65, 0.25, 25, false, 25,
                         0.025, 0.8));
         this.addSequential(new StraightDriveWithTime(0.0, 250));
-        this.addSequential(new DriveWithDecelerationCurve(distance, 3, 0.0, 0.6, 0.8));
+        this.addSequential(new DriveWithDecelerationCurve(distance, 3, 0.0, 0.6, 0.8, false));
     }
 }
