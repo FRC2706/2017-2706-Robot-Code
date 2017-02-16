@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.command.Command;
  * This command is activated when the driver holds the corresponding button, turning the motor in the climber mechanism.
  * 
  * @author wakandacat, FilledWithDetermination, Crazycat200
- *
  */
 public class Climb extends Command {
 

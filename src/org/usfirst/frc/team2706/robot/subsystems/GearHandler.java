@@ -17,8 +17,7 @@ public class GearHandler extends Subsystem {
     // Let's use this to keep track of whether the arm is closed :)
     private boolean closed = true;
 
-    public void initDefaultCommand() {
-    }
+    public void initDefaultCommand() {}
     
     public void openArm() {
         solenoid.set(DoubleSolenoid.Value.kForward);
