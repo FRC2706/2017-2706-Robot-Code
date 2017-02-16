@@ -3,6 +3,8 @@ package org.usfirst.frc.team2706.robot;
 import java.lang.reflect.Field;
 
 import org.usfirst.frc.team2706.robot.commands.autonomous.plays.AlignAndDistance;
+import org.usfirst.frc.team2706.robot.commands.teleop.Climb;
+import org.usfirst.frc.team2706.robot.commands.teleop.GearHandlerToggle;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -48,6 +50,12 @@ public class OI {
 
         EJoystickButton backLeftButton = new EJoystickButton(driverStick, 5);
         backLeftButton.runWhileHeld(new AlignAndDistance(24));
+
+        EJoystickButton a = new EJoystickButton(driverStick, 1);
+        a.runWhileHeld(new Climb());
+
+        EJoystickButton b = new EJoystickButton(driverStick, 2);
+        b.whenPressed(new GearHandlerToggle());
 
         // Joystick for controlling the mechanisms of the robot
         this.controlStick = controlStick;
