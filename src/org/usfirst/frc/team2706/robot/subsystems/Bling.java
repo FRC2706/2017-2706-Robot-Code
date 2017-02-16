@@ -4,6 +4,8 @@ package org.usfirst.frc.team2706.robot.subsystems;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.usfirst.frc.team2706.robot.RobotMap;
+
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -11,13 +13,14 @@ public class Bling extends Subsystem {
 
     SerialPort blingPort = new SerialPort(9600, SerialPort.Port.kMXP);
 
-    int pixels = 120; // The number of pixels on one LED strip
+    int pixels = RobotMap.LED_Strip_PixelCount; // The number of pixels on one LED strip
 
     /*
      * Will be true if the battery level is critical, in which case it will override all other
      * signals to display the critical battery warning
      */
-    boolean batCritical = false;
+    public static boolean batCritical = false;
+    
 
 
     // Let's make the colour and command codes
@@ -37,13 +40,14 @@ public class Bling extends Subsystem {
             put("TURQUOISE", "65535");
             put("BLACK", "0");
         }
+        
     };
 
     public Bling() {
 
         blingPort.setTimeout(0.5); // Will wait a max of half a second.
         blingPort.writeString("I");
-        String readString = blingPort.readString(); // Get output from the arduino.
+       
 
     }
 
@@ -71,9 +75,12 @@ public class Bling extends Subsystem {
      * automatically at startup.
      * 
      * @param percent : The current voltage percent reading from the battery.
+     * @param criticalStatus : Needs to be true if the battery level is below 20%.
      */
-    public void batteryInd(double percent) {
+    public void batteryInd(double percent, boolean criticalStatus) {
 
+        batCritical = criticalStatus;
+        
         blingPort.writeString("I"); // Let them know we need to send another command
         blingPort.writeString("E0Z"); // Clear the LED strip
         String bColour;

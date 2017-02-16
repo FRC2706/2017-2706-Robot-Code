@@ -148,6 +148,13 @@ public class RobotMap {
 
     private static final String ROBOT_ID_LOC = "/home/lvuser/robot-type.conf";
 
+    // Bling Various
+    // Number of pixels in LED Strip
+    public static final int LED_Strip_PixelCount = 120;
+    
+    // Battery Variable which equals the voltage of the battery
+    public static final double BatteryCapacity = 12.0;
+                    
     private static int getRobotID() {
         int temp = 0;
 

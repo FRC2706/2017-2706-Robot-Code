@@ -48,6 +48,7 @@ public class Robot extends IterativeRobot {
 
     // Records joystick states to file for later replaying
     RecordJoystick recordAJoystick;
+    
 
     /**
      * This function is run when the robot is first started up and should be used for any
@@ -58,12 +59,13 @@ public class Robot extends IterativeRobot {
         // Instantiate the robot subsystems
         driveTrain = new DriveTrain();
         // camera = new Camera(Camera.CAMERA_IP);
-
-        // New bling system class.
-        blingSystem = new Bling();
-        blingSystem.batteryInd(1.0); // Display battery voltage.
-
+        
         oi = new OI();
+
+        // New bling subsystem class.
+        blingSystem = new Bling();
+        
+                
 
         // Set up our autonomous modes with the hardware selector switch
         hardwareChooser = new AutonomousSelector(
@@ -97,6 +99,7 @@ public class Robot extends IterativeRobot {
 
         recordAJoystick = new RecordJoystick(oi.getDriverJoystick(), oi.getOperatorJoystick(),
                         () -> SmartDashboard.getString("record-joystick-name", "default"));
+        
     }
 
     /**
@@ -133,6 +136,7 @@ public class Robot extends IterativeRobot {
         // Schedule the autonomous command that was selected
         if (autonomousCommand != null)
             autonomousCommand.start();
+        
     }
 
     /**
@@ -155,7 +159,6 @@ public class Robot extends IterativeRobot {
         if (SmartDashboard.getBoolean("record-joystick", false))
             recordAJoystick.start();
 
-        blingSystem.startTeleOp();
     }
 
     /**
