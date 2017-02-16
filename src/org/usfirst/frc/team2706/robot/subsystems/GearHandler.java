@@ -7,6 +7,8 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 /** 
  * Coordinates commands for the Gear Handler Arm mechanisms. 
+ * 
+ * @author wakandacat, FilledWithDetermination, Crazycat200
  */
 public class GearHandler extends Subsystem {
 
@@ -18,21 +20,21 @@ public class GearHandler extends Subsystem {
     public void initDefaultCommand() {
     }
     
-    public void OpenArm() {
+    public void openArm() {
         solenoid.set(DoubleSolenoid.Value.kForward);
         closed = false;
     }
     
-    public void CloseArm() {
+    public void closeArm() {
         solenoid.set(DoubleSolenoid.Value.kReverse); 
         closed = true;
     }
     
-    public void ToggleArm() {
+    public void toggleArm() {
         if (closed) {
-            OpenArm();
+            openArm();
         } else {
-            CloseArm();
+            closeArm();
         }
     }
 }

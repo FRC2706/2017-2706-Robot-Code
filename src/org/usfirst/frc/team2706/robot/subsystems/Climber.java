@@ -1,5 +1,8 @@
 package org.usfirst.frc.team2706.robot.subsystems;
 
+import org.usfirst.frc.team2706.robot.RobotMap;
+
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
@@ -7,24 +10,23 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
  * Coordinates commands for the climber mechanism.
+ * 
+ * @author wakandacat, FilledWithDetermination, Crazycat200
  */
 public class Climber extends Subsystem {
-
-    private SpeedController motor = new Talon(6);
+  
+    private SpeedController motor = new Talon(RobotMap.CLIMBER_MOTOR);
     private boolean finished = false;
 
     public void initDefaultCommand() {
-        // Set the default command for a subsystem here.
-        //setDefaultCommand(new MySpecialCommand());
     }
     
-    public void Climb() {
+    public void climb() {
         motor.set(0.5);
     }
     
-    public void Stop() {
+    public void stop() {
         motor.set(0.0);
-    }
-    
+    }   
 }
 

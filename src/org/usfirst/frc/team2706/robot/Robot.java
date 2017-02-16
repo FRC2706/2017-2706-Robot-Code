@@ -40,10 +40,10 @@ public class Robot extends IterativeRobot {
     // The spinny dial on the robot that selects what autonomous mode we are going to do
     public static AutonomousSelector hardwareChooser;
     
-    //The gear handler arm
+    // The gear handler arm
     public static GearHandler gearHandler;
     
-    //The climber
+    // The climber
     public static Climber climber;
 
     // Stores all of the joysticks, and returns them as read only.

@@ -152,6 +152,9 @@ public class RobotMap {
     private static final int[] SOLENOID_REVERSE_CHANNEL_VALS = {5, 5, 5};
     public static final int SOLENOID_REVERSE_CHANNEL= getConstant("SOLENOID_REVERSE_CHANNEL");
     
+    // Climber motor
+    private static final int[] CLIMBER_MOTOR_VALS = {6, 6, 6};
+    public static final int CLIMBER_MOTOR = getConstant("CLIMBER_MOTOR");
     
     private static final String ROBOT_ID_LOC = "/home/lvuser/robot-type.conf";
 
