@@ -52,7 +52,7 @@ public class OI {
         backLeftButton.runWhileHeld(new AlignAndDistance(24));
 
         EJoystickButton a = new EJoystickButton(driverStick, 1);
-        a.whileHeld(new Climb());
+        a.runWhileHeld(new Climb());
 
         EJoystickButton b = new EJoystickButton(driverStick, 2);
         b.whenPressed(new GearHandlerToggle());
