@@ -20,7 +20,7 @@ public class RotateDriveWithGyroDistanceSensorHybrid extends Command {
 
     private final PIDController PID;
 
-    private final double P = 1, I = 0, D = 0, F = 0;
+    private final double P = 10, I = 0.5, D = 3, F = 0;
 
     /**
      * Drive at a specific speed for a certain amount of time
@@ -53,7 +53,7 @@ public class RotateDriveWithGyroDistanceSensorHybrid extends Command {
             PID.setOutputRange(speed, -speed);
         }
         // Will accept within 1 degrees of target
-        PID.setAbsoluteTolerance(2);
+        PID.setAbsoluteTolerance(0.25);
 
         PID.setSetpoint(angle);
 
