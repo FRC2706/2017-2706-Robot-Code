@@ -174,6 +174,7 @@ public class DriveTrain extends Subsystem {
      */
     public void resetGyro() {
         gyro.reset();
+        resetDisplacement();
     }
 
     /**
@@ -182,7 +183,36 @@ public class DriveTrain extends Subsystem {
     public double getHeading() {
         return gyro.getAngle();
     }
-
+    
+    /**
+     * Resets the displacement of the robot
+     */
+    public  void resetDisplacement() {
+        gyro.resetDisplacement();
+    }
+    
+    /**
+     * Gets the x distance of the robot with a direction
+     */
+    public double getDisplacementX() {
+        return gyro.getDisplacementX();
+    }
+    
+    /**
+     * Gets the y distance of the robot with a direction
+     */
+    
+    public double getDisplacementY() {
+        return gyro.getDisplacementY();
+    }
+    
+    /**
+     * Gets the z distance of the robot with a direction
+     */
+    public double getDisplacementZ() {
+        return gyro.getDisplacementZ();
+    }
+    
     /**
      * @param useGyroStraightening True to invert second motor direction for rotating
      * 
@@ -191,6 +221,7 @@ public class DriveTrain extends Subsystem {
     public PIDOutput getDrivePIDOutput(boolean useGyroStraightening, boolean invert) {
         return new DrivePIDOutput(drive, useGyroStraightening, invert);
     }
+    
     /**
      * @return The robot's gyro PIDSource
      */
@@ -202,6 +233,7 @@ public class DriveTrain extends Subsystem {
     public void invertGyroPIDSource(boolean invert) {
         gyroPIDSource.invert(invert);
     }
+    
     /**
      * Takes values of the two distance sensors and finds the angle the robot is on with the wall
      * @return -90 to 90 degrees
@@ -283,7 +315,7 @@ public class DriveTrain extends Subsystem {
 
         private final DriveTrain driveTrain;
         private boolean invert;
-
+        
         public GyroPIDSource(DriveTrain driveTrain) {
             this.driveTrain = driveTrain;
         }
