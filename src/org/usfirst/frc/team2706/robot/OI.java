@@ -2,6 +2,7 @@ package org.usfirst.frc.team2706.robot;
 
 import java.lang.reflect.Field;
 
+import org.usfirst.frc.team2706.robot.commands.GetTargets;
 import org.usfirst.frc.team2706.robot.commands.autonomous.plays.AlignAndDistance;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -51,6 +52,9 @@ public class OI {
 
         // Joystick for controlling the mechanisms of the robot
         this.controlStick = controlStick;
+        
+        EJoystickButton CameraButton = new EJoystickButton(driverStick, 3);
+        CameraButton.whenPressed(new GetTargets());
 
 
     }

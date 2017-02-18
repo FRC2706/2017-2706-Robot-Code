@@ -31,16 +31,17 @@ public class Camera extends Subsystem {
         RPi_addr = ip;
     }
 
+   public void GetTargets() {
    
            ArrayList<TrackerBox2.TargetObject> targets = trackerbox.getVisionData();
-
+              if (targets!=null){
 
            System.out.println("I found "+targets.size()+" targets.");
            for(TrackerBox2.TargetObject target : targets)
                System.out.println("\tI found: "+target.toString());
 
            System.out.println();
-       
+              }
    }
    /*public float GetBoundingArea() {
         return cachedTarget.boundingArea;
