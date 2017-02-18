@@ -1,12 +1,11 @@
 package org.usfirst.frc.team2706.robot.controls;
 
+import org.usfirst.frc.team2706.robot.Robot;
+
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
-import org.usfirst.frc.team2706.robot.Robot;
-
-import org.usfirst.frc.team2706.robot.Robot;
 
 public class StickRumble extends Command {
 
