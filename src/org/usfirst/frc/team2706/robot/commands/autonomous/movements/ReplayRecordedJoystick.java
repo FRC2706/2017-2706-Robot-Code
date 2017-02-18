@@ -111,10 +111,27 @@ public class ReplayRecordedJoystick extends Command {
     @Override
     public void end() {
         super.end();
+        
         ((RecordableJoystick) driverStick).end();
         ((RecordableJoystick) operatorStick).end();
 
+        if (Robot.driveTrain.getDefaultCommand() instanceof ArcadeDriveWithJoystick) {
+            ((ArcadeDriveWithJoystick) Robot.driveTrain.getDefaultCommand())
+                            .setJoystick(((RecordableJoystick) driverStick).getRealJoystick());
+        }
+
         Robot.oi.destroy();
+        
+        Joystick driverStick = this.driverStick, operatorStick = this.operatorStick;
+        
+        while(driverStick instanceof RecordableJoystick) {
+            driverStick = ((RecordableJoystick) driverStick).getRealJoystick();
+        }
+        
+        while(operatorStick instanceof RecordableJoystick) {
+            operatorStick = ((RecordableJoystick) operatorStick).getRealJoystick();
+        }
+        
         Robot.oi = new OI(driverStick, operatorStick);
     }
 

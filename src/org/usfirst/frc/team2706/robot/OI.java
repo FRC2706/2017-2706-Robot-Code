@@ -59,8 +59,6 @@ public class OI {
 
         // Joystick for controlling the mechanisms of the robot
         this.controlStick = controlStick;
-
-
     }
 
 
