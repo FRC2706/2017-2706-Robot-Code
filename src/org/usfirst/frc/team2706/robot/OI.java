@@ -3,8 +3,9 @@ package org.usfirst.frc.team2706.robot;
 import java.lang.reflect.Field;
 
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.CurveDrive;
-import org.usfirst.frc.team2706.robot.commands.autonomous.movements.RotateDriveWithGyroDistanceSensorHybrid;
-import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithEncoders;
+import org.usfirst.frc.team2706.robot.commands.autonomous.plays.AlignAndDistance;
+import org.usfirst.frc.team2706.robot.commands.teleop.Climb;
+import org.usfirst.frc.team2706.robot.commands.teleop.GearHandlerToggle;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -48,13 +49,24 @@ public class OI {
         // Joystick for driving the robot around
         this.driverStick = driverStick;
 
+        // TODO we need to start using controlStick and not driverStick for non-testing buttons
+        
         EJoystickButton backLeftButton = new EJoystickButton(driverStick, 5);
-        backLeftButton.runWhileHeld(new CurveDrive(2,3,45,0.45));
-       // backLeftButton.whenReleased();
+        backLeftButton.runWhileHeld(new AlignAndDistance(24));
+        
+        EJoystickButton backRightButton = new EJoystickButton(driverStick, 6);
+        backRightButton.runWhileHeld(new CurveDrive(2,3,45,0.45));
+        
+        
+
+        EJoystickButton a = new EJoystickButton(driverStick, 1);
+        a.runWhileHeld(new Climb());
+
+        EJoystickButton b = new EJoystickButton(driverStick, 2);
+        b.whenPressed(new GearHandlerToggle());
+
         // Joystick for controlling the mechanisms of the robot
         this.controlStick = controlStick;
-
-
     }
 
 

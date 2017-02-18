@@ -92,12 +92,20 @@ public class RecordJoystick extends Command {
     @Override
     public void end() {
         super.end();
+        
         ((RecordableJoystick) driverStick).end();
         ((RecordableJoystick) operatorStick).end();
 
-        Robot.oi.destroy();
-        Robot.oi = new OI(((RecordableJoystick) driverStick).getRealJoystick(),
-                        ((RecordableJoystick) operatorStick).getRealJoystick());
+        // Make sure that Oi receives a real joystick, not a RecordableJoystick
+        while(driverStick instanceof RecordableJoystick) {
+            driverStick = ((RecordableJoystick) driverStick).getRealJoystick();
+        }
+        
+        while(operatorStick instanceof RecordableJoystick) {
+            operatorStick = ((RecordableJoystick) operatorStick).getRealJoystick();
+        }
+        
+        Robot.oi = new OI(driverStick, operatorStick);
     }
 
     @Override
