@@ -124,6 +124,7 @@ public class ReplayRecordedJoystick extends Command {
         
         Joystick driverStick = this.driverStick, operatorStick = this.operatorStick;
         
+        // Make sure that Oi receives a real joystick, not a RecordableJoystick
         while(driverStick instanceof RecordableJoystick) {
             driverStick = ((RecordableJoystick) driverStick).getRealJoystick();
         }

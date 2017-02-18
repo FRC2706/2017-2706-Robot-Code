@@ -96,6 +96,7 @@ public class RecordJoystick extends Command {
         ((RecordableJoystick) driverStick).end();
         ((RecordableJoystick) operatorStick).end();
 
+        // Make sure that Oi receives a real joystick, not a RecordableJoystick
         while(driverStick instanceof RecordableJoystick) {
             driverStick = ((RecordableJoystick) driverStick).getRealJoystick();
         }
