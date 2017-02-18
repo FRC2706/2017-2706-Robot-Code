@@ -137,6 +137,7 @@ public class Robot extends IterativeRobot {
      * additional strings & commands.
      */
     public void autonomousInit() {
+        
         driveTrain.reset();
 
         // Get the bling doing autonomous patterns.
@@ -150,6 +151,7 @@ public class Robot extends IterativeRobot {
         // Schedule the autonomous command that was selected
         if (autonomousCommand != null)
             autonomousCommand.start();
+        
         
     }
 

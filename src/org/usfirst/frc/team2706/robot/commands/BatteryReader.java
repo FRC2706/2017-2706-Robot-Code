@@ -1,7 +1,7 @@
 package org.usfirst.frc.team2706.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.hal.PDPJNI;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 
 import org.usfirst.frc.team2706.robot.Robot;
 import org.usfirst.frc.team2706.robot.RobotMap;
@@ -21,8 +21,17 @@ public class BatteryReader extends Command{
 
     public static double fullBatteryCapacity = RobotMap.BatteryCapacity; 
     
+    public static PowerDistributionPanel pdp; // Get a new battery object.
+    
+    
     public BatteryReader(){
-        System.out.println("Initialised");   
+      
+        pdp = new PowerDistributionPanel();
+        batteryOutputVoltage = pdp.getVoltage();
+        double batteryPercent = (batteryOutputVoltage - 10) / (fullBatteryCapacity - 10);
+        System.out.println("Battery Percent " + batteryPercent);
+        Robot.blingSystem.batteryInd(batteryPercent, false);
+        
     }
     
     /**
@@ -31,27 +40,22 @@ public class BatteryReader extends Command{
     public void execute(){
         
         // Get the battery voltage.
-        batteryOutputVoltage = PDPJNI.getPDPVoltage(0);
-        System.out.println("Voltage" + batteryOutputVoltage); // Remove Later
+        batteryOutputVoltage = pdp.getVoltage();
+        double batteryPercent = (batteryOutputVoltage - 10) / (fullBatteryCapacity - 10);
         
-        // The battery critical boolean should be true if the battery voltage is below 20%. 
-        if (batteryOutputVoltage / fullBatteryCapacity <= 0.2) {
-            
+        /* The battery critical boolean should be true if the battery voltage is below 20%, but don't want
+        to spam the bling system. */
+        if (batteryPercent <= 0.2 && !batCritical) {
+            System.out.println("Low Battery " + batCritical);
             batCritical = true;
+            Robot.blingSystem.batteryInd(batteryPercent, batCritical);
             
         }
         
-        else batCritical = false;
+        if (batteryPercent > 0.2) batCritical = false;
         
         timePassed = Timer.getFPGATimestamp() - startTime;
         
-        /*Essentially, I only want to update the lights every 2 seconds, approximately and 
-        only during the first 10 seconds, or no matter what if the battery level is critical..*/
-        if (((timePassed % 2.0 < 0.1 | timePassed % 2.0 > 1.9) && Timer.getFPGATimestamp() < 10.0) | batCritical) {
-            
-            System.out.println("Passed through the if statement");
-           // TODO Robot.blingSystem.batteryInd(batteryOutputVoltage / fullBatteryCapacity, batCritical);
-        }
     }
     @Override
     public void end(){

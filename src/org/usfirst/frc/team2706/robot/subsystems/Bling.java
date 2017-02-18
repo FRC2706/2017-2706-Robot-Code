@@ -45,8 +45,9 @@ public class Bling extends Subsystem {
 
     public Bling() {
 
-        blingPort.setTimeout(0.5); // Will wait a max of half a second.
+        blingPort.setTimeout(0.8); // Will wait a max of half a second.
         blingPort.writeString("I");
+        blingPort.writeString("E0Z");
        
 
     }
@@ -62,9 +63,9 @@ public class Bling extends Subsystem {
     }
 
     /**
-     * This function runs to initialize the teleop patterns. Starts the teleop period for the bling
+     * This command just quickly clear the LED Strip.
      */
-    public void startTeleOp() {
+    public void clear() {
 
         blingPort.writeString("I");
         blingPort.writeString("E0Z"); // Clear the LED strip
@@ -78,11 +79,11 @@ public class Bling extends Subsystem {
      * @param criticalStatus : Needs to be true if the battery level is below 20%.
      */
     public void batteryInd(double percent, boolean criticalStatus) {
-
-        batCritical = criticalStatus;
         
+        batCritical = criticalStatus;
         blingPort.writeString("I"); // Let them know we need to send another command
         blingPort.writeString("E0Z"); // Clear the LED strip
+        blingPort.writeString("I");
         String bColour;
         if (percent <= 0.25)
             bColour = colours.get("RED");
@@ -120,6 +121,7 @@ public class Bling extends Subsystem {
         
         // Colour flash
         blingPort.writeString("F7C" + dColour + "P0" + "Q" + Math.round(percentDist * pixels) + "E7Z");
+        
     }
 
     /**
@@ -128,9 +130,11 @@ public class Bling extends Subsystem {
      * @param ready : A boolean that indicates whether or not the robot is ready. True if yes.
      */
     public void showReadyToReceiveGear(boolean ready) {
+        
         // Do not interfere with critical battery warning.
         if (ready && !batCritical)
             customDisplay("Green", 3, -1, 2, 100, 0, 120);
+        
     }
 
     /**
