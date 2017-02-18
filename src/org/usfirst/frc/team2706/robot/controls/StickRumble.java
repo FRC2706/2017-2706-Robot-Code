@@ -24,18 +24,19 @@ public class StickRumble extends Command {
     public int repeatCount;
 
     public boolean finished;
-    
+
     public static boolean on = false;
-    
+
     public static double vibrationIntensity;
-    
-    public static double intervalTime; 
-    
+
+    public static double intervalTime;
+
     public static int intervalCount;
-    
+
     public static int repeatCountCopy;
-    
-    public static boolean intervalOn = false; // Used to determine if we are in the interval time period
+
+    public static boolean intervalOn = false; // Used to determine if we are in the interval time
+                                              // period
 
     /**
      * Simple function for setting vibration on the controller.
@@ -47,8 +48,8 @@ public class StickRumble extends Command {
      * @param intervalCount : The number of times to repeat the pattern sets.
      * @param intensity : How much the controllers will vibrate.
      */
-    public StickRumble(double timeOn, double timeOff, int repeatCount, double intervalTime, 
-                       int intervalCount, double intensity) {
+    public StickRumble(double timeOn, double timeOff, int repeatCount, double intervalTime,
+                    int intervalCount, double intensity) {
 
         joystick = Robot.oi.getDriverJoystick();
         operatorJoy = Robot.oi.getOperatorJoystick();
@@ -61,10 +62,10 @@ public class StickRumble extends Command {
         this.repeatCountCopy = repeatCount;
         this.intervalTime = intervalTime;
         this.intervalCount = intervalCount;
-        vibrationIntensity = intensity; 
+        vibrationIntensity = intensity;
         finished = false;
         startTime = Timer.getFPGATimestamp();
-        
+
     }
 
     /**
@@ -86,42 +87,46 @@ public class StickRumble extends Command {
             operatorJoy.setRumble(RumbleType.kRightRumble, 0.0);
         }
     }
+
     @Override
     public void execute() {
-        
-        
+
+
         timePassed = Timer.getFPGATimestamp() - startTime; // Get the time passes since the start.
-        
-        
+
+
         if (repeatCount < 0 && !intervalOn) {
 
             intervalOn = true;
             rumbleAll(false);
         }
-        
+
         if (intervalOn && timePassed >= intervalTime) {
-            
+
             intervalCount -= 1;
             repeatCount = repeatCountCopy; // Reset the repeat count.
             intervalOn = false;
             on = false;
-            
+
         }
 
         // Turn on the rumble when it needs to be turned on.
-        if (((timePassed / (timeOn + timeOff)) >= 1) | (timePassed < timeOn) && !on && !intervalOn) {
-            
+        if (((timePassed / (timeOn + timeOff)) >= 1) | (timePassed < timeOn) && !on
+                        && !intervalOn) {
+
             on = true;
-            repeatCount -= 1; // Subtract from this to eventually get to 0.   
-            if (repeatCount >= 0) rumbleAll(true);
+            repeatCount -= 1; // Subtract from this to eventually get to 0.
+            if (repeatCount >= 0)
+                rumbleAll(true);
             startTime += timePassed; // Need to add to startTime so timePassed is 0 again.
-        
+
         }
 
-        /* In other words, if we have surpassed rumble On
-        time, turn off the rumble */ 
-        else if (((timePassed / timeOn) >= 1) && on && !intervalOn) { 
-                                   
+        /*
+         * In other words, if we have surpassed rumble On time, turn off the rumble
+         */
+        else if (((timePassed / timeOn) >= 1) && on && !intervalOn) {
+
             rumbleAll(false);
             on = false;
 
@@ -135,23 +140,23 @@ public class StickRumble extends Command {
     public boolean isFinished() {
 
         if (intervalCount <= 0) { // If on is set to off anywhere (false) then we
-                                                   // should quit.
+                                  // should quit.
 
             finished = true;
             rumbleAll(false);
         }
         return finished;
     }
-    
+
     @Override
     public void interrupted() {
-        
+
         end();
     }
-    
+
     @Override
     public void end() {
-        
+
         System.out.println("Ended the stick rumble forcefully");
     }
 

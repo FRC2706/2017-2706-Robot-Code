@@ -20,7 +20,7 @@ public class Bling extends Subsystem {
      * signals to display the critical battery warning
      */
     public static boolean batCritical = false;
-    
+
 
 
     // Let's make the colour and command codes
@@ -42,7 +42,7 @@ public class Bling extends Subsystem {
             put("TURQUOISE", "65535");
             put("BLACK", "0");
         }
-        
+
     };
 
     public Bling() {
@@ -80,7 +80,7 @@ public class Bling extends Subsystem {
      * @param criticalStatus : Needs to be true if the battery level is below 20%.
      */
     public void batteryInd(double percent, boolean criticalStatus) {
-        
+
         batCritical = criticalStatus;
         blingPort.writeString("I"); // Let them know we need to send another command
         blingPort.writeString("E0Z"); // Clear the LED strip
@@ -119,10 +119,11 @@ public class Bling extends Subsystem {
             dColour = colours.get("YELLOW");
         else
             dColour = colours.get("GREEN");
-        
+
         // Colour flash
-        blingPort.writeString("F7C" + dColour + "P0" + "Q" + Math.round(percentDist * pixels) + "E7Z");
-        
+        blingPort.writeString(
+                        "F7C" + dColour + "P0" + "Q" + Math.round(percentDist * pixels) + "E7Z");
+
     }
 
     /**
@@ -131,11 +132,11 @@ public class Bling extends Subsystem {
      * @param ready : A boolean that indicates whether or not the robot is ready. True if yes.
      */
     public void showReadyToReceiveGear(boolean ready) {
-        
+
         // Do not interfere with critical battery warning.
         if (ready && !batCritical)
             customDisplay("Green", 3, -1, 2, 100, 0, 120);
-        
+
     }
 
     /**
@@ -154,8 +155,8 @@ public class Bling extends Subsystem {
      * @param pixelStart : The percent of the bar where the pixel pattern will start.
      * @param pixelEnd : The percent of the bar where the pattern will end.
      */
-    public void customDisplay(String colour, int pattern, double duration, double delay, int brightness,
-                    int pixelStart, int pixelEnd) {
+    public void customDisplay(String colour, int pattern, double duration, double delay,
+                    int brightness, int pixelStart, int pixelEnd) {
 
         String gColour = colour.replace(" ", ""); // Get rid of all the spaces
         gColour = gColour.toUpperCase(); // Make sure that any letters are uppercase.
