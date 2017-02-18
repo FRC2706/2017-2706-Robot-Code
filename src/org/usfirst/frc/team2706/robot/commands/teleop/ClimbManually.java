@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.command.Command;
  * 
  * @author wakandacat, FilledWithDetermination, Crazycat200
  */
-public class Climb extends Command {
+public class ClimbManually extends Command {
 
     protected void execute() {
         Robot.climber.climb();

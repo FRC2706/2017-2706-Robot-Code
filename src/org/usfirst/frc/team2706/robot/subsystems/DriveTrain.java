@@ -123,6 +123,14 @@ public class DriveTrain extends Subsystem {
     }
 
     /**
+     * Get the NavX AHRS
+     * @return the NavX AHRS
+     */
+    public AHRS getGyro(){
+        return gyro; 
+    }
+    
+    /**
      * The log method puts interesting information to the SmartDashboard.
      */
     public void log() {
