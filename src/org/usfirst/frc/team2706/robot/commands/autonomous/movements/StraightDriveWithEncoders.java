@@ -18,7 +18,7 @@ public class StraightDriveWithEncoders extends Command {
 
     private final PIDController PID;
 
-    private final double P = 1.0, I = 0.03, D = 0.25;
+    private final double P = 1.0, I = 0.06, D = 0.25;
 
     /**
      * Drive at a specific speed for a certain amount of time
