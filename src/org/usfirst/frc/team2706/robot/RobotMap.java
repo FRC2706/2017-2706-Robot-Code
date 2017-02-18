@@ -152,6 +152,10 @@ public class RobotMap {
     private static final int[] SOLENOID_REVERSE_CHANNEL_VALS = {5, 5, 5};
     public static final int SOLENOID_REVERSE_CHANNEL= getConstant("SOLENOID_REVERSE_CHANNEL");
     
+    // Gear sensor
+    private static final int[] INFRARED_SENSOR_ANALOG_VALS = {1, 1, 1};
+    public static final int INFRARED_SENSOR_ANALOG = getConstant("INFRARED_SENSOR_ANALOG");
+    
     // Climber motor
     private static final int[] CLIMBER_MOTOR_VALS = {6, 6, 6};
     public static final int CLIMBER_MOTOR = getConstant("CLIMBER_MOTOR");
