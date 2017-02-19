@@ -4,7 +4,6 @@ package org.usfirst.frc.team2706.robot.subsystems;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.usfirst.frc.team2706.robot.RobotMap;
 
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -13,7 +12,8 @@ public class Bling extends Subsystem {
 
     SerialPort blingPort = new SerialPort(9600, SerialPort.Port.kMXP);
 
-    int pixels = RobotMap.LED_Strip_PixelCount; // The number of pixels on one LED strip
+    // The number of pixels on one LED strip
+    int pixels = 120; 
 
     /*
      * Will be true if the battery level is critical, in which case it will override all other

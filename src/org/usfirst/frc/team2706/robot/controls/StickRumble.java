@@ -35,8 +35,9 @@ public class StickRumble extends Command {
 
     public static int repeatCountCopy;
 
-    public static boolean intervalOn = false; // Used to determine if we are in the interval time
-                                              // period
+    /* Used to determine if we are in the interval time
+    period */
+    public static boolean intervalOn = false; 
 
     /**
      * Simple function for setting vibration on the controller.
@@ -139,8 +140,7 @@ public class StickRumble extends Command {
      */
     public boolean isFinished() {
 
-        if (intervalCount <= 0) { // If on is set to off anywhere (false) then we
-                                  // should quit.
+        if (intervalCount <= 0) { 
 
             finished = true;
             rumbleAll(false);
@@ -149,15 +149,9 @@ public class StickRumble extends Command {
     }
 
     @Override
-    public void interrupted() {
-
-        end();
-    }
+    public void interrupted() {}
 
     @Override
-    public void end() {
-
-        System.out.println("Ended the stick rumble forcefully");
-    }
+    public void end() {}
 
 }

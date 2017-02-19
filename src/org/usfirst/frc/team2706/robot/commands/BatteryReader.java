@@ -21,8 +21,8 @@ public class BatteryReader extends Command {
 
     public static double fullBatteryCapacity = RobotMap.BatteryCapacity;
 
-    public static PowerDistributionPanel pdp; // Get a new battery object.
-
+    // Get a new battery object.
+    public static PowerDistributionPanel pdp; 
 
     public BatteryReader() {
 
@@ -48,13 +48,14 @@ public class BatteryReader extends Command {
          * don't want to spam the bling system.
          */
         if (batteryPercent <= 0.2 && !batCritical) {
-            System.out.println("Low Battery " + batCritical);
+           
             batCritical = true;
             Robot.blingSystem.batteryInd(batteryPercent, batCritical);
 
         }
 
-        if (batteryPercent > 0.2)
+        if (batteryPercent > 0.2 && batCritical)
+            
             batCritical = false;
 
         timePassed = Timer.getFPGATimestamp() - startTime;
@@ -62,9 +63,7 @@ public class BatteryReader extends Command {
     }
 
     @Override
-    public void end() {
-
-    }
+    public void end() {}
 
     /**
      * Used to tell the scheduler when to terminate running this command. Will only return true (in
