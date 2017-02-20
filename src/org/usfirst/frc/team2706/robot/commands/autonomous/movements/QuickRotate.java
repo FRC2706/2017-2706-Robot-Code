@@ -42,6 +42,7 @@ public class QuickRotate extends Command {
         super("QuickRotate");
 
         requires(Robot.driveTrain);
+
         this.targetHeading = normalize(targetHeading);
     }
 
@@ -49,6 +50,7 @@ public class QuickRotate extends Command {
     protected void initialize() {
         done = 10;
         maxCycles = 120;
+
         Robot.driveTrain.reset();
     }
 

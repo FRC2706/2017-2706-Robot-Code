@@ -16,7 +16,7 @@ public class StraightDriveWithEncoders extends Command {
 
     private final double error;
 
-    private PIDController PID;
+    private final PIDController PID;
 
     private final double P = 1.0, I = 0.06, D = 0.25;
 
@@ -36,7 +36,8 @@ public class StraightDriveWithEncoders extends Command {
 
         this.error = error / 12.0;
 
-        
+        PID = new PIDController(P, I, D, Robot.driveTrain.getEncoderPIDSource(true),
+                        Robot.driveTrain.getDrivePIDOutput(true, false));
     }
 
     // Called just before this Command runs the first time
@@ -44,8 +45,7 @@ public class StraightDriveWithEncoders extends Command {
         
         System.out.println("restarted");
         Robot.driveTrain.resetEncoders();
-        PID = new PIDController(P, I, D, Robot.driveTrain.getEncoderPIDSource(true),
-                        Robot.driveTrain.getDrivePIDOutput(true, false));
+      
         // Make input infinite
         PID.setContinuous();
 

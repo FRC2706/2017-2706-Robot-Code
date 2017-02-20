@@ -2,7 +2,6 @@ package org.usfirst.frc.team2706.robot;
 
 import java.lang.reflect.Field;
 
-import org.usfirst.frc.team2706.robot.commands.autonomous.movements.CurveDrive;
 import org.usfirst.frc.team2706.robot.commands.autonomous.plays.AlignAndDistance;
 import org.usfirst.frc.team2706.robot.commands.teleop.Climb;
 import org.usfirst.frc.team2706.robot.commands.teleop.GearHandlerToggle;
@@ -54,11 +53,6 @@ public class OI {
         EJoystickButton backLeftButton = new EJoystickButton(driverStick, 5);
         backLeftButton.runWhileHeld(new AlignAndDistance(24));
         
-        EJoystickButton backRightButton = new EJoystickButton(driverStick, 6);
-        backRightButton.runWhileHeld(new CurveDrive(5.33,8.75,65,0.55));
-        
-        
-
         EJoystickButton a = new EJoystickButton(driverStick, 1);
         a.runWhileHeld(new Climb());
 

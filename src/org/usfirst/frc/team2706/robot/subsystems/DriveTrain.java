@@ -126,7 +126,6 @@ public class DriveTrain extends Subsystem {
      * The log method puts interesting information to the SmartDashboard.
      */
     public void log() {
-        System.out.println(gyro.getAngle());
         SmartDashboard.putNumber("Left Distance", left_encoder.getDistance());
         SmartDashboard.putNumber("Right Distance", right_encoder.getDistance());
         SmartDashboard.putNumber("Left Speed (RPM)", left_encoder.getRate());
@@ -165,8 +164,9 @@ public class DriveTrain extends Subsystem {
      * Reset the robots sensors to the zero states.
      */
     public void reset() {
-       resetEncoders();
+        resetEncoders();
         resetGyro();
+        resetDisplacement();
     }
 
     /**
@@ -174,8 +174,11 @@ public class DriveTrain extends Subsystem {
      */
     public void resetGyro() {
         gyro.reset();
-       // resetDisplacement();
     }
+    
+    /**
+     * Reset the robot encoders to zero states
+     */
     public void resetEncoders() {
         left_encoder.reset();
         right_encoder.reset();

@@ -25,6 +25,8 @@ public class CurveDrive extends Command {
     // The equation that the robot will follow
     private CubicEquation eq;
 
+    // If you're not resetting before driving you need to remember where you started
+    private double initHeading;
     /**
      * Drives to a specified point and ends at a specified angle.
      * 
@@ -46,10 +48,11 @@ public class CurveDrive extends Command {
 
         // Creates the cubic equation that the robot follows
         eq = EquationCreator.MakeCubicEquation(xFeet, yFeet, endCurve);
-
+        
         // Resets the gyro and encoders
         Robot.driveTrain.reset();
-
+        
+        initHeading = Robot.driveTrain.getHeading();
     }
 
     protected void execute() {
@@ -74,13 +77,17 @@ public class CurveDrive extends Command {
         yPos = 0;
         Robot.driveTrain.reset();
         lastEncoderAv = 0;
-        // new StraightDriveWithEncoders(0.5,0,0.1).start();
     }
 
     protected void interrupt() {
         end();
     }
-
+    
+    /**
+     * Uses gyro and encoders along with the equation of the line to actually follow the curve with the robot.
+     * Uses tank drive.
+     */
+    @SuppressWarnings("unused")
     private void followCurve() {
         
         // Figures out the angle that you are currently on
@@ -89,10 +96,12 @@ public class CurveDrive extends Command {
 
         // Finds out what x position you should be at, and compares it with what you are currently at
         double wantedX = (eq.a * Math.pow(yPos, 3)) + (eq.b * Math.pow(xPos, 2));
+        
+        
         double offset = xPos - wantedX;
         
         // Figures out how far you should rotate based on offset and gyro pos
-        double rotateVal = tangent - (Robot.driveTrain.getHeading() + offset * 5);
+        double rotateVal = tangent - (Robot.driveTrain.getHeading() - initHeading);
         rotateVal /= 10;
 
 
@@ -100,6 +109,10 @@ public class CurveDrive extends Command {
         double leftSpeed = (speed + rotateVal);
         double rightSpeed = (speed - rotateVal);
 
+        if(Math.abs(leftSpeed - rightSpeed )> 0.4) {
+            leftSpeed /= 2;
+            rightSpeed /= 2;
+        }
         // Tank Drives according to the above factors
         Robot.driveTrain.drive(-leftSpeed, -rightSpeed);
     }
@@ -111,12 +124,12 @@ public class CurveDrive extends Command {
     public double lastEncoderAv = 0;
 
     /**
-     * Called every tick to keep position
+     * Called every tick to keep position, an x and y position, not always accurate due to a few reasons
      */
     private void findPosition() {
 
         // Gets gyro angle
-        double gyroAngle = Robot.driveTrain.getHeading();
+        double gyroAngle = Robot.driveTrain.getHeading() - initHeading;
         
         // Gets encoder average distance
         double encoderAv = Robot.driveTrain.getDistance() - lastEncoderAv;

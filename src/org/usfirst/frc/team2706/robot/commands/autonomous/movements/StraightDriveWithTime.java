@@ -41,7 +41,6 @@ public class StraightDriveWithTime extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-        System.out.println("driving");
         // Drive while command is running
         Robot.driveTrain.drive(speed, speed);
     }
