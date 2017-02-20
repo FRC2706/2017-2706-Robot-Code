@@ -74,15 +74,20 @@ public class RotateDriveWithGyroDistanceSensorHybrid extends Command {
         Robot.driveTrain.drive(0, 0);
     }
 
-    // Called when another command which requires one or more of the same
-    // subsystems is scheduled to run
+    /**
+     * Called when another command which requires one or more of the same subsystems is scheduled to run
+     */
     protected void interrupted() {
         end();
     }
 
-    public void Turn() {
+    /**
+     * Turns the robot using gyro based on the distance sensor angle, just like in QuickRotate.java
+     */
+    public void turn() {
         float slowSpeed = 0.2f;
         float medSpeed = 0.4f;
+        
         if (Robot.driveTrain.getGyroPIDSource(false).pidGet() - angle < 20
                         && Robot.driveTrain.getGyroPIDSource(false).pidGet() - angle >= 0) {
             Robot.driveTrain.drive(-slowSpeed, slowSpeed);

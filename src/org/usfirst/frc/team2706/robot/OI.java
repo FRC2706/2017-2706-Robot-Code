@@ -49,10 +49,10 @@ public class OI {
         this.driverStick = driverStick;
 
         // TODO we need to start using controlStick and not driverStick for non-testing buttons
-        
+
         EJoystickButton backLeftButton = new EJoystickButton(driverStick, 5);
         backLeftButton.runWhileHeld(new AlignAndDistance(24));
-        
+
         EJoystickButton a = new EJoystickButton(driverStick, 1);
         a.runWhileHeld(new Climb());
 

@@ -227,7 +227,7 @@ public class DriveTrain extends Subsystem {
     public PIDOutput getDrivePIDOutput(boolean useGyroStraightening, boolean invert) {
         return new DrivePIDOutput(drive, useGyroStraightening, invert);
     }
-    
+
     /**
      * @return The robot's gyro PIDSource
      */
@@ -321,7 +321,7 @@ public class DriveTrain extends Subsystem {
 
         private final DriveTrain driveTrain;
         private boolean invert;
-        
+
         public GyroPIDSource(DriveTrain driveTrain) {
             this.driveTrain = driveTrain;
         }

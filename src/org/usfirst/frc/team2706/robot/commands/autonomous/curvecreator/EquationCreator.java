@@ -2,7 +2,6 @@ package org.usfirst.frc.team2706.robot.commands.autonomous.curvecreator;
 
 /**
  * Actually does the math to create the equation from two points and a tangent. Warning: Complicated
- *
  */
 public class EquationCreator {
 
@@ -23,7 +22,8 @@ public class EquationCreator {
         // Calculates the slope of your triangle at the angle you want, in the bottom right quadrant
         double tangent = Math.tan(Math.toRadians(360 - theta));
 
-        // Instead of making another equation class for each I just store each polynomial in its own double
+        // Instead of making another equation class for each I just store each polynomial in its own
+        // double
         double eq1a = Math.pow(c.x, 3);
         double eq1b = Math.pow(c.x, 2);
         double eq1y = c.y;
@@ -47,5 +47,4 @@ public class EquationCreator {
         // Creates a new cubicequation with the values to be returned.
         return new CubicEquation(-a, -b, 0, 0);
     }
-
 }
