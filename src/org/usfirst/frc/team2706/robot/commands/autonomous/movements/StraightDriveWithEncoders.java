@@ -42,10 +42,8 @@ public class StraightDriveWithEncoders extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-        
-        System.out.println("restarted");
         Robot.driveTrain.resetEncoders();
-      
+
         // Make input infinite
         PID.setContinuous();
 
@@ -75,7 +73,6 @@ public class StraightDriveWithEncoders extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-        System.out.println("finished");
         // Disable PID output and stop robot to be safe
         PID.disable();
         Robot.driveTrain.drive(0, 0);
