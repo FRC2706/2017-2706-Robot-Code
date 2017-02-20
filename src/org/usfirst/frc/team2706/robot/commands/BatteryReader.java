@@ -1,6 +1,7 @@
 package org.usfirst.frc.team2706.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 
 import org.usfirst.frc.team2706.robot.Robot;
@@ -12,6 +13,7 @@ public class BatteryReader extends Command {
 
 
     public static double batteryOutputVoltage;
+    
     // Used to tell us if the battery level is critical
     public static boolean batCritical;
 
@@ -49,6 +51,7 @@ public class BatteryReader extends Command {
          */
         if (batteryPercent <= 0.2 && !batCritical) {
            
+            DriverStation.getInstance().reportWarning("Battery low. " + batteryPercent + " remaining.", false);
             batCritical = true;
             Robot.blingSystem.batteryInd(batteryPercent, batCritical);
 
