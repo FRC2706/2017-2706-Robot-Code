@@ -1,12 +1,13 @@
 package org.usfirst.frc.team2706.robot.commands.autonomous.automodes;
 
+import org.usfirst.frc.team2706.robot.commands.autonomous.movements.CurveDrive;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.QuickRotate;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithEncoders;
-import org.usfirst.frc.team2706.robot.commands.autonomous.plays.DrivePlaceGear;
+import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithTime;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class SideStartSideGear extends CommandGroup {
+public class SideGearCurve extends CommandGroup {
 
     /**
      * Start at the side of the field, grab the side gear and head on out to the launch pad
@@ -19,13 +20,13 @@ public class SideStartSideGear extends CommandGroup {
      * @param reverseDistance How far back do we go after placing the gear?
      * @param toLaunchPadDistance How far is it to the launch pad from our location?
      */
-    public SideStartSideGear(boolean rightSide, double speed, double fromWallDistance, double turnDegrees,
-                    double toGearDistance, double reverseDistance,
+    public SideGearCurve(double speed, double xCurve, double yCurve, double endAngle,
+                    double reverseDistance,
                     double toLaunchPadDistance) {
-        this.addSequential(new StraightDriveWithEncoders(speed, fromWallDistance, 25));
-        this.addSequential(new QuickRotate(rightSide ? -turnDegrees : turnDegrees));
-        this.addSequential(new DrivePlaceGear(speed, toGearDistance, reverseDistance));
-        this.addSequential(new QuickRotate(rightSide ? turnDegrees : -turnDegrees));
-        this.addSequential(new StraightDriveWithEncoders(speed, toLaunchPadDistance, 25));
+        this.addSequential(new CurveDrive(xCurve,yCurve,endAngle,speed));
+        this.addSequential(new StraightDriveWithEncoders(0.45,0,0.2));
+        this.addSequential(new StraightDriveWithEncoders(-0.5, -4, 0.2));
+        this.addSequential(new QuickRotate(-endAngle));
+        this.addSequential(new StraightDriveWithEncoders(0.5,toLaunchPadDistance,0.2));
     }
 }

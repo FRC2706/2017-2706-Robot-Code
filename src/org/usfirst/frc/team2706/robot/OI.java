@@ -55,7 +55,7 @@ public class OI {
         backLeftButton.runWhileHeld(new AlignAndDistance(24));
         
         EJoystickButton backRightButton = new EJoystickButton(driverStick, 6);
-        backRightButton.runWhileHeld(new CurveDrive(2,3,45,0.45));
+        backRightButton.runWhileHeld(new CurveDrive(5.33,8.75,65,0.55));
         
         
 

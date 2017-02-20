@@ -49,6 +49,7 @@ public class QuickRotate extends Command {
     protected void initialize() {
         done = 10;
         maxCycles = 120;
+        Robot.driveTrain.reset();
     }
 
     // Called repeatedly when this Command is scheduled to run
