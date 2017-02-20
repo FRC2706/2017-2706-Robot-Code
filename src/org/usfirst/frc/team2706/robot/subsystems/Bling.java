@@ -9,8 +9,13 @@ import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class Bling extends Subsystem {
+    
+    /* Will be true if the bling system is working properly 
+     * (so if the arduino is not plugged in, it will be false).
+     defaults to false to keep everything working. */
+    public static boolean connected = false;
 
-    SerialPort blingPort = new SerialPort(9600, SerialPort.Port.kMXP);
+    public static SerialPort blingPort;
 
     // The number of pixels on one LED strip
     int pixels = 120; 
@@ -20,6 +25,8 @@ public class Bling extends Subsystem {
      * signals to display the critical battery warning
      */
     public static boolean batCritical = false;
+    
+    
 
 
 
@@ -46,10 +53,17 @@ public class Bling extends Subsystem {
     };
 
     public Bling() {
-
-        blingPort.setTimeout(0.8); // Will wait a max of half a second.
-        blingPort.writeString("I");
-        blingPort.writeString("E0Z");
+        
+        try {
+            blingPort = new SerialPort(9600, SerialPort.Port.kMXP);
+            blingPort.setTimeout(0.8); // Will wait a max of half a second.
+            blingPort.writeString("I"); // Tell arduino we're sending a command.
+            blingPort.writeString("E0Z"); // Clear the LED strip.
+            connected = true;
+        }
+        
+        catch (Exception e){} 
+        
 
     }
 
@@ -58,9 +72,13 @@ public class Bling extends Subsystem {
      */
     public void auto() { // Will run during autonomous period
 
+        // IF THE BLINGPORT FAILED, DON'T CAUSE MORE ERRORS
+        if (!connected) return; 
+        
         blingPort.writeString("I");
         blingPort.writeString("E0Z"); // Clear the LED strip
         blingPort.writeString("E1Z");
+        
     }
 
     /**
@@ -68,6 +86,8 @@ public class Bling extends Subsystem {
      */
     public void clear() {
 
+        if (!connected) return;
+        
         blingPort.writeString("I");
         blingPort.writeString("E0Z"); // Clear the LED strip
     }
@@ -80,6 +100,8 @@ public class Bling extends Subsystem {
      * @param criticalStatus : Needs to be true if the battery level is below 20%.
      */
     public void batteryInd(double percent, boolean criticalStatus) {
+        
+        if (!connected) return;
 
         batCritical = criticalStatus;
         blingPort.writeString("I"); // Let them know we need to send another command
@@ -106,6 +128,8 @@ public class Bling extends Subsystem {
      */
     public void showDistance(double distance) {
 
+        if (!connected) return;
+        
         blingPort.writeString("I");
         blingPort.writeString("E0Z"); // Clear the LED strip
         if (distance > 3.0)
@@ -132,6 +156,8 @@ public class Bling extends Subsystem {
      * @param ready : A boolean that indicates whether or not the robot is ready. True if yes.
      */
     public void showReadyToReceiveGear(boolean ready) {
+        
+        if (!connected) return;
 
         // Do not interfere with critical battery warning.
         if (ready && !batCritical)
@@ -157,6 +183,8 @@ public class Bling extends Subsystem {
      */
     public void customDisplay(String colour, int pattern, double duration, double delay,
                     int brightness, int pixelStart, int pixelEnd) {
+        
+        if (!connected) return;
 
         String gColour = colour.replace(" ", ""); // Get rid of all the spaces
         gColour = gColour.toUpperCase(); // Make sure that any letters are uppercase.
