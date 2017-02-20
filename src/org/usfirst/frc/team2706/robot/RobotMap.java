@@ -162,7 +162,6 @@ public class RobotMap {
     
     private static final String ROBOT_ID_LOC = "/home/lvuser/robot-type.conf";
 
-                    
     private static int getRobotID() {
         int temp = 0;
 
