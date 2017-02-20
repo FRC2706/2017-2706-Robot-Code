@@ -42,11 +42,14 @@ public class Bling extends Subsystem {
     };
 
     public Bling() {
-
         blingPort.setTimeout(0.5); // Will wait a max of half a second.
         blingPort.writeString("I");
-        blingPort.readString(); // Get output from the arduino.
-
+        // TODO replace this with a better error catching system
+        try {
+            blingPort.readString(); // Get output from the arduino. 
+        } catch(RuntimeException e) {
+            System.out.println("Can not connect to arduino :(");
+        }
     }
 
     /**

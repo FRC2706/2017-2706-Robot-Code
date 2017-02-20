@@ -145,6 +145,10 @@ public class RobotMap {
     public static final int RIGHT_ULTRASONIC_ECHO_CHANNEL =
                     getConstant("RIGHT_ULTRASONIC_ECHO_CHANNEL");
 
+    private static final double[] DISTANCE_SENSOR_SEPARATION_CM_VALS = {38.5, 38.5, 38.5};
+    public static final double DISTANCE_SENSOR_SEPARATION_CM = 
+                    getConstant("DISTANCE_SENSOR_SEPARATION_CM");
+
     // Gear handler Arms
     private static final int[] SOLENOID_FORWARD_CHANNEL_VALS = {4, 4, 4};
     public static final int SOLENOID_FORWARD_CHANNEL= getConstant("SOLENOID_FORWARD_CHANNEL");
