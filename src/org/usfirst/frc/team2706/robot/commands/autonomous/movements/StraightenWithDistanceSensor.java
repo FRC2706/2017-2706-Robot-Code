@@ -24,6 +24,11 @@ public class StraightenWithDistanceSensor extends Command {
 
     private final double speedDecrease;
 
+    private final double alpha;
+
+    private double leftSensorAverage;
+    private double rightSensorAverage;
+
     /**
      * Straightens out against a wall in close proximity(~5ft)
      * 
@@ -35,11 +40,13 @@ public class StraightenWithDistanceSensor extends Command {
      * @param inverted Change turning direction
      * @param speedIncrease How much the offset affects the turning speed
      * @param speedDecrease How much being in the zone slows down turning speed
+     * @param alpha The weight given to the current sensor data, verses the previous weighted
+     *        average
      * 
      */
     public StraightenWithDistanceSensor(double minSpeed, double maxSpeed, double baseSpeed,
                     double error, double stopCycles, boolean inverted, double speedIncrease,
-                    double speedDecrease) {
+                    double speedDecrease, double alpha) {
         requires(Robot.driveTrain);
 
         this.minSpeed = minSpeed;
@@ -50,19 +57,27 @@ public class StraightenWithDistanceSensor extends Command {
         this.inverted = inverted;
         this.speedIncrease = speedIncrease;
         this.speedDecrease = speedDecrease;
+        this.alpha = alpha;
     }
 
     protected void initialize() {
+        leftSensorAverage = Robot.driveTrain.getLeftDistanceToObstacle();
+        rightSensorAverage = Robot.driveTrain.getRightDistanceToObstacle();
+
         Robot.driveTrain.reset();
 
         currentStopCycles = 0;
     }
 
     protected void execute() {
+        leftSensorAverage = alpha * Robot.driveTrain.getLeftDistanceToObstacle()
+                        + (1 - alpha) * leftSensorAverage;
+        rightSensorAverage = alpha * Robot.driveTrain.getRightDistanceToObstacle()
+                        + (1 - alpha) * rightSensorAverage;
+
         inPosition();
 
-        double offset = Math.abs(Robot.driveTrain.getLeftDistanceToObstacle()
-                        - Robot.driveTrain.getRightDistanceToObstacle());
+        double offset = Math.abs(leftSensorAverage - rightSensorAverage);
         double turnSpeed =
                         baseSpeed + (offset / speedIncrease) - (speedDecrease * currentStopCycles);
 
@@ -74,8 +89,7 @@ public class StraightenWithDistanceSensor extends Command {
             turnSpeed = minSpeed;
         }
 
-        if (Robot.driveTrain.getRightDistanceToObstacle() > Robot.driveTrain
-                        .getLeftDistanceToObstacle()) {
+        if (rightSensorAverage > leftSensorAverage) {
             turnSpeed *= -1;
         }
 
@@ -95,9 +109,8 @@ public class StraightenWithDistanceSensor extends Command {
     }
 
     protected void inPosition() {
-        if (Math.abs(Robot.driveTrain.getLeftDistanceToObstacle()
-                        - Robot.driveTrain.getDistanceToObstacle()) < error
-                        && Math.abs(Robot.driveTrain.getRightDistanceToObstacle()
+        if (Math.abs(leftSensorAverage - Robot.driveTrain.getDistanceToObstacle()) < error
+                        && Math.abs(rightSensorAverage
                                         - Robot.driveTrain.getDistanceToObstacle()) < error) {
             currentStopCycles++;
         } else {
