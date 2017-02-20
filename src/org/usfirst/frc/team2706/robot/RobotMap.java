@@ -162,9 +162,6 @@ public class RobotMap {
     
     private static final String ROBOT_ID_LOC = "/home/lvuser/robot-type.conf";
 
-    
-    // Battery Variable which equals the voltage of the battery
-    public static final double BatteryCapacity = 12.0;
                     
     private static int getRobotID() {
         int temp = 0;

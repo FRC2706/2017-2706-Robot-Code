@@ -21,7 +21,7 @@ public class BatteryReader extends Command {
     // Used for knowing when this command started.
     protected static double startTime = Timer.getFPGATimestamp();
 
-    public static double fullBatteryCapacity = RobotMap.BatteryCapacity;
+    public static double fullBatteryCapacity = 12;
 
     // Get a new battery object.
     public static PowerDistributionPanel pdp; 
