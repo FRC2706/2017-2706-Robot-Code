@@ -53,18 +53,15 @@ public class Bling extends Subsystem {
     };
 
     public Bling() {
-        
         try {
             blingPort = new SerialPort(9600, SerialPort.Port.kMXP);
             blingPort.setTimeout(0.8); // Will wait a max of half a second.
             blingPort.writeString("I"); // Tell arduino we're sending a command.
             blingPort.writeString("E0Z"); // Clear the LED strip.
             connected = true;
-        }
-        
-        catch (Exception e){} 
-        
-
+        } catch (Exception e) {
+            System.out.println("Can not connect to arduino :("); 
+        } 
     }
 
     /**
