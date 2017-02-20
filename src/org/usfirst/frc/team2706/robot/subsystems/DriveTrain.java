@@ -175,7 +175,7 @@ public class DriveTrain extends Subsystem {
     public void resetGyro() {
         gyro.reset();
     }
-    
+
     /**
      * Reset the robot encoders to zero states
      */
@@ -183,42 +183,43 @@ public class DriveTrain extends Subsystem {
         left_encoder.reset();
         right_encoder.reset();
     }
+
     /**
      * @return The robots heading in degrees.
      */
     public double getHeading() {
         return gyro.getAngle();
     }
-    
+
     /**
      * Resets the displacement of the robot
      */
-    public  void resetDisplacement() {
+    public void resetDisplacement() {
         gyro.resetDisplacement();
     }
-    
+
     /**
      * Gets the x distance of the robot with a direction
      */
     public double getDisplacementX() {
         return gyro.getDisplacementX();
     }
-    
+
     /**
      * Gets the y distance of the robot with a direction
      */
-    
+
     public double getDisplacementY() {
         return gyro.getDisplacementY();
     }
-    
+
     /**
      * Gets the z distance of the robot with a direction
      */
     public double getDisplacementZ() {
         return gyro.getDisplacementZ();
     }
-    
+
     /**
      * @param useGyroStraightening True to invert second motor direction for rotating
      * 
@@ -239,9 +240,10 @@ public class DriveTrain extends Subsystem {
     public void invertGyroPIDSource(boolean invert) {
         gyroPIDSource.invert(invert);
     }
-    
+
     /**
      * Takes values of the two distance sensors and finds the angle the robot is on with the wall
+     * 
      * @return -90 to 90 degrees
      */
     public double GetAngleWithDistanceSensors() {
@@ -253,6 +255,7 @@ public class DriveTrain extends Subsystem {
         System.out.println(theta);
         return theta;
     }
+
     /**
      * @return The distance driven (average of left and right encoders).
      */
@@ -267,7 +270,7 @@ public class DriveTrain extends Subsystem {
     public double getRightDistanceToObstacle() {
         return rightDistanceSensor.getRangeInches();
     }
- 
+
     /**
      * @return The robot's encoder PIDSource
      */
@@ -352,7 +355,7 @@ public class DriveTrain extends Subsystem {
     }
 
     public class DrivePIDOutput implements PIDOutput {
-        
+
         private final RobotDrive drive;
 
         private boolean invert;
@@ -377,7 +380,7 @@ public class DriveTrain extends Subsystem {
                 } else {
                     drive.arcadeDrive(-output, -rotateVal);
                 }
-            else 
+            else
                 if (invert) {
                     drive.setLeftRightMotorOutputs(-output, output);
                 } else {

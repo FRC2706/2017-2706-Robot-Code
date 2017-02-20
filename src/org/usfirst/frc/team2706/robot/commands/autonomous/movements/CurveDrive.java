@@ -143,4 +143,3 @@ public class CurveDrive extends Command {
         lastEncoderAv = Robot.driveTrain.getDistance();
     }
 }
-
