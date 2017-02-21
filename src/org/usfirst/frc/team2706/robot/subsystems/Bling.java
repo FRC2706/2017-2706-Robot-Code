@@ -22,6 +22,8 @@ public class Bling extends Subsystem {
 
     // Let's make the colour and command codes
     Map<String, String> colours = new HashMap<String, String>() {
+        private static final long serialVersionUID = 1L;
+
         {
             put("RED", "16711680");
             put("GREEN", "32768");
@@ -40,11 +42,14 @@ public class Bling extends Subsystem {
     };
 
     public Bling() {
-
         blingPort.setTimeout(0.5); // Will wait a max of half a second.
         blingPort.writeString("I");
-        String readString = blingPort.readString(); // Get output from the arduino.
-
+        // TODO replace this with a better error catching system
+        try {
+            blingPort.readString(); // Get output from the arduino. 
+        } catch(RuntimeException e) {
+            System.out.println("Can not connect to arduino :(");
+        }
     }
 
     /**
@@ -162,8 +167,5 @@ public class Bling extends Subsystem {
     }
 
     @Override
-    protected void initDefaultCommand() {
-        // TODO Auto-generated method stub
-
-    }
+    protected void initDefaultCommand() {}
 }

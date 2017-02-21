@@ -35,14 +35,14 @@ public class RecordableJoystick extends Joystick {
 
     private final IndexFinder indexFinder;
 
-    private int index;
+    private volatile int index;
     private double time;
 
     private Supplier<Double> timeSupplier;
 
     private final String loc;
 
-    private boolean looping;
+    private volatile boolean looping;
 
     /**
      * Sets up recording or replaying from or to a real Joystick
@@ -75,8 +75,6 @@ public class RecordableJoystick extends Joystick {
      */
     public void end() {
         looping = false;
-
-        reset();
 
         if (!replay) {
             saveFile(new Gson().toJson(config), new File(loc + "-config.json"));
@@ -161,6 +159,8 @@ public class RecordableJoystick extends Joystick {
         this.timeSupplier = timeSupplier;
         this.looping = true;
 
+        reset();
+
         Thread indexFinder = new Thread(this.indexFinder);
         indexFinder.setDaemon(true);
         indexFinder.start();
@@ -182,7 +182,7 @@ public class RecordableJoystick extends Joystick {
      * @return Whether finished or not
      */
     public boolean done() {
-        return replay && index >= states.size();
+        return replay && index == -1;
     }
 
     /**
@@ -192,9 +192,13 @@ public class RecordableJoystick extends Joystick {
         index = 0;
     }
 
+    private boolean isValidReplayState() {
+        return replay && config != null && states != null && index < states.size() && index != -1;
+    }
+    
     @Override
     public int getAxisCount() {
-        if (replay && config != null && states != null)
+        if (isValidReplayState())
             return config.axisCount;
         else
             return joy.getAxisCount();
@@ -202,7 +206,7 @@ public class RecordableJoystick extends Joystick {
 
     @Override
     public int getButtonCount() {
-        if (replay && config != null && states != null)
+        if (isValidReplayState())
             return config.buttonCount;
         else
             return joy.getButtonCount();
@@ -210,7 +214,7 @@ public class RecordableJoystick extends Joystick {
 
     @Override
     public boolean getIsXbox() {
-        if (replay && config != null && states != null)
+        if (isValidReplayState())
             return config.isXbox;
         else
             return joy.getIsXbox();
@@ -218,7 +222,7 @@ public class RecordableJoystick extends Joystick {
 
     @Override
     public HIDType getType() {
-        if (replay && config != null && states != null)
+        if (isValidReplayState())
             return HIDType.values()[config.type];
         else
             return joy.getType();
@@ -226,7 +230,7 @@ public class RecordableJoystick extends Joystick {
 
     @Override
     public String getName() {
-        if (replay && config != null && states != null)
+        if (isValidReplayState())
             return config.name;
         else
             return joy.getName();
@@ -234,7 +238,7 @@ public class RecordableJoystick extends Joystick {
 
     @Override
     public int getPOVCount() {
-        if (replay && config != null && states != null)
+        if (isValidReplayState())
             return config.povCount;
         else
             return joy.getPOVCount();
@@ -242,7 +246,7 @@ public class RecordableJoystick extends Joystick {
 
     @Override
     public double getRawAxis(final int axis) {
-        if (replay && config != null && states != null)
+        if (isValidReplayState())
             return states.get(index).axes[axis];
         else
             return joy.getRawAxis(axis);
@@ -250,7 +254,7 @@ public class RecordableJoystick extends Joystick {
 
     @Override
     public boolean getRawButton(final int button) {
-        if (replay && config != null && states != null)
+        if (isValidReplayState())
             return states.get(index).buttons[button - 1];
         else {
             return joy.getRawButton(button);
@@ -259,7 +263,7 @@ public class RecordableJoystick extends Joystick {
 
     @Override
     public int getPOV(int pov) {
-        if (replay && config != null && states != null)
+        if (isValidReplayState())
             return states.get(index).povs[pov];
         else
             return joy.getPOV(pov);
@@ -308,7 +312,8 @@ public class RecordableJoystick extends Joystick {
 
         @Override
         public void run() {
-            while (looping) {
+            while (looping && index != -1 && index < states.size()
+                            && time - 0.5 < states.get(states.size() - 1).time) {
                 time = timeSupplier.get();
 
                 if (replay) {
@@ -326,6 +331,9 @@ public class RecordableJoystick extends Joystick {
                     }
                 }
             }
+
+            looping = false;
+            index = -1;
         }
     }
 }

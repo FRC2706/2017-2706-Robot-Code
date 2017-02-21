@@ -145,7 +145,25 @@ public class RobotMap {
     public static final int RIGHT_ULTRASONIC_ECHO_CHANNEL =
                     getConstant("RIGHT_ULTRASONIC_ECHO_CHANNEL");
 
+    private static final double[] DISTANCE_SENSOR_SEPARATION_CM_VALS = {38.5, 38.5, 38.5};
+    public static final double DISTANCE_SENSOR_SEPARATION_CM = 
+                    getConstant("DISTANCE_SENSOR_SEPARATION_CM");
 
+    // Gear handler Arms
+    private static final int[] SOLENOID_FORWARD_CHANNEL_VALS = {4, 4, 4};
+    public static final int SOLENOID_FORWARD_CHANNEL= getConstant("SOLENOID_FORWARD_CHANNEL");
+
+    private static final int[] SOLENOID_REVERSE_CHANNEL_VALS = {5, 5, 5};
+    public static final int SOLENOID_REVERSE_CHANNEL= getConstant("SOLENOID_REVERSE_CHANNEL");
+    
+    // Gear sensor
+    private static final int[] INFRARED_SENSOR_ANALOG_VALS = {1, 1, 1};
+    public static final int INFRARED_SENSOR_ANALOG = getConstant("INFRARED_SENSOR_ANALOG");
+    
+    // Climber motor
+    private static final int[] CLIMBER_MOTOR_VALS = {6, 6, 6};
+    public static final int CLIMBER_MOTOR = getConstant("CLIMBER_MOTOR");
+    
     private static final String ROBOT_ID_LOC = "/home/lvuser/robot-type.conf";
 
     private static int getRobotID() {

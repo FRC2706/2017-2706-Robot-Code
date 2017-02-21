@@ -4,6 +4,8 @@ import java.lang.reflect.Field;
 
 import org.usfirst.frc.team2706.robot.commands.GetTargets;
 import org.usfirst.frc.team2706.robot.commands.autonomous.plays.AlignAndDistance;
+import org.usfirst.frc.team2706.robot.commands.teleop.Climb;
+import org.usfirst.frc.team2706.robot.commands.teleop.GearHandlerToggle;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -47,16 +49,24 @@ public class OI {
         // Joystick for driving the robot around
         this.driverStick = driverStick;
 
-        EJoystickButton backLeftButton = new EJoystickButton(driverStick, 5);
-        backLeftButton.runWhileHeld(new AlignAndDistance(24));
-
         // Joystick for controlling the mechanisms of the robot
         this.controlStick = controlStick;
+
+        // TODO we need to start using controlStick and not driverStick for non-testing buttons
+
+        EJoystickButton backLeftButton = new EJoystickButton(driverStick, 5);
+        backLeftButton.runWhileHeld(new AlignAndDistance(24));
         
-        EJoystickButton CameraButton = new EJoystickButton(driverStick, 3);
-        CameraButton.whenPressed(new GetTargets());
+        EJoystickButton a = new EJoystickButton(driverStick, 1);
+        a.runWhileHeld(new Climb());
 
+        EJoystickButton b = new EJoystickButton(driverStick, 2);
+        b.whenPressed(new GearHandlerToggle());
 
+        // test the camera integration
+        EJoystickButton cameraButton = new EJoystickButton(driverStick, 3);
+        cameraButton.whenPressed(new GetTargets());
+        
     }
 
 

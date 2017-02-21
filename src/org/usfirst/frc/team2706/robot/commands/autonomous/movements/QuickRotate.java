@@ -18,10 +18,10 @@ public class QuickRotate extends Command {
     private int direction = 1;
 
     // Rotate faster if far away from target heading
-    private double fastRotateSpeed = 0.7;
+    private double fastRotateSpeed = 0.8;
 
     // Rotate slower when approaching target heading
-    private double slowRotateSpeed = 0.65;
+    private double slowRotateSpeed = 0.7;
 
     // Threshold (degrees) at which to switch from fast to slow
     private double speedThreshold = 15.0;
@@ -42,6 +42,7 @@ public class QuickRotate extends Command {
         super("QuickRotate");
 
         requires(Robot.driveTrain);
+
         this.targetHeading = normalize(targetHeading);
     }
 
@@ -49,6 +50,8 @@ public class QuickRotate extends Command {
     protected void initialize() {
         done = 10;
         maxCycles = 120;
+
+        Robot.driveTrain.reset();
     }
 
     // Called repeatedly when this Command is scheduled to run

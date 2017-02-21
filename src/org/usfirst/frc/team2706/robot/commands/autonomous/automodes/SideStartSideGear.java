@@ -14,13 +14,13 @@ public class SideStartSideGear extends CommandGroup {
      * @param rightSide Are we starting on the right or left?
      * @param speed What speeed are we travelling at?
      * @param fromWallDistance How far from the wall are we traveling?
-     * @param toGearDistance How far is it from our position to the gear?
      * @param turnDegrees How far do we turn to face the gear?
+     * @param toGearDistance How far is it from our position to the gear?
      * @param reverseDistance How far back do we go after placing the gear?
      * @param toLaunchPadDistance How far is it to the launch pad from our location?
      */
-    public SideStartSideGear(boolean rightSide, double speed, double fromWallDistance,
-                    double toGearDistance, double turnDegrees, double reverseDistance,
+    public SideStartSideGear(boolean rightSide, double speed, double fromWallDistance, double turnDegrees,
+                    double toGearDistance, double reverseDistance,
                     double toLaunchPadDistance) {
         this.addSequential(new StraightDriveWithEncoders(speed, fromWallDistance, 25));
         this.addSequential(new QuickRotate(rightSide ? -turnDegrees : turnDegrees));
