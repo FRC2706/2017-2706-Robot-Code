@@ -5,7 +5,7 @@ import org.usfirst.frc.team2706.robot.Robot;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
- *
+ * A test command that uses the camera to get target information.
  */
 public class GetTargets extends Command {
 
