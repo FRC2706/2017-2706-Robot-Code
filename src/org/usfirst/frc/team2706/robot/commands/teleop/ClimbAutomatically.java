@@ -15,6 +15,7 @@ public class ClimbAutomatically extends Command {
     boolean finished = false;
 
     protected void initialize() {
+        Robot.climber.resetClimberDistance();
         Robot.climber.startVerifyingClimb();
         Robot.climber.climb();
     }
@@ -40,6 +41,7 @@ public class ClimbAutomatically extends Command {
 
     private void stopClimbing() {
         Robot.climber.stop();
+        Robot.climber.resetClimberDistance();
         finished = true;
     }
 }
