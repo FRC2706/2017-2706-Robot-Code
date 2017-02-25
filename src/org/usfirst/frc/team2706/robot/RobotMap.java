@@ -164,15 +164,15 @@ public class RobotMap {
     private static final int[] CLIMBER_MOTOR_VALS = {6, 6, 6};
     public static final int CLIMBER_MOTOR = getConstant("CLIMBER_MOTOR");
     
-    //Climber encoder
+    // Climber encoder
     private static final double[] CLIMBER_ENCODER_DPP_VALS = {1.0 / 1075, 1.0 / 1075, 1.0 / 1960};
     public static final double CLIMBER_ENCODER_DPP = getConstant("CLIMBER_ENCODER_DPP");
     
-    //Climber encoder
+    // Climber encoder
     private static final int[] CLIMBER_ENCODER_A_VALS = {};
     public static final int CLIMBER_ENCODER_A = getConstant("CLIMBER_ENCODER_A");
     
-    //Climber encoder
+    // Climber encoder
     private static final int[] CLIMBER_ENCODER_B_VALS = {};
     public static final int CLIMBER_ENCODER_B = getConstant("CLIMBER_ENCODER_B");
     
