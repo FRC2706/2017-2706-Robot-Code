@@ -44,7 +44,7 @@ public class GearHandler extends Subsystem {
     private AnalogInput irSensor = new AnalogInput(RobotMap.INFRARED_SENSOR_ANALOG);
     private static final double GEAR_CAPTURED = 1.2;
     
-    // calls limit switches from robot map
+    // Calls limit switches from robot map
     private DigitalInput limitSwitchLeft = new DigitalInput(RobotMap.LIMIT_SWITCH_LEFT_CHANNEL);
     private DigitalInput limitSwitchRight = new DigitalInput(RobotMap.LIMIT_SWITCH_RIGHT_CHANNEL);
    
@@ -54,13 +54,13 @@ public class GearHandler extends Subsystem {
     
     public void openArm() {
         solenoid.set(DoubleSolenoid.Value.kForward);
-       //Check to see if arm is open (see bottom of code)
+    // Check to see if arm is open (see bottom of code)
         closed = checkArmOpen();
     }
     
     public void closeArm() {
         solenoid.set(DoubleSolenoid.Value.kReverse); 
-        //Check to see if arm is open (see bottom of code)
+    // Check to see if arm is open (see bottom of code)
         closed = checkArmOpen();   
     }
     
