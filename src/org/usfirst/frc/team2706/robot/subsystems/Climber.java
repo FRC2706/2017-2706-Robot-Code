@@ -5,6 +5,7 @@ import org.usfirst.frc.team2706.robot.RobotMap;
 
 import com.ctre.CANTalon;
 
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -34,7 +35,14 @@ public class Climber extends Subsystem {
     private float pastLinearAccelZ = 0.0f;
 
     private CANTalon motor = new CANTalon(RobotMap.CLIMBER_MOTOR);
+    
+    private Encoder encoder = new Encoder(RobotMap.CLIMBER_ENCODER_A, RobotMap.CLIMBER_ENCODER_B);
 
+    public Climber() {
+        encoder.setDistancePerPulse(RobotMap.CLIMBER_ENCODER_DPP);
+        encoder.reset();
+    }
+    
     /**
      * Checking conditions to see if the robot is climbing.
      * 
@@ -88,7 +96,15 @@ public class Climber extends Subsystem {
         pastLinearAccelZ = presentLinearAccelZ;
         return hittingTouchpad;
     }
-
+    
+    public double climberDistance() {
+        return encoder.getDistance();
+        
+    }
+    public void resetClimberDistance() {
+        encoder.reset();
+    }
+    
     public void initDefaultCommand() {}
 
     public void climb() {
