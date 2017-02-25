@@ -160,11 +160,11 @@ public class RobotMap {
     private static final int[] INFRARED_SENSOR_ANALOG_VALS = {1, 1, 1};
     public static final int INFRARED_SENSOR_ANALOG = getConstant("INFRARED_SENSOR_ANALOG");
     
-    // limit switch left
+    // Limit switch left
     private static final int[] LIMIT_SWITCH_LEFT_CHANNEL_VALS = {8, 8, 8};
     public static final int LIMIT_SWITCH_LEFT_CHANNEL = getConstant("LIMIT_SWITCH_LEFT_CHANNEL");
     
-    // limit switch right
+    // Limit switch right
     private static final int[] LIMIT_SWITCH_RIGHT_CHANNEL_VALS = {9, 9, 9};
     public static final int LIMIT_SWITCH_RIGHT_CHANNEL = getConstant("LIMIT_SWITCH_RIGHT_CHANNEL");
     

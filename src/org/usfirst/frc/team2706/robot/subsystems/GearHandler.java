@@ -50,7 +50,7 @@ public class GearHandler extends Subsystem {
    
     // Let's use this to keep track of whether the arm is closed :)
     private boolean closed = true;
-
+   
     public void initDefaultCommand() {}
     
     public void openArm() {
@@ -80,10 +80,9 @@ public class GearHandler extends Subsystem {
         return false;
     }
         
-   // uses limit switch to help see if arm is open
+   // Uses limit switch to help see if arm is open
       public boolean checkArmOpen() {
           if (limitSwitchLeft.get() || limitSwitchRight.get()) {
-              System.out.println("arm open");
               return true;
           }
         return false;
