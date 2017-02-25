@@ -16,6 +16,56 @@ public class GearHandler extends Subsystem {
 
     private DoubleSolenoid solenoid = new DoubleSolenoid(RobotMap.SOLENOID_FORWARD_CHANNEL, RobotMap.SOLENOID_REVERSE_CHANNEL);
     
+    public static final int ARMS_CLOSED_NO_GEAR = 0;
+    public static final int ARMS_CLOSED_WITH_GEAR = 1;
+    public static final int ARMS_CLOSED_PEG_IN_WITH_GEAR = 2;
+    public static final int ARMS_OPEN_PEG_IN_WITH_GEAR = 3;
+    public static final int ARMS_OPEN_NO_GEAR = 4;
+    public static final int ARMS_OPEN_WITH_GEAR = 5;
+    public static final int ARMS_OPEN_PEG_IN_NO_GEAR = 6;
+    public static final int ARMS_CLOSED_PEG_IN_NO_GEAR = 7;
+    
+    public int gearHandlerState() {
+        int state = ARMS_CLOSED_NO_GEAR;
+        if (checkArmOpen() == true) {
+            if (gearCaptured() == true) {
+                if (pegDetected() == true) {
+                    state = ARMS_OPEN_PEG_IN_WITH_GEAR;
+                } else {
+                    //pegDetected() == false)
+                    state = ARMS_OPEN_WITH_GEAR;
+                }
+            } else {
+                //gearCaptured() == false
+                if (pegDetected() == true) {
+                    state = ARMS_OPEN_PEG_IN_NO_GEAR;
+                } else {
+                    //pegDetecter() == false
+                    state = ARMS_OPEN_NO_GEAR;
+                }
+            }
+        } else {
+            //arm closed
+            if (gearCaptured() == true) {
+                if (pegDetected() == true) {
+                    state = ARMS_CLOSED_PEG_IN_WITH_GEAR;
+                } else {
+                    //pegDetected() == false
+                    state = ARMS_CLOSED_WITH_GEAR;
+                }
+            } else {
+                //gearCaptured() == false
+                if (pegDetected() == true) {
+                    state = ARMS_CLOSED_PEG_IN_NO_GEAR;
+                } else {
+                    //pegDetected() == false
+                    state = ARMS_CLOSED_NO_GEAR;
+                }
+            }
+        }
+        return state;
+    }
+    
     /*
      * some interesting things about the sensor... (measured in flash card lines)
      *  (right on top of sensor = line 1)
