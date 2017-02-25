@@ -3,6 +3,7 @@ package org.usfirst.frc.team2706.robot.subsystems;
 import org.usfirst.frc.team2706.robot.RobotMap;
 
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -42,6 +43,10 @@ public class GearHandler extends Subsystem {
      */
     private AnalogInput irSensor = new AnalogInput(RobotMap.INFRARED_SENSOR_ANALOG);
     private static final double GEAR_CAPTURED = 1.2;
+    
+    private DigitalInput limitSwitchLeft = new DigitalInput(RobotMap.LIMIT_SWITCH_LEFT_CHANNEL);
+    
+    private DigitalInput limitSwitchRight = new DigitalInput(RobotMap.LIMIT_SWITCH_RIGHT_CHANNEL);
    
     // Let's use this to keep track of whether the arm is closed :)
     private boolean closed = true;
@@ -50,12 +55,14 @@ public class GearHandler extends Subsystem {
     
     public void openArm() {
         solenoid.set(DoubleSolenoid.Value.kForward);
-        closed = false;
+        closed = checkArmOpen();
+        
     }
     
     public void closeArm() {
         solenoid.set(DoubleSolenoid.Value.kReverse); 
-        closed = true;
+        closed = checkArmOpen();
+        
     }
     
     public void toggleArm() {
@@ -70,6 +77,15 @@ public class GearHandler extends Subsystem {
         if (irSensor.getVoltage() >= GEAR_CAPTURED) {
             return true;
         }
+        return false;
+    }
+        
+   // uses limit switch to help see if arm is open
+      public boolean checkArmOpen() {
+          if (limitSwitchLeft.get() || limitSwitchRight.get()) {
+              System.out.println("arm open");
+              return true;
+          }
         return false;
     }
 }
