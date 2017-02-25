@@ -56,8 +56,8 @@ public class Bling extends Subsystem {
             blingPort.writeString("E0Z");
             connected = true;
         } catch (Exception e) {
-            e.printStackTrace();
-        }
+            System.out.println("Can not connect to arduino :("); 
+        } 
     }
 
     /**

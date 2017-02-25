@@ -18,7 +18,7 @@ public class StraightDriveWithEncoders extends Command {
 
     private final PIDController PID;
 
-    private final double P = 1.0, I = 0.03, D = 0.25;
+    private final double P = 1.0, I = 0.06, D = 0.25;
 
     /**
      * Drive at a specific speed for a certain amount of time
@@ -42,7 +42,7 @@ public class StraightDriveWithEncoders extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-        Robot.driveTrain.reset();
+        Robot.driveTrain.resetEncoders();
 
         // Make input infinite
         PID.setContinuous();
