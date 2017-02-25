@@ -81,7 +81,6 @@ public class GearHandler extends Subsystem {
             return true;
         }
         return false;
-    }
-    
+    }    
 }
 
