@@ -41,12 +41,17 @@ public class GearHandler extends Subsystem {
      * line 20 = 0.9V +++++++++
      * line 21 = 0.9V +++++++++
      */
-    private AnalogInput irSensor = new AnalogInput(RobotMap.INFRARED_SENSOR_ANALOG);
+    private AnalogInput irGearSensor = new AnalogInput(RobotMap.INFRARED_SENSOR_GEAR_ANALOG);
     private static final double GEAR_CAPTURED = 1.2;
     
-    // Calls limit switches from robot map
+
+    private AnalogInput irPegSensor = new AnalogInput(RobotMap.INFRARED_SENSOR_PEG_ANALOG);
+    private static final double PEG_DETECTED = 2.0;    
+
+  // Calls limit switches from robot map
     private DigitalInput limitSwitchLeft = new DigitalInput(RobotMap.LIMIT_SWITCH_LEFT_CHANNEL);
     private DigitalInput limitSwitchRight = new DigitalInput(RobotMap.LIMIT_SWITCH_RIGHT_CHANNEL);
+
    
     // Let's use this to keep track of whether the arm is closed :)
     private boolean closed = true;
@@ -73,11 +78,20 @@ public class GearHandler extends Subsystem {
     }
     
     public boolean gearCaptured() {
-        if (irSensor.getVoltage() >= GEAR_CAPTURED) {
+        if (irGearSensor.getVoltage() >= GEAR_CAPTURED) {
             return true;
         }
         return false;
     }
+
+
+    public boolean pegDetected() {
+        if (irPegSensor.getVoltage() >= PEG_DETECTED) {
+            return true;
+        }
+        return false;
+    }    
+
         
     // Uses limit switch to help see if arm is open
     public boolean checkArmOpen() {

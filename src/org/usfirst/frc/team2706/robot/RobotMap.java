@@ -157,8 +157,12 @@ public class RobotMap {
     public static final int SOLENOID_REVERSE_CHANNEL= getConstant("SOLENOID_REVERSE_CHANNEL");
     
     // Gear sensor
-    private static final int[] INFRARED_SENSOR_ANALOG_VALS = {1, 1, 1};
-    public static final int INFRARED_SENSOR_ANALOG = getConstant("INFRARED_SENSOR_ANALOG");
+    private static final int[] INFRARED_SENSOR_GEAR_ANALOG_VALS = {1, 1, 1};
+    public static final int INFRARED_SENSOR_GEAR_ANALOG = getConstant("INFRARED_SENSOR_GEAR_ANALOG");
+
+    // IR Sensor to detect peg
+    private static final int[] INFRARED_SENSOR_PEG_ANALOG_VALS = {2, 2, 2};
+    public static final int INFRARED_SENSOR_PEG_ANALOG = getConstant("INFRARED_SENSOR_PEG_ANALOG");
     
     // Limit switch left
     private static final int[] LIMIT_SWITCH_LEFT_CHANNEL_VALS = {8, 8, 8};
