@@ -50,18 +50,17 @@ public class GearHandler extends Subsystem {
    
     // Let's use this to keep track of whether the arm is closed :)
     private boolean closed = true;
-   
     public void initDefaultCommand() {}
     
     public void openArm() {
         solenoid.set(DoubleSolenoid.Value.kForward);
-       //check to see if arm is open (see bottom of code)
+       //Check to see if arm is open (see bottom of code)
         closed = checkArmOpen();
     }
     
     public void closeArm() {
         solenoid.set(DoubleSolenoid.Value.kReverse); 
-        //check to see if arm is open (see bottom of code)
+        //Check to see if arm is open (see bottom of code)
         closed = checkArmOpen();   
     }
     
@@ -80,11 +79,11 @@ public class GearHandler extends Subsystem {
         return false;
     }
         
-   // Uses limit switch to help see if arm is open
-      public boolean checkArmOpen() {
-          if (limitSwitchLeft.get() || limitSwitchRight.get()) {
-              return true;
-          }
+    // Uses limit switch to help see if arm is open
+    public boolean checkArmOpen() {
+        if (limitSwitchLeft.get() || limitSwitchRight.get()) {
+            return true;
+        }
         return false;
     }
 }
