@@ -10,6 +10,7 @@ import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriv
 import org.usfirst.frc.team2706.robot.commands.autonomous.plays.DrivePlaceGear;
 import org.usfirst.frc.team2706.robot.commands.teleop.ArcadeDriveWithJoystick;
 import org.usfirst.frc.team2706.robot.commands.teleop.RecordJoystick;
+import org.usfirst.frc.team2706.robot.controls.StickRumble;
 import org.usfirst.frc.team2706.robot.subsystems.AutonomousSelector;
 import org.usfirst.frc.team2706.robot.subsystems.Bling;
 import org.usfirst.frc.team2706.robot.subsystems.Camera;
@@ -73,10 +74,12 @@ public class Robot extends IterativeRobot {
 
         climber = new Climber();
 
+
         // New bling subsystem class.
         blingSystem = new Bling();
-
+        
         // WARNING DO NOT AUTOFORMAT THIS OR BAD THINGS WILL HAPPEN TO YOU
+
         // Set up our autonomous modes with the hardware selector switch
         hardwareChooser = new AutonomousSelector(
                          /* no switch: do nothing */ new ArcadeDriveWithJoystick(),
@@ -106,7 +109,11 @@ public class Robot extends IterativeRobot {
      * This function is called once each time the robot enters Disabled mode. You can use it to
      * reset any subsystem information you want to clear when the robot is disabled.
      */
-    public void disabledInit() {}
+    public void disabledInit() {
+        
+        blingSystem.clear();
+        
+    }
 
     public void disabledPeriodic() {
         Scheduler.getInstance().run();
@@ -126,8 +133,8 @@ public class Robot extends IterativeRobot {
         driveTrain.reset();
 
         // Get the bling doing autonomous patterns.
-        blingSystem.auto();
-
+        blingSystem.auto(); 
+      
         // Great for safety just in case you set the wrong one in practice ;)
         System.out.println("Running " + hardwareChooser.getSelected() + "...");
 
@@ -137,7 +144,9 @@ public class Robot extends IterativeRobot {
         if (autonomousCommand != null)
             autonomousCommand.start();
 
-
+        // Tell drive team we're in auto
+        StickRumble rumbler = new StickRumble(1.0, 1.0, 3, 0, 1, 1.0);
+        rumbler.start();
     }
 
     /**
@@ -160,12 +169,17 @@ public class Robot extends IterativeRobot {
         if (SmartDashboard.getBoolean("record-joystick", false))
             recordAJoystick.start();
 
+        // Tell drive team to drive
+        StickRumble rumbler = new StickRumble(0.2, 0.15, 3, 0.5, 2, 1.0);
+        rumbler.start();
+        blingSystem.teleopInit();
     }
 
     /**
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
+        blingSystem.teleopPeriodic();
         Scheduler.getInstance().run();
         log();
     }
