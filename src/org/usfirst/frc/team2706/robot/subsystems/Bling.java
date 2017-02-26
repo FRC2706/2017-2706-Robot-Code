@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.usfirst.frc.team2706.robot.Robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -71,9 +72,10 @@ public class Bling extends Subsystem {
             connected = true;
         }
         
-        catch (Exception e){} 
-        
-
+        catch (Exception e){
+            DriverStation.getInstance();
+            DriverStation.reportWarning("Can not connect to arduino :(", false);
+        } 
     }
 
     /**

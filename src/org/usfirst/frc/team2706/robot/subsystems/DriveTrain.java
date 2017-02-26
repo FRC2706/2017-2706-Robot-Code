@@ -123,6 +123,14 @@ public class DriveTrain extends Subsystem {
     }
 
     /**
+     * Get the NavX AHRS
+     * @return the NavX AHRS
+     */
+    public AHRS getGyro(){
+        return gyro; 
+    }
+    
+    /**
      * The log method puts interesting information to the SmartDashboard.
      */
     public void log() {
@@ -164,9 +172,9 @@ public class DriveTrain extends Subsystem {
      * Reset the robots sensors to the zero states.
      */
     public void reset() {
-        left_encoder.reset();
-        right_encoder.reset();
+        resetEncoders();
         resetGyro();
+        resetDisplacement();
     }
 
     /**
@@ -177,10 +185,47 @@ public class DriveTrain extends Subsystem {
     }
 
     /**
+     * Reset the robot encoders to zero states
+     */
+    public void resetEncoders() {
+        left_encoder.reset();
+        right_encoder.reset();
+    }
+
+    /**
      * @return The robots heading in degrees.
      */
     public double getHeading() {
         return gyro.getAngle();
+    }
+
+    /**
+     * Resets the displacement of the robot
+     */
+    public void resetDisplacement() {
+        gyro.resetDisplacement();
+    }
+
+    /**
+     * Gets the x distance of the robot with a direction
+     */
+    public double getDisplacementX() {
+        return gyro.getDisplacementX();
+    }
+
+    /**
+     * Gets the y distance of the robot with a direction
+     */
+
+    public double getDisplacementY() {
+        return gyro.getDisplacementY();
+    }
+
+    /**
+     * Gets the z distance of the robot with a direction
+     */
+    public double getDisplacementZ() {
+        return gyro.getDisplacementZ();
     }
 
     /**
@@ -202,6 +247,21 @@ public class DriveTrain extends Subsystem {
 
     public void invertGyroPIDSource(boolean invert) {
         gyroPIDSource.invert(invert);
+    }
+
+    /**
+     * Takes values of the two distance sensors and finds the angle the robot is on with the wall
+     * 
+     * @return -90 to 90 degrees
+     */
+    public double GetAngleWithDistanceSensors() {
+        double opposite = getRightDistanceToObstacle() - getLeftDistanceToObstacle();
+        // Converts centimeters to inches so the two measurements match up
+        double adjacent = RobotMap.DISTANCE_SENSOR_SEPARATION_CM / 2.54;
+        // Inverse tangent to take two sides of the triangle and get the angle
+        double theta = Math.toDegrees(Math.atan2(opposite, adjacent));
+        System.out.println(theta);
+        return theta;
     }
 
     /**
@@ -303,7 +363,7 @@ public class DriveTrain extends Subsystem {
     }
 
     public class DrivePIDOutput implements PIDOutput {
-        
+
         private final RobotDrive drive;
 
         private boolean invert;
@@ -328,7 +388,7 @@ public class DriveTrain extends Subsystem {
                 } else {
                     drive.arcadeDrive(-output, -rotateVal);
                 }
-            else 
+            else
                 if (invert) {
                     drive.setLeftRightMotorOutputs(-output, output);
                 } else {
