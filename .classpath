@@ -11,5 +11,7 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/2017-2706-Robot-Code/lib/non-robot-libs/google/docs.zip!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="build/jars/navx_frc.jar"/>
+	<classpathentry kind="lib" path="build/jars/CTRLib.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
