@@ -80,7 +80,7 @@ public class Robot extends IterativeRobot {
         // New bling subsystem class.
         blingSystem = new Bling();
         
-        oi = new OI();
+        // WARNING DO NOT AUTOFORMAT THIS OR BAD THINGS WILL HAPPEN TO YOU
 
         // Set up our autonomous modes with the hardware selector switch
         hardwareChooser = new AutonomousSelector(
