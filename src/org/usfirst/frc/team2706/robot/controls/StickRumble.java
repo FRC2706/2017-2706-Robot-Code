@@ -92,7 +92,6 @@ public class StickRumble extends Command {
     @Override
     public void execute() {
 
-
         timePassed = Timer.getFPGATimestamp() - startTime; // Get the time passes since the start.
 
 

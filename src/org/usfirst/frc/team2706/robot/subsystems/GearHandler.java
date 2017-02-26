@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  * @author wakandacat, FilledWithDetermination, Crazycat200
  */
 public class GearHandler extends Subsystem {
+    
 
     private DoubleSolenoid solenoid = new DoubleSolenoid(RobotMap.SOLENOID_FORWARD_CHANNEL, RobotMap.SOLENOID_REVERSE_CHANNEL);
     
@@ -51,11 +52,13 @@ public class GearHandler extends Subsystem {
     public void openArm() {
         solenoid.set(DoubleSolenoid.Value.kForward);
         closed = false;
+
     }
     
     public void closeArm() {
         solenoid.set(DoubleSolenoid.Value.kReverse); 
         closed = true;
+        
     }
     
     public void toggleArm() {
@@ -72,5 +75,7 @@ public class GearHandler extends Subsystem {
         }
         return false;
     }
+    
+
 }
 
