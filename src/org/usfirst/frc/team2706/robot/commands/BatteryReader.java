@@ -1,68 +1,58 @@
 package org.usfirst.frc.team2706.robot.commands;
 
-import edu.wpi.first.wpilibj.command.Command;
+import org.usfirst.frc.team2706.robot.Robot;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
-
-import org.usfirst.frc.team2706.robot.Robot;
-import org.usfirst.frc.team2706.robot.RobotMap;
-
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.command.Command;
 
 public class BatteryReader extends Command {
 
-
     public static double batteryOutputVoltage;
-    
+
     // Used to tell us if the battery level is critical
     public static boolean batCritical;
 
     protected static double timePassed;
-    // Used for knowing when this command started.
-    protected static double startTime = Timer.getFPGATimestamp();
 
-    public static double fullBatteryCapacity = 12;
+    public static final double FULL_BATTERY_CAPACITY = 12.0;
 
     // Get a new battery object.
-    public static PowerDistributionPanel pdp; 
+    public static PowerDistributionPanel pdp;
 
     public BatteryReader() {
-
         pdp = new PowerDistributionPanel();
         batteryOutputVoltage = pdp.getVoltage();
-        double batteryPercent = (batteryOutputVoltage - 10) / (fullBatteryCapacity - 10);
-        System.out.println("Battery Percent " + batteryPercent);
+        
+        double batteryPercent = (batteryOutputVoltage - 10) / (FULL_BATTERY_CAPACITY - 10);
+        
+        System.out.println("Battery Percentage: " + batteryPercent * 100);
+        
         Robot.blingSystem.batteryInd(batteryPercent, false);
-
     }
 
     /**
      * This will run when the scheduler calls the command.
      */
     public void execute() {
-
         // Get the battery voltage.
         batteryOutputVoltage = pdp.getVoltage();
-        double batteryPercent = (batteryOutputVoltage - 10) / (fullBatteryCapacity - 10);
+        double batteryPercent = (batteryOutputVoltage - 10) / (FULL_BATTERY_CAPACITY - 10);
 
         /*
          * The battery critical boolean should be true if the battery voltage is below 20%, but
          * don't want to spam the bling system.
          */
         if (batteryPercent <= 0.2 && !batCritical) {
-           
-            DriverStation.getInstance().reportWarning("Battery low. " + batteryPercent + " remaining.", false);
+            DriverStation.reportWarning("Battery low. " + (batteryPercent * 100) + "% remaining.",
+                            false);
             batCritical = true;
             Robot.blingSystem.batteryInd(batteryPercent, batCritical);
-
         }
-
         if (batteryPercent > 0.2 && batCritical)
-            
             batCritical = false;
 
-        timePassed = Timer.getFPGATimestamp() - startTime;
-
+        timePassed = timeSinceInitialized();
     }
 
     @Override

@@ -40,10 +40,10 @@ public class Robot extends IterativeRobot {
 
     // The spinny dial on the robot that selects what autonomous mode we are going to do
     public static AutonomousSelector hardwareChooser;
-    
+
     // The gear handler arm
     public static GearHandler gearHandler;
-    
+
     // The climber
     public static Climber climber;
 
@@ -58,22 +58,20 @@ public class Robot extends IterativeRobot {
 
     // Records joystick states to file for later replaying
     RecordJoystick recordAJoystick;
-    
 
     /**
      * This function is run when the robot is first started up and should be used for any
      * initialization code.
      */
     public void robotInit() {
-
         // Instantiate the robot subsystems
         driveTrain = new DriveTrain();
         // camera = new Camera(Camera.CAMERA_IP);
-        
+
         oi = new OI();
 
         gearHandler = new GearHandler();
-        
+
         climber = new Climber();
 
 
@@ -105,8 +103,6 @@ public class Robot extends IterativeRobot {
 
         recordAJoystick = new RecordJoystick(oi.getDriverJoystick(), oi.getOperatorJoystick(),
                         () -> SmartDashboard.getString("record-joystick-name", "default"));
-        
-        
     }
 
     /**
@@ -134,11 +130,11 @@ public class Robot extends IterativeRobot {
      * additional strings & commands.
      */
     public void autonomousInit() {
-        
         driveTrain.reset();
 
         // Get the bling doing autonomous patterns.
         blingSystem.auto(); 
+      
         // Great for safety just in case you set the wrong one in practice ;)
         System.out.println("Running " + hardwareChooser.getSelected() + "...");
 
@@ -147,8 +143,7 @@ public class Robot extends IterativeRobot {
         // Schedule the autonomous command that was selected
         if (autonomousCommand != null)
             autonomousCommand.start();
-        
-        
+
         // Tell drive team we're in auto
         StickRumble rumbler = new StickRumble(1.0, 1.0, 3, 0, 1, 1.0);
         rumbler.start();

@@ -1,6 +1,5 @@
 package org.usfirst.frc.team2706.robot.subsystems;
 
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,16 +11,16 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
- * 
  * @author eAUE (Kyle Anderson)
  * @see <a href = "https://docs.google.com/drawings/d/1JQYcLj3Sdf0h_-DD0J7ceG14csBJ6LMhIWoIXoaeYVE/edit?usp=sharing"> 
  * Explanation of the light patterns</a> 
  */
 public class Bling extends Subsystem {
-    
-    /* Will be true if the bling system is working properly 
-     * (so if the arduino is not plugged in, it will be false).
-     defaults to false to keep everything working. */
+
+    /**
+     * Will be true if the bling system is working properly (so if the arduino is not plugged in, it
+     * will be false). defaults to false to keep everything working.
+     */
     public static boolean connected = false;
 
     public static SerialPort blingPort;
@@ -30,18 +29,17 @@ public class Bling extends Subsystem {
     private static String teleopDisplayState = "";
 
     // The number of pixels on one LED strip
-    int pixels = 120; 
+    int pixels = 120;
 
-    /*
+    /**
      * Will be true if the battery level is critical, in which case it will override all other
      * signals to display the critical battery warning
      */
     public static boolean batCritical = false;
-    
+
     // Let's make the colour and command codes
     Map<String, String> colours = new HashMap<String, String>() {
         private static final long serialVersionUID = 1L;
-
         {
             put("RED", "16711680");
             put("GREEN", "32768");
@@ -59,16 +57,17 @@ public class Bling extends Subsystem {
             put("GOLD", "16766720");
             put("SILVER", "12632256");
         }
-
     };
 
     public Bling() {
-
         try {
             blingPort = new SerialPort(9600, SerialPort.Port.kMXP);
-            blingPort.setTimeout(0.8); // Will wait a max of half a second.
-            blingPort.writeString("I"); // Tell arduino we're sending a command.
-            blingPort.writeString("E0Z"); // Clear the LED strip.
+            // Will wait a max of half a second.
+            blingPort.setTimeout(0.8);
+            // Tell arduino we're sending a command.
+            blingPort.writeString("I");
+            // Clear the LED strip.
+            blingPort.writeString("E0Z");
             connected = true;
 
         }
@@ -82,19 +81,18 @@ public class Bling extends Subsystem {
     /**
      * This function should be run at the beginning of autonomous to get the proper light pattern.
      */
-    public void auto() { // Will run during autonomous period
-
+    public void auto() {
         // IF THE BLINGPORT FAILED, DON'T CAUSE MORE ERRORS
-        if (!connected) return; 
-        
+        if (!connected)
+            return;
+
         blingPort.writeString("I");
         blingPort.writeString("E0Z"); // Clear the LED strip
         blingPort.writeString("F1C" + colours.get("MERGE") + "D150E1Z");
-        
     }
 
-    /** This function initializes teleop period
-     * 
+    /**
+     * This function initializes teleop period
      */
     public void teleopInit(){
         blingPort.writeString("I");
@@ -137,26 +135,29 @@ public class Bling extends Subsystem {
      * This command just quickly clear the LED Strip.
      */
     public void clear() {
+        if (!connected)
+            return;
 
-        if (!connected) return;
-        
         blingPort.writeString("I");
-        blingPort.writeString("E0Z"); // Clear the LED strip
+        // Clear the LED strip
+        blingPort.writeString("E0Z");
     }
 
     /**
      * This function will run whenever we want to display the battery voltage output. Will run
      * automatically at startup.
      * 
-     * @param percent : The current voltage percent reading from the battery.
-     * @param criticalStatus : Needs to be true if the battery level is below 20%.
+     * @param percent The current voltage percent reading from the battery.
+     * @param criticalStatus Needs to be true if the battery level is below 20%.
      */
     public void batteryInd(double percent, boolean criticalStatus) {
-        
-        if (!connected) return;
+        if (!connected)
+            return;
 
         batCritical = criticalStatus;
+      
         blingPort.writeString("I"); // Let them know we need to send another command
+      
         String bColour;
         if (percent <= 0.25)
             bColour = colours.get("RED");
@@ -174,16 +175,20 @@ public class Bling extends Subsystem {
     /**
      * Show a distance indication on the LED strip out of 3 metres.
      * 
-     * @param distance : The current distance
+     * @param distance The current distance
      */
     public void showDistance(double distance) {
+        if (!connected)
+            return;
 
-        if (!connected) return;
-        
         blingPort.writeString("I");
-        blingPort.writeString("E0Z"); // Clear the LED strip
+        // Clear the LED strip
+        blingPort.writeString("E0Z");
+
+        // Only showing 3 metres from the object.
         if (distance > 3.0)
-            return; // Only showing 3 metres from the object.
+            return;
+
         double percentDist = distance / 3;
         System.out.println(Math.round(percentDist * pixels));
         String dColour;
@@ -197,40 +202,37 @@ public class Bling extends Subsystem {
         // Colour flash
         blingPort.writeString(
                         "F7C" + dColour + "P0" + "Q" + Math.round(percentDist * pixels) + "E7Z");
-
     }
 
     /**
      * This function lets you show whether or not the robot is ready to receive a gear.
      * 
-     * @param ready : A boolean that indicates whether or not the robot is ready. True if yes.
+     * @param ready A boolean that indicates whether or not the robot is ready. True if yes.
      */
     public void showReadyToReceiveGear(boolean ready) {
-        
-        if (!connected) return;
+        if (!connected)
+            return;
 
         // Do not interfere with critical battery warning.
         // Show a theatre chase
         if (ready && !batCritical)
             customDisplay("Orange", 3, -1, 100, 0, 100);
-
     }
     
     /**
      * This function lets you show whether or not the robot is ready to climb.
-     * @param ready : A boolean that indicate true for ready or false for not ready.
+     *
+     * @param ready A boolean that indicate true for ready or false for not ready.
      */
-    public void showReadyToClimb(boolean ready){
-        
-        if (ready) customDisplay("White", 11, 250, 60, 0, 100);
-        
+    public void showReadyToClimb(boolean ready) {  
+        if (ready) customDisplay("White", 11, 250, 60, 0, 100);   
     }
 
     /**
      * This is used to display a basic pattern on the bling LED lights.
      * Note that for functions above 9, pixelStart and pixelEnd and delay will do nothing.
      * 
-     * @param pattern : The type of motion or animation pattern you would like to display. Patterns range from 1-12.
+     * @param pattern The type of motion or animation pattern you would like to display. Patterns range from 1-12.
      * 1 : Color wipe
      * 2 : Colour wipe with blank period
      * 3 : Theatre chase
@@ -243,26 +245,30 @@ public class Bling extends Subsystem {
      * 10: Multi bounce
      * 11: Multi bouce wipe
      * 12: Multi colour wipe
-     * @param colour : Colour, either as a preset such as "RED", "GREEN", "WHITE" (either caps or
+     * @param colour Colour, either as a preset such as "RED", "GREEN", "WHITE" (either caps or
      *        no caps) or in decimal format. Use a programmer calculator to determine decimal
      *        format.
      * 
      *        Presets: GREEN, RED, BLUE, YELLOW, ORANGE, PURPLE, TAN, VIOLET, MERGE, PINK, WHITE,
      *        TURQUOISE, BLACK, GOLD, SILVER
-     * @param delay : The delay between animation segments in seconds, if applicable.
-     * @param brightness : The brightness of the LED pattern as an integer between 0 and 100.
-     * @param pixelStart : The percent of the bar where the pixel pattern will start in decimal format.
-     * @param pixelEnd : The percent of the bar where the pattern will end in decimal format.
+     * @param delay The delay between animation segments in seconds, if applicable.
+     * @param brightness The brightness of the LED pattern as an integer between 0 and 100.
+     * @param pixelStart The percent of the bar where the pixel pattern will start in decimal format.
+     * @param pixelEnd The percent of the bar where the pattern will end in decimal format.
      */
     public void customDisplay(String colour, int pattern, double delay,
                     int brightness, int pixelStart, int pixelEnd) {
-        
-        if (!connected) return;
+        if (!connected)
+            return;
 
-        String gColour = colour.replace(" ", ""); // Get rid of all the spaces
-        gColour = gColour.toUpperCase(); // Make sure that any letters are uppercase.
+        // Get rid of all the spaces
+        String gColour = colour.replace(" ", "");
 
-        if ((gColour.charAt(0)) != '0') { // Preset colour that we need to convert to RGB888.
+        // Make sure that any letters are uppercase.
+        gColour = gColour.toUpperCase();
+
+        // Preset colour that we need to convert to RGB888.
+        if ((gColour.charAt(0)) != '0') {
             gColour = colours.get(gColour);
         }
 
@@ -274,7 +280,6 @@ public class Bling extends Subsystem {
         if (pattern <= 9)
             blingPort.writeString("F" + pattern + "C" + gColour + "B" + brightness + "D" + delay
                                    + "P" + startPixel + "Q" + endPixel + "E" + pattern + "Z");
-        
         else 
             blingPort.writeString("F" + pattern + "C" + gColour + "B" + brightness + "E" + 
                                    pattern + "Z");
