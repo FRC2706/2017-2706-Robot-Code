@@ -1,13 +1,7 @@
 package org.usfirst.frc.team2706.robot.subsystems;
 
-import java.io.PrintWriter;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -21,24 +15,23 @@ public class Camera extends Subsystem {
     public boolean PRINT_STUFF = false;
     public String RPi_addr;
     public final int visionDataPort = 1182;
-    
-    @Override
-    protected void initDefaultCommand() {
-    }
 
-   public Camera(String ip) {
+    @Override
+    protected void initDefaultCommand() {}
+
+    public Camera(String ip) {
         super();
         RPi_addr = ip;
     }
 
-   public void GetTargets() {
-       ArrayList<TrackerBox2.TargetObject> targets = trackerbox.getVisionData();
-              
-       if (targets != null) {
-           System.out.println("I found "+targets.size()+" targets.");
-           for(TrackerBox2.TargetObject target : targets)
-               System.out.println("\tI found: "+target.toString());
-           System.out.println();
-       }
-   }
+    public void GetTargets() {
+        ArrayList<TrackerBox2.TargetObject> targets = trackerbox.getVisionData();
+
+        if (targets != null) {
+            System.out.println("I found " + targets.size() + " targets.");
+            for (TrackerBox2.TargetObject target : targets)
+                System.out.println("\tI found: " + target.toString());
+            System.out.println();
+        }
+    }
 }

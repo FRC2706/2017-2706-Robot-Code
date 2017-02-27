@@ -52,14 +52,6 @@ public class OI {
         // Joystick for driving the robot around
         this.driverStick = driverStick;
 
-        // Joystick for controlling the mechanisms of the robot
-        this.controlStick = controlStick;
-
-        // TODO we need to start using controlStick and not driverStick for non-testing buttons
-
-        EJoystickButton backLeftButton = new EJoystickButton(driverStick, 5);
-        backLeftButton.runWhileHeld(new AlignAndDistance(24));
-        
         EJoystickButton a = new EJoystickButton(driverStick, 1);
         a.runWhileHeld(new ClimbManually());
 
@@ -73,6 +65,13 @@ public class OI {
         EJoystickButton cameraButton = new EJoystickButton(driverStick, 3);
         cameraButton.whenPressed(new GetTargets());
         
+        // Joystick for controlling the mechanisms of the robot
+        this.controlStick = controlStick;
+
+        // TODO we need to start using controlStick and not driverStick for non-testing buttons
+
+        EJoystickButton backLeftButton = new EJoystickButton(driverStick, 5);
+        backLeftButton.runWhileHeld(new AlignAndDistance(24));
     }
     
     /**
