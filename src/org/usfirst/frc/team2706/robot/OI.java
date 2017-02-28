@@ -19,9 +19,7 @@ public class OI {
 
     // Joystick for driving the robot around
     private final Joystick driverStick;
-    // Only want one instance of this at a time since
-    private ClimbAutomatically climbAutomatically = new ClimbAutomatically();
-    
+
     // Joystick for controlling the mechanisms of the robot
     private final Joystick controlStick;
 
@@ -56,19 +54,19 @@ public class OI {
         EJoystickButton backLeftButton = new EJoystickButton(driverStick, 5);
         backLeftButton.runWhileHeld(new AlignAndDistance(24));
 
-        EJoystickButton a = new EJoystickButton(driverStick, 1);
-        a.runWhileHeld(new ClimbManually());
+        EJoystickButton aButton = new EJoystickButton(driverStick, 1);
+        aButton.runWhileHeld(new ClimbManually());
 
-        EJoystickButton b = new EJoystickButton(driverStick, 2);
-        b.whenPressed(new GearHandlerToggle());
-        
-        EJoystickButton c = new EJoystickButton(driverStick, 3);
-        c.toggleWhenPressed(climbAutomatically);
+        EJoystickButton bButton = new EJoystickButton(driverStick, 2);
+        bButton.whenPressed(new GearHandlerToggle());
+
+        EJoystickButton xButton = new EJoystickButton(driverStick, 3);
+        xButton.toggleWhenPressed(new ClimbAutomatically());
 
         // Joystick for controlling the mechanisms of the robot
         this.controlStick = controlStick;
     }
-    
+
     /**
      * Removes ButtonSchedulers that run commands that were added in Oi
      */
