@@ -34,20 +34,24 @@ public class StickRumble extends Command {
     public static int intervalCount;
 
     public static int repeatCountCopy;
-
+    
+    // True when we are going to have an infinite loop.
+    public static boolean infiniteCount = false;
     /*
      * Used to determine if we are in the interval time period
      */
     public static boolean intervalOn = false;
 
     /**
-     * Simple function for setting vibration on the controller.
+     * Function for setting vibration on the controller.
      * 
      * @param timeOn The time for which the controller will vibrate in seconds
      * @param timeOff The delay time between when the controller is vibrating
      * @param repeatCount The number of times to repeat the rumble on - rumble off pattern.
      * @param intervalTime The time in seconds between the patterns of vibrations.
      * @param intervalCount The number of times to repeat the pattern sets.
+     * Set this to -1 to keep going indefinitely until you call "StickRumble.end".
+     * PLEASE CALL STICKRUMBLE.END! DO NOT LEAVE THE CONTROLLER VIBRATING ETERNALLY!
      * @param intensity How much the controllers will vibrate.
      */
     public StickRumble(double timeOn, double timeOff, int repeatCount, double intervalTime,
@@ -63,6 +67,8 @@ public class StickRumble extends Command {
         StickRumble.repeatCountCopy = repeatCount;
         StickRumble.intervalTime = intervalTime;
         StickRumble.intervalCount = intervalCount;
+        if (StickRumble.intervalCount == -1)
+            infiniteCount = true;
         vibrationIntensity = intensity;
         finished = false;
         startTime = Timer.getFPGATimestamp();
@@ -131,16 +137,19 @@ public class StickRumble extends Command {
      * the schedule.
      */
     public boolean isFinished() {
-        if (intervalCount <= 0) {
+        if (intervalCount <= 0 && !infiniteCount) {
             finished = true;
-            rumbleAll(false);
         }
         return finished;
     }
+    
+    
 
     @Override
     public void interrupted() {}
 
     @Override
-    public void end() {}
+    public void end() {
+        rumbleAll(false);
+    }
 }

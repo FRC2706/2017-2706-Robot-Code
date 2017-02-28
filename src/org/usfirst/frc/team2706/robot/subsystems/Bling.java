@@ -139,8 +139,10 @@ public class Bling extends Subsystem {
      * Show a distance indication on the LED strip out of 3 metres.
      * 
      * @param distance The current distance
+     * @param pegIn Will be true if the peg is in 
+     * the hole, false otherwise.
      */
-    public void showDistance(double distance) {
+    public void showDistance(double distance, boolean pegIn) {
         if (!connected)
             return;
 
@@ -155,12 +157,15 @@ public class Bling extends Subsystem {
         double percentDist = distance / 3;
         System.out.println(Math.round(percentDist * pixels));
         String dColour;
-        if (distance > 2)
-            dColour = colours.get("RED");
-        else if (distance > 1)
+
+        // Peg in is true if the peg is going through the gear hole
+        if (distance < 1.5 && !pegIn)
             dColour = colours.get("YELLOW");
-        else
+        
+        else if (distance <1.5 && pegIn)
             dColour = colours.get("GREEN");
+        else
+            dColour = colours.get("RED");
 
         // Colour flash
         blingPort.writeString(
