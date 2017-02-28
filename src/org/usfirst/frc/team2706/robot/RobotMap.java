@@ -173,7 +173,7 @@ public class RobotMap {
     public static final int LIMIT_SWITCH_RIGHT_CHANNEL = getConstant("LIMIT_SWITCH_RIGHT_CHANNEL");
     
     // Climber motor
-    private static final int[] CLIMBER_MOTOR_VALS = {6, 6, 6};
+    private static final int[] CLIMBER_MOTOR_VALS = {5, 5, 5};
     public static final int CLIMBER_MOTOR = getConstant("CLIMBER_MOTOR");
     
     // Climber encoder
