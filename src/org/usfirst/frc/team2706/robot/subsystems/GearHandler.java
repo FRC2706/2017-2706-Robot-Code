@@ -27,9 +27,9 @@ public class GearHandler extends Subsystem {
     
     public int gearHandlerState() {
         int state = ARMS_CLOSED_NO_GEAR;
-        if (checkArmOpen() == true) {
-            if (gearCaptured() == true) {
-                if (pegDetected() == true) {
+        if (checkArmOpen()) {
+            if (gearCaptured()) {
+                if (pegDetected()) {
                     state = ARMS_OPEN_PEG_IN_WITH_GEAR;
                 } else {
                     // pegDetected() == false)
@@ -37,7 +37,7 @@ public class GearHandler extends Subsystem {
                 }
             } else {
                 // gearCaptured() == false
-                if (pegDetected() == true) {
+                if (pegDetected()) {
                     state = ARMS_OPEN_PEG_IN_NO_GEAR;
                 } else {
                     // pegDetecter() == false
@@ -46,8 +46,8 @@ public class GearHandler extends Subsystem {
             }
         } else {
             // arm closed
-            if (gearCaptured() == true) {
-                if (pegDetected() == true) {
+            if (gearCaptured()) {
+                if (pegDetected()) {
                     state = ARMS_CLOSED_PEG_IN_WITH_GEAR;
                 } else {
                     // pegDetected() == false
@@ -55,7 +55,7 @@ public class GearHandler extends Subsystem {
                 }
             } else {
                 // gearCaptured() == false
-                if (pegDetected() == true) {
+                if (pegDetected()) {
                     state = ARMS_CLOSED_PEG_IN_NO_GEAR;
                 } else {
                     // pegDetected() == false

@@ -181,11 +181,11 @@ public class RobotMap {
     public static final double CLIMBER_ENCODER_DPP = getConstant("CLIMBER_ENCODER_DPP");
     
     // Climber encoder
-    private static final int[] CLIMBER_ENCODER_A_VALS = {};
+    private static final int[] CLIMBER_ENCODER_A_VALS = {10, 10, 10};
     public static final int CLIMBER_ENCODER_A = getConstant("CLIMBER_ENCODER_A");
     
     // Climber encoder
-    private static final int[] CLIMBER_ENCODER_B_VALS = {};
+    private static final int[] CLIMBER_ENCODER_B_VALS = {11, 11, 11};
     public static final int CLIMBER_ENCODER_B = getConstant("CLIMBER_ENCODER_B");
     
     private static final String ROBOT_ID_LOC = "/home/lvuser/robot-type.conf";
