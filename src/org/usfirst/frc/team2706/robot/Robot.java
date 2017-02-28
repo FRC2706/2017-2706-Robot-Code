@@ -9,6 +9,7 @@ import org.usfirst.frc.team2706.robot.commands.autonomous.movements.ReplayRecord
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithEncoders;
 import org.usfirst.frc.team2706.robot.commands.autonomous.plays.DrivePlaceGear;
 import org.usfirst.frc.team2706.robot.commands.teleop.ArcadeDriveWithJoystick;
+import org.usfirst.frc.team2706.robot.commands.teleop.BlingTeleop;
 import org.usfirst.frc.team2706.robot.commands.teleop.RecordJoystick;
 import org.usfirst.frc.team2706.robot.controls.StickRumble;
 import org.usfirst.frc.team2706.robot.subsystems.AutonomousSelector;
@@ -172,14 +173,16 @@ public class Robot extends IterativeRobot {
         // Tell drive team to drive
         StickRumble rumbler = new StickRumble(0.2, 0.15, 3, 0.5, 2, 1.0);
         rumbler.start();
-        blingSystem.teleopInit();
+        
+        // Get bling system doing teleop patterns.
+        BlingTeleop blingerLoop = new BlingTeleop();
+        blingerLoop.start();
     }
 
     /**
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-        blingSystem.teleopPeriodic();
         Scheduler.getInstance().run();
         log();
     }
