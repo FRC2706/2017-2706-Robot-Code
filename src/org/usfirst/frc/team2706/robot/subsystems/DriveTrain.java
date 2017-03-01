@@ -4,6 +4,7 @@ import org.usfirst.frc.team2706.robot.Robot;
 import org.usfirst.frc.team2706.robot.RobotMap;
 import org.usfirst.frc.team2706.robot.commands.teleop.ArcadeDriveWithJoystick;
 
+import com.ctre.CANTalon;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.Encoder;
@@ -14,7 +15,6 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Ultrasonic;
-import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * These include four drive motors, a left and right encoder and a gyro.
  */
 public class DriveTrain extends Subsystem {
-    private Victor front_left_motor, back_left_motor, front_right_motor, back_right_motor;
+    private CANTalon front_left_motor, back_left_motor, front_right_motor, back_right_motor;
     private RobotDrive drive;
     private Encoder left_encoder, right_encoder;
     private Ultrasonic leftDistanceSensor, rightDistanceSensor;
@@ -42,10 +42,10 @@ public class DriveTrain extends Subsystem {
 
     public DriveTrain() {
         super();
-        front_left_motor = new Victor(RobotMap.MOTOR_FRONT_LEFT);
-        back_left_motor = new Victor(RobotMap.MOTOR_REAR_LEFT);
-        front_right_motor = new Victor(RobotMap.MOTOR_FRONT_RIGHT);
-        back_right_motor = new Victor(RobotMap.MOTOR_REAR_RIGHT);
+        front_left_motor = new CANTalon(RobotMap.MOTOR_FRONT_LEFT);
+        back_left_motor = new CANTalon(RobotMap.MOTOR_REAR_LEFT);
+        front_right_motor = new CANTalon(RobotMap.MOTOR_FRONT_RIGHT);
+        back_right_motor = new CANTalon(RobotMap.MOTOR_REAR_RIGHT);
 
         front_left_motor.setInverted(RobotMap.MOTOR_FRONT_LEFT_INVERTED);
         back_left_motor.setInverted(RobotMap.MOTOR_REAR_LEFT_INVERTED);
@@ -124,12 +124,13 @@ public class DriveTrain extends Subsystem {
 
     /**
      * Get the NavX AHRS
+     * 
      * @return the NavX AHRS
      */
-    public AHRS getGyro(){
-        return gyro; 
+    public AHRS getGyro() {
+        return gyro;
     }
-    
+
     /**
      * The log method puts interesting information to the SmartDashboard.
      */
@@ -388,12 +389,11 @@ public class DriveTrain extends Subsystem {
                 } else {
                     drive.arcadeDrive(-output, -rotateVal);
                 }
-            else
-                if (invert) {
-                    drive.setLeftRightMotorOutputs(-output, output);
-                } else {
-                    drive.setLeftRightMotorOutputs(output, output);
-                }
+            else if (invert) {
+                drive.setLeftRightMotorOutputs(-output, output);
+            } else {
+                drive.setLeftRightMotorOutputs(output, output);
+            }
         }
 
         public void setInvert(boolean invert) {
