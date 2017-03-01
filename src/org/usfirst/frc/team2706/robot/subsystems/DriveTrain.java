@@ -229,6 +229,12 @@ public class DriveTrain extends Subsystem {
         return gyro.getDisplacementZ();
     }
 
+    public void brakeMode(boolean on) {
+        front_left_motor.enableBrakeMode(on);
+        back_left_motor.enableBrakeMode(on);
+        front_right_motor.enableBrakeMode(on);
+        back_right_motor.enableBrakeMode(on);
+    }
     /**
      * @param useGyroStraightening True to invert second motor direction for rotating
      * 

@@ -2,10 +2,11 @@ package org.usfirst.frc.team2706.robot;
 
 import java.lang.reflect.Field;
 
-import org.usfirst.frc.team2706.robot.commands.autonomous.plays.AlignAndDistance;
 import org.usfirst.frc.team2706.robot.commands.teleop.ClimbAutomatically;
 import org.usfirst.frc.team2706.robot.commands.teleop.ClimbManually;
 import org.usfirst.frc.team2706.robot.commands.teleop.GearHandlerToggle;
+import org.usfirst.frc.team2706.robot.commands.teleop.HandBrake;
+import org.usfirst.frc.team2706.robot.commands.teleop.TakeOverCommandBreak;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -52,8 +53,10 @@ public class OI {
         // TODO we need to start using controlStick and not driverStick for non-testing buttons
 
         EJoystickButton backLeftButton = new EJoystickButton(driverStick, 5);
-        backLeftButton.runWhileHeld(new AlignAndDistance(24));
+        backLeftButton.runWhileHeld(new TakeOverCommandBreak());
 
+        EJoystickButton backRightButton = new EJoystickButton(driverStick,6);
+        backRightButton.runWhileHeld(new HandBrake());
         EJoystickButton aButton = new EJoystickButton(driverStick, 1);
         aButton.runWhileHeld(new ClimbManually());
 
