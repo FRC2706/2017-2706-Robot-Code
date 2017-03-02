@@ -3,8 +3,11 @@ package org.usfirst.frc.team2706.robot.subsystems;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.usfirst.frc.team2706.robot.commands.teleop.BlingTeleop;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -53,6 +56,8 @@ public class Bling extends Subsystem {
         }
     };
 
+    private Command defaultCommand;
+    
     public Bling() {
         try {
             blingPort = new SerialPort(9600, SerialPort.Port.kMXP);
@@ -253,6 +258,22 @@ public class Bling extends Subsystem {
                                    pattern + "Z");
     }
 
+    /**
+     * When no other command is running let the operator drive around using the Xbox joystick.
+     */
     @Override
-    protected void initDefaultCommand() {}
+    public void initDefaultCommand() {
+        if (defaultCommand == null) {
+            getDefaultCommand();
+        }
+        setDefaultCommand(defaultCommand);
+    }
+
+    @Override
+    public Command getDefaultCommand() {
+        if (defaultCommand == null) {
+            defaultCommand = new BlingTeleop();
+        }
+        return defaultCommand;
+    }
 }

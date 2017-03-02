@@ -9,7 +9,6 @@ import org.usfirst.frc.team2706.robot.commands.autonomous.movements.ReplayRecord
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithEncoders;
 import org.usfirst.frc.team2706.robot.commands.autonomous.plays.DrivePlaceGear;
 import org.usfirst.frc.team2706.robot.commands.teleop.ArcadeDriveWithJoystick;
-import org.usfirst.frc.team2706.robot.commands.teleop.BlingTeleop;
 import org.usfirst.frc.team2706.robot.commands.teleop.RecordJoystick;
 import org.usfirst.frc.team2706.robot.controls.StickRumble;
 import org.usfirst.frc.team2706.robot.subsystems.AutonomousSelector;
@@ -59,6 +58,9 @@ public class Robot extends IterativeRobot {
 
     // Records joystick states to file for later replaying
     RecordJoystick recordAJoystick;
+    
+    // Rumbles joystick to tell drive team which mode we're in
+    StickRumble rumbler;
 
     /**
      * This function is run when the robot is first started up and should be used for any
@@ -74,7 +76,6 @@ public class Robot extends IterativeRobot {
         gearHandler = new GearHandler();
 
         climber = new Climber();
-
 
         // New bling subsystem class.
         blingSystem = new Bling();
@@ -111,9 +112,7 @@ public class Robot extends IterativeRobot {
      * reset any subsystem information you want to clear when the robot is disabled.
      */
     public void disabledInit() {
-        
-        blingSystem.clear();
-        
+        blingSystem.clear(); // S.V.P leave this here. 
     }
 
     public void disabledPeriodic() {
@@ -132,9 +131,6 @@ public class Robot extends IterativeRobot {
      */
     public void autonomousInit() {
         driveTrain.reset();
-
-        // Get the bling doing autonomous patterns.
-        blingSystem.auto(); 
       
         // Great for safety just in case you set the wrong one in practice ;)
         System.out.println("Running " + hardwareChooser.getSelected() + "...");
@@ -146,7 +142,7 @@ public class Robot extends IterativeRobot {
             autonomousCommand.start();
 
         // Tell drive team we're in auto
-        StickRumble rumbler = new StickRumble(1.0, 1.0, 3, 0, 1, 1.0);
+        rumbler = new StickRumble(1.0, 1.0, 3, 0, 1, 1.0);
         rumbler.start();
     }
 
@@ -171,12 +167,13 @@ public class Robot extends IterativeRobot {
             recordAJoystick.start();
 
         // Tell drive team to drive
-        StickRumble rumbler = new StickRumble(0.2, 0.15, 3, 0.5, 2, 1.0);
+        rumbler = new StickRumble(0.2, 0.15, 3, 0.5, 2, 1.0);
         rumbler.start();
         
-        // Get bling system doing teleop patterns.
-        BlingTeleop blingerLoop = new BlingTeleop();
-        blingerLoop.start();
+        if(blingSystem.getDefaultCommand().isRunning()) {
+            blingSystem.getDefaultCommand().cancel();
+            blingSystem.getDefaultCommand().start();
+        }
     }
 
     /**
