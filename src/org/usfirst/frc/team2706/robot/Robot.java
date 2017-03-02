@@ -111,9 +111,7 @@ public class Robot extends IterativeRobot {
      * This function is called once each time the robot enters Disabled mode. You can use it to
      * reset any subsystem information you want to clear when the robot is disabled.
      */
-    public void disabledInit() {
-        blingSystem.clear(); // S.V.P leave this here. 
-    }
+    public void disabledInit() {}
 
     public void disabledPeriodic() {
         Scheduler.getInstance().run();
