@@ -4,6 +4,7 @@ import org.usfirst.frc.team2706.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
 
+@SuppressWarnings("unused")
 public class StopAtGearWall extends Command {
 
     private final double stopRange;

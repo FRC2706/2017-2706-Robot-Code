@@ -98,7 +98,7 @@ public class GearHandler extends Subsystem {
     private AnalogInput irPegSensor = new AnalogInput(RobotMap.INFRARED_SENSOR_PEG_ANALOG);
     private static final double PEG_DETECTED = 2.0;    
 
-  // Calls limit switches from robot map
+    // Calls limit switches from robot map
     private DigitalInput limitSwitchLeft = new DigitalInput(RobotMap.LIMIT_SWITCH_LEFT_CHANNEL);
     private DigitalInput limitSwitchRight = new DigitalInput(RobotMap.LIMIT_SWITCH_RIGHT_CHANNEL);
 
@@ -109,13 +109,13 @@ public class GearHandler extends Subsystem {
     
     public void openArm() {
         solenoid.set(DoubleSolenoid.Value.kForward);
-    // Check to see if arm is open (see bottom of code)
+        // Check to see if arm is open (see bottom of code)
         closed = checkArmOpen();
     }
     
     public void closeArm() {
         solenoid.set(DoubleSolenoid.Value.kReverse); 
-    // Check to see if arm is open (see bottom of code)
+        // Check to see if arm is open (see bottom of code)
         closed = checkArmOpen();   
     }
     
