@@ -64,9 +64,9 @@ public class OI {
         xButton.runWhileHeld(new StopAtGearWall(14,40));
 
         EJoystickButton y = new EJoystickButton(driverStick,4);
-        y.runWhileHeld(new StraightDriveWithCamera(0.6,14,1));
+        y.runWhileHeld(new StraightDriveWithCamera(0.5,0,12));
         // test the camera integration
-        EJoystickButton cameraButton = new EJoystickButton(driverStick, 3);
+        EJoystickButton cameraButton = new EJoystickButton(driverStick, 7);
         cameraButton.whenPressed(new GetTargets());
         
         

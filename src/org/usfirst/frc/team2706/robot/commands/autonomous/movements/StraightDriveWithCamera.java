@@ -2,14 +2,13 @@ package org.usfirst.frc.team2706.robot.commands.autonomous.movements;
 
 import org.usfirst.frc.team2706.robot.Robot;
 import org.usfirst.frc.team2706.robot.commands.GetTargets;
-import org.usfirst.frc.team2706.robot.commands.teleop.EncodersNoReturn;
 
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class StraightDriveWithCamera extends Command {
 
-    private final double speed;
+    private double speed;
 
     private final double distance;
 
@@ -24,7 +23,7 @@ public class StraightDriveWithCamera extends Command {
      * 
      * @param speed Speed in range [-1,1]
      * @param distance The encoder distance to travel
-     * @param error The range that the robot is happy ending the command in
+     * @param error The range that the robot is happy ending the command in inches
      */
     public StraightDriveWithCamera(double speed, double distance, double error) {
         requires(Robot.driveTrain);
@@ -67,20 +66,14 @@ public class StraightDriveWithCamera extends Command {
         // Start going to location
         PID.enable();
     }
-EncodersNoReturn c = new EncodersNoReturn();
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        boolean b = PID.onTarget();
-       // if(b) {
-           // c.start();
-      //  }
         return false;
     }
 
     // Called once after isFinished returns true
     protected void end() {
         Robot.driveTrain.brakeMode(false);
-      //  c.cancel();
         t.cancel();
         // Disable PID output and stop robot to be safe
         PID.disable();

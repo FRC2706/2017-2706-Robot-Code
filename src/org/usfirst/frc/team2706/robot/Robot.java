@@ -99,7 +99,7 @@ public class Robot extends IterativeRobot {
         );
 
         // Set up the Microsoft LifeCam and start streaming it to the Driver Station
-      //  CameraServer.getInstance().startAutomaticCapture();
+        CameraServer.getInstance().startAutomaticCapture();
 
         recordAJoystick = new RecordJoystick(oi.getDriverJoystick(), oi.getOperatorJoystick(),
                         () -> SmartDashboard.getString("record-joystick-name", "default"));

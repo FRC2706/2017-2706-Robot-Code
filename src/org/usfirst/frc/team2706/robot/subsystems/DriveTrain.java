@@ -399,12 +399,6 @@ public class DriveTrain extends Subsystem {
             double rotateVal;
             if(useCamera) {
                 rotateVal = Robot.camera.getTarget() != null ? Robot.camera.getTarget().ctrY : 0;  
-                if(rotateVal > 0.5) {
-                    rotateVal = 0.5;
-                }
-                if(rotateVal < -0.5) {
-                    rotateVal = -0.5;
-                }
             }
             else {
                 rotateVal = normalize(getHeading() - initGyro) * 0.1;

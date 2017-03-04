@@ -1,7 +1,6 @@
 package org.usfirst.frc.team2706.robot.commands.teleop;
 
 import org.usfirst.frc.team2706.robot.Robot;
-import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithEncoders;
 
 import edu.wpi.first.wpilibj.command.Command;
 

@@ -158,7 +158,7 @@ public class RobotMap {
     private static final String ROBOT_ID_LOC = "/home/lvuser/robot-type.conf";
 
     // Raspberry Pi IP for vision
-    private static final String[] RPI_IPS_VALS = {"10.27.6.101", "10.27.6.101", "10.27.6.101"};
+    private static final String[] RPI_IPS_VALS = {"10.27.6.240", "10.27.6.240", "10.27.6.240"};
     public static final String RPI_IPS = getConstant("RPI_IPS");
 
     private static int getRobotID() {
