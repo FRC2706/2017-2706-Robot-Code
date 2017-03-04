@@ -33,8 +33,8 @@ public class StraightDriveWithCamera extends Command {
 
         this.error = error / 12.0;
 
-        PID = new PIDController(P, I, D, Robot.driveTrain.getEncoderPIDSource(true),
-                        Robot.driveTrain.getDrivePIDOutput(true, false));
+        PID = new PIDController(P, I, D, Robot.driveTrain.getDistanceSensorPIDSource(),
+                        Robot.driveTrain.getDrivePIDOutput(true, true, false));
     }
 
     // Called just before this Command runs the first time

@@ -235,13 +235,15 @@ public class DriveTrain extends Subsystem {
         front_right_motor.enableBrakeMode(on);
         back_right_motor.enableBrakeMode(on);
     }
+
     /**
      * @param useGyroStraightening True to invert second motor direction for rotating
      * 
      * @return The robot's drive PIDOutput
      */
-    public PIDOutput getDrivePIDOutput(boolean useGyroStraightening, boolean invert) {
-        return new DrivePIDOutput(drive, useGyroStraightening, false, invert);
+    public PIDOutput getDrivePIDOutput(boolean useGyroStraightening, boolean useCamera,
+                    boolean invert) {
+        return new DrivePIDOutput(drive, useGyroStraightening, useCamera, invert);
     }
 
     /**
@@ -376,10 +378,11 @@ public class DriveTrain extends Subsystem {
         private boolean invert;
 
         private final boolean useGyroStraightening;
-     
+
         private final boolean useCamera;
 
-        public DrivePIDOutput(RobotDrive drive, boolean useGyroStraightening, boolean useCamera, boolean invert ) {
+        public DrivePIDOutput(RobotDrive drive, boolean useGyroStraightening, boolean useCamera,
+                        boolean invert) {
             this.drive = drive;
             this.useGyroStraightening = useGyroStraightening;
             this.useCamera = useCamera;
@@ -388,7 +391,10 @@ public class DriveTrain extends Subsystem {
 
         @Override
         public void pidWrite(double output) {
-            double rotateVal = (normalize(getHeading() - initGyro) * 0.1);
+            double rotateVal = (useCamera
+                            ? (Robot.camera.getTarget() != null
+                                            ? Robot.camera.getTarget().ctrY * 5 : 0)
+                            : normalize(getHeading() - initGyro) * 0.1);
 
             // System.out.println("Rotate:\t"+rotateVal);
 

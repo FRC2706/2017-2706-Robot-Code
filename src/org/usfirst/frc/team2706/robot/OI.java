@@ -2,11 +2,9 @@ package org.usfirst.frc.team2706.robot;
 
 import java.lang.reflect.Field;
 
+import org.usfirst.frc.team2706.robot.commands.GetTargets;
 import org.usfirst.frc.team2706.robot.commands.mechanismcontrol.CloseGearMechanism;
 import org.usfirst.frc.team2706.robot.commands.mechanismcontrol.OpenGearMechanism;
-import org.usfirst.frc.team2706.robot.commands.GetTargets;
-import org.usfirst.frc.team2706.robot.commands.autonomous.plays.AlignAndDistance;
-import org.usfirst.frc.team2706.robot.commands.teleop.ClimbAutomatically;
 import org.usfirst.frc.team2706.robot.commands.teleop.ClimbManually;
 import org.usfirst.frc.team2706.robot.commands.teleop.HandBrake;
 import org.usfirst.frc.team2706.robot.commands.teleop.TakeOverCommandBreak;

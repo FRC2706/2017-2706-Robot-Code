@@ -38,7 +38,7 @@ public class StraightDriveWithDistanceSensor extends Command {
         this.error = error;
 
         PID = new PIDController(P, I, D, Robot.driveTrain.getDistanceSensorPIDSource(),
-                        Robot.driveTrain.getDrivePIDOutput(true, false));
+                        Robot.driveTrain.getDrivePIDOutput(true, false, false));
     }
 
     // Called just before this Command runs the first time

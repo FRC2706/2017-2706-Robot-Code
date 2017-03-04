@@ -37,7 +37,7 @@ public class StraightDriveWithEncoders extends Command {
         this.error = error / 12.0;
 
         PID = new PIDController(P, I, D, Robot.driveTrain.getEncoderPIDSource(true),
-                        Robot.driveTrain.getDrivePIDOutput(true, false));
+                        Robot.driveTrain.getDrivePIDOutput(true, false, false));
     }
 
     // Called just before this Command runs the first time
