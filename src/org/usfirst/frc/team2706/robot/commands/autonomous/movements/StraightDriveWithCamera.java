@@ -5,10 +5,7 @@ import org.usfirst.frc.team2706.robot.Robot;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.command.Command;
 
-/**
- * Have the robot drive certain distance using the distance sensor(s) on the robot and PID
- */
-public class StraightDriveWithDistanceSensor extends Command {
+public class StraightDriveWithCamera extends Command {
 
     private final double speed;
 
@@ -18,32 +15,33 @@ public class StraightDriveWithDistanceSensor extends Command {
 
     private final PIDController PID;
 
-    private int doneCount;
-    private final double P = 1.0, I = 0.03, D = 0.5;
+    private final double P = 1.0, I = 0.06, D = 0.25;
 
     /**
      * Drive at a specific speed for a certain amount of time
      * 
      * @param speed Speed in range [-1,1]
-     * @param distance The ultrasonic distance to travel in inches
+     * @param distance The encoder distance to travel
      * @param error The range that the robot is happy ending the command in
      */
-    public StraightDriveWithDistanceSensor(double speed, double distance, double error) {
+    public StraightDriveWithCamera(double speed, double distance, double error) {
         requires(Robot.driveTrain);
 
         this.speed = speed;
 
         this.distance = distance;
 
-        this.error = error;
+        this.error = error / 12.0;
 
         PID = new PIDController(P, I, D, Robot.driveTrain.getDistanceSensorPIDSource(),
-                        Robot.driveTrain.getDrivePIDOutput(true, false, false));
+                        Robot.driveTrain.getDrivePIDOutput(true, true, false));
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-        Robot.driveTrain.reset();
+        Robot.driveTrain.resetEncoders();
+        
+        Robot.driveTrain.brakeMode(true);
 
         // Make input infinite
         PID.setContinuous();
@@ -67,7 +65,6 @@ public class StraightDriveWithDistanceSensor extends Command {
         PID.enable();
     }
 
-
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
         return PID.onTarget();
@@ -75,7 +72,7 @@ public class StraightDriveWithDistanceSensor extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-        doneCount = 0;
+        Robot.driveTrain.brakeMode(false);
         // Disable PID output and stop robot to be safe
         PID.disable();
         Robot.driveTrain.drive(0, 0);
@@ -85,9 +82,5 @@ public class StraightDriveWithDistanceSensor extends Command {
     // subsystems is scheduled to run
     protected void interrupted() {
         end();
-    }
-
-    public int getDoneCount() {
-        return doneCount;
     }
 }
