@@ -7,8 +7,10 @@ import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriv
 import org.usfirst.frc.team2706.robot.commands.mechanismcontrol.CloseGearMechanism;
 import org.usfirst.frc.team2706.robot.commands.mechanismcontrol.OpenGearMechanism;
 import org.usfirst.frc.team2706.robot.commands.teleop.ClimbManually;
+import org.usfirst.frc.team2706.robot.commands.teleop.ClimbVariableManually;
 import org.usfirst.frc.team2706.robot.commands.teleop.HandBrake;
 import org.usfirst.frc.team2706.robot.commands.teleop.StopAtGearWall;
+import org.usfirst.frc.team2706.robot.controls.TriggerButtonJoystick;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -73,6 +75,9 @@ public class OI {
         
         // Joystick for controlling the mechanisms of the robot
         this.controlStick = controlStick;
+        
+        TriggerButtonJoystick climberTrigger = new TriggerButtonJoystick(driverStick, 3);
+        climberTrigger.whenPressed(new ClimbVariableManually());
 
         // Runs a motor at a set speed to make the robot climb the rope
         EJoystickButton aButton = new EJoystickButton(controlStick, 1);
@@ -82,7 +87,7 @@ public class OI {
         EJoystickButton bButton = new EJoystickButton(controlStick, 2);
         bButton.whenPressed(new CloseGearMechanism());
 
-        // Opens gear holder mechanism for when peg is in gear
+        // Opens gear holder mechanism for when peg is in
         EJoystickButton yButton = new EJoystickButton(controlStick, 4);
         yButton.whenPressed(new OpenGearMechanism());
     }
