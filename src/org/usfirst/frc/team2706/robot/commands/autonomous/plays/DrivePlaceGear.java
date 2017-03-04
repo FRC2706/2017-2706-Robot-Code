@@ -1,7 +1,8 @@
 package org.usfirst.frc.team2706.robot.commands.autonomous.plays;
 
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithEncoders;
-import org.usfirst.frc.team2706.robot.commands.mechanismcontrol.GearMechanism;
+import org.usfirst.frc.team2706.robot.commands.mechanismcontrol.CloseGearMechanism;
+import org.usfirst.frc.team2706.robot.commands.mechanismcontrol.OpenGearMechanism;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -20,7 +21,8 @@ public class DrivePlaceGear extends CommandGroup {
             this.addSequential(new StraightDriveWithEncoders(speed, distance, 0.1));  
         }
         
-        this.addSequential(new GearMechanism());
+        this.addSequential(new OpenGearMechanism());
         this.addSequential(new StraightDriveWithEncoders(-speed, -reverseDistance, 0.1));
+        this.addSequential(new CloseGearMechanism());
     }
 }

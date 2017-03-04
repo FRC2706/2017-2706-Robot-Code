@@ -229,6 +229,11 @@ public class DriveTrain extends Subsystem {
         return gyro.getDisplacementZ();
     }
 
+    /**
+     * Sets the CANTalon motors to go into brake mode or coast mode
+     * 
+     * @param on Set to brake when true and coast when false
+     */
     public void brakeMode(boolean on) {
         front_left_motor.enableBrakeMode(on);
         back_left_motor.enableBrakeMode(on);
