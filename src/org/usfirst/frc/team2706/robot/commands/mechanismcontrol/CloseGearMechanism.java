@@ -12,7 +12,7 @@ public class CloseGearMechanism extends Command {
     
     @Override
     protected void initialize() {
-            Robot.gearHandler.closeArm();
+        Robot.gearHandler.closeArm();
     }
     
     @Override

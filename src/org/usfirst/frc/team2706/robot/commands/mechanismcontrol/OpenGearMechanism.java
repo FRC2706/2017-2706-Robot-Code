@@ -12,7 +12,7 @@ public class OpenGearMechanism extends Command {
     
     @Override
     protected void initialize() {
-            Robot.gearHandler.openArm();
+        Robot.gearHandler.openArm();
     }
     
     @Override
