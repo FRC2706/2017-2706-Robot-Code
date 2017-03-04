@@ -2,10 +2,10 @@ package org.usfirst.frc.team2706.robot;
 
 import java.lang.reflect.Field;
 
-import org.usfirst.frc.team2706.robot.commands.autonomous.plays.AlignAndDistance;
-import org.usfirst.frc.team2706.robot.commands.teleop.ClimbAutomatically;
+import org.usfirst.frc.team2706.robot.commands.mechanismcontrol.CloseGearMechanism;
+import org.usfirst.frc.team2706.robot.commands.mechanismcontrol.OpenGearMechanism;
 import org.usfirst.frc.team2706.robot.commands.teleop.ClimbManually;
-import org.usfirst.frc.team2706.robot.commands.teleop.GearHandlerToggle;
+import org.usfirst.frc.team2706.robot.commands.teleop.HandBrake;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -49,22 +49,28 @@ public class OI {
         // Joystick for driving the robot around
         this.driverStick = driverStick;
 
-        // TODO we need to start using controlStick and not driverStick for non-testing buttons
-
+        // Stop driving and go into breakmode, stopping the robot
         EJoystickButton backLeftButton = new EJoystickButton(driverStick, 5);
-        backLeftButton.runWhileHeld(new AlignAndDistance(24));
+        backLeftButton.runWhileHeld(new HandBrake(true));
 
-        EJoystickButton aButton = new EJoystickButton(driverStick, 1);
-        aButton.runWhileHeld(new ClimbManually());
-
-        EJoystickButton bButton = new EJoystickButton(driverStick, 2);
-        bButton.whenPressed(new GearHandlerToggle());
-
-        EJoystickButton xButton = new EJoystickButton(driverStick, 3);
-        xButton.toggleWhenPressed(new ClimbAutomatically());
+        // Stop the robot by going into break mode
+        EJoystickButton backRightButton = new EJoystickButton(driverStick, 6);
+        backRightButton.runWhileHeld(new HandBrake(false));
 
         // Joystick for controlling the mechanisms of the robot
         this.controlStick = controlStick;
+
+        // Runs a motor at a set speed to make the robot climb the rope
+        EJoystickButton aButton = new EJoystickButton(controlStick, 1);
+        aButton.runWhileHeld(new ClimbManually());
+
+        // Closes gear holder mechanism so holder can hold gears
+        EJoystickButton bButton = new EJoystickButton(controlStick, 2);
+        bButton.whenPressed(new CloseGearMechanism());
+
+        // Opens gear holder mechanism for when peg is in gear
+        EJoystickButton yButton = new EJoystickButton(controlStick, 4);
+        yButton.whenPressed(new OpenGearMechanism());
     }
 
     /**
