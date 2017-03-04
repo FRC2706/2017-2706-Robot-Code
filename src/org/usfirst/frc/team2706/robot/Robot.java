@@ -67,7 +67,8 @@ public class Robot extends IterativeRobot {
 
         // Instantiate the robot subsystems
         driveTrain = new DriveTrain();
-        // camera = new Camera(Camera.CAMERA_IP);
+
+        camera = new Camera(Camera.CAMERA_IP);
         
         gearHandler = new GearHandler();
         
