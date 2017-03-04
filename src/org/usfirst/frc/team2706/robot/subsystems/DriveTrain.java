@@ -230,12 +230,25 @@ public class DriveTrain extends Subsystem {
     }
 
     /**
+     * Sets the CANTalon motors to go into brake mode or coast mode
+     * 
+     * @param on Set to brake when true and coast when false
+     */
+    public void brakeMode(boolean on) {
+        front_left_motor.enableBrakeMode(on);
+        back_left_motor.enableBrakeMode(on);
+        front_right_motor.enableBrakeMode(on);
+        back_right_motor.enableBrakeMode(on);
+    }
+
+    /**
      * @param useGyroStraightening True to invert second motor direction for rotating
      * 
      * @return The robot's drive PIDOutput
      */
-    public PIDOutput getDrivePIDOutput(boolean useGyroStraightening, boolean invert) {
-        return new DrivePIDOutput(drive, useGyroStraightening, invert);
+    public PIDOutput getDrivePIDOutput(boolean useGyroStraightening, boolean useCamera,
+                    boolean invert) {
+        return new DrivePIDOutput(drive, useGyroStraightening, useCamera, invert);
     }
 
     /**
@@ -371,15 +384,22 @@ public class DriveTrain extends Subsystem {
 
         private final boolean useGyroStraightening;
 
-        public DrivePIDOutput(RobotDrive drive, boolean useGyroStraightening, boolean invert) {
+        private final boolean useCamera;
+
+        public DrivePIDOutput(RobotDrive drive, boolean useGyroStraightening, boolean useCamera,
+                        boolean invert) {
             this.drive = drive;
             this.useGyroStraightening = useGyroStraightening;
+            this.useCamera = useCamera;
             this.invert = invert;
         }
 
         @Override
         public void pidWrite(double output) {
-            double rotateVal = (normalize(getHeading() - initGyro) * 0.1);
+            double rotateVal = (useCamera
+                            ? (Robot.camera.getTarget() != null
+                                            ? Robot.camera.getTarget().ctrY * 5 : 0)
+                            : normalize(getHeading() - initGyro) * 0.1);
 
             // System.out.println("Rotate:\t"+rotateVal);
 

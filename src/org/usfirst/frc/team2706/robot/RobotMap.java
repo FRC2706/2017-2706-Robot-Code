@@ -63,13 +63,13 @@ public class RobotMap {
     public static final int MOTOR_CAMERA_TILT = getConstant("MOTOR_CAMERA_TILT");
 
     // XXX: Encoders got flipped
-    private static final int[] ENCODER_LEFT_A_VALS = {0, 0, 0};
+    private static final int[] ENCODER_LEFT_A_VALS = {1, 1, 1};
     public static final int ENCODER_LEFT_A = getConstant("ENCODER_LEFT_A");
 
-    private static final int[] ENCODER_LEFT_B_VALS = {1, 1, 1};
+    private static final int[] ENCODER_LEFT_B_VALS = {0, 0, 0};
     public static final int ENCODER_LEFT_B = getConstant("ENCODER_LEFT_B");
 
-    private static final double[] ENCODER_LEFT_DPP_VALS = {1.0 / 1075, 1.0 / 1075, 1.0 / 1960};
+    private static final double[] ENCODER_LEFT_DPP_VALS = {1.0 / 264, 1.0 / 264, 1.0 / 264};
     public static final double ENCODER_LEFT_DPP = getConstant("ENCODER_LEFT_DPP");
 
 
@@ -79,7 +79,7 @@ public class RobotMap {
     private static final int[] ENCODER_RIGHT_B_VALS = {3, 3, 3};
     public static final int ENCODER_RIGHT_B = getConstant("ENCODER_RIGHT_B");
 
-    private static final double[] ENCODER_RIGHT_DPP_VALS = {1.0 / 1075, 1.0 / 1075, 1.0 / 1960};
+    private static final double[] ENCODER_RIGHT_DPP_VALS = {1.0 / 264, 1.0 / 264, 1.0 / 264};
     public static final double ENCODER_RIGHT_DPP = getConstant("ENCODER_RIGHT_DPP");
 
 
@@ -156,6 +156,10 @@ public class RobotMap {
     public static final int CLIMBER_ENCODER_B = getConstant("CLIMBER_ENCODER_B");
 
     private static final String ROBOT_ID_LOC = "/home/lvuser/robot-type.conf";
+
+    // Raspberry Pi IP for vision
+    private static final String[] RPI_IPS = {"10.27.6.240", "10.27.6.240", "10.27.6.240"};
+    public static final String RPI_IP = getConstant("RPI_IPS");
 
     private static int getRobotID() {
         int temp = 0;
