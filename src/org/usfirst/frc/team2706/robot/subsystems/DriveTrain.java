@@ -376,10 +376,13 @@ public class DriveTrain extends Subsystem {
         private boolean invert;
 
         private final boolean useGyroStraightening;
+     
+        private final boolean useCamera;
 
-        public DrivePIDOutput(RobotDrive drive, boolean useGyroStraightening, boolean invert) {
+        public DrivePIDOutput(RobotDrive drive, boolean useGyroStraightening, boolean useCamera, boolean invert ) {
             this.drive = drive;
             this.useGyroStraightening = useGyroStraightening;
+            this.useCamera = useCamera;
             this.invert = invert;
         }
 
