@@ -5,9 +5,13 @@ import java.lang.reflect.Field;
 import org.usfirst.frc.team2706.robot.commands.autonomous.plays.AlignAndDistance;
 import org.usfirst.frc.team2706.robot.commands.teleop.ClimbAutomatically;
 import org.usfirst.frc.team2706.robot.commands.teleop.ClimbManually;
+import org.usfirst.frc.team2706.robot.commands.teleop.ClimbVariableManually;
 import org.usfirst.frc.team2706.robot.commands.teleop.GearHandlerToggle;
+import org.usfirst.frc.team2706.robot.controls.TriggerButtonJoystick;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.buttons.Trigger;
 import edu.wpi.first.wpilibj.command.Scheduler;
 
 /**
@@ -65,6 +69,9 @@ public class OI {
 
         // Joystick for controlling the mechanisms of the robot
         this.controlStick = controlStick;
+        
+        TriggerButtonJoystick climberTrigger = new TriggerButtonJoystick(driverStick, 3);
+        climberTrigger.whenPressed(new ClimbVariableManually());
     }
 
     /**

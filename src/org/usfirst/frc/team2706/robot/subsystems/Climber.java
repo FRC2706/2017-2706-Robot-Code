@@ -109,9 +109,27 @@ public class Climber extends Subsystem {
 
     public void climb() {
         motor.set(0.5);
+        debugOutput();
     }
 
     public void stop() {
         motor.set(0.0);
+    }
+    
+    public void setClimberSpeed(double speed) {
+        if (speed <= 0) {
+            speed = 0;
+        } else if (speed >= 1) {
+            speed = 1;
+        }
+        motor.set(speed);
+        debugOutput();
+    }
+    
+    public void debugOutput() {
+        System.out.println("Climber: vc=" + verifyingClimb + " speed=" + motor.get() + " pCurr=" + 
+                        pastCurrent + " cCurr=" + motor.getOutputCurrent() + " pLAZ=" + pastLinearAccelZ +
+                        " cLAZ=" + Robot.driveTrain.getGyro().getWorldLinearAccelZ() + " pitch=" +
+                        Robot.driveTrain.getGyro().getPitch() + " enc=" + encoder.getDistance());
     }
 }
