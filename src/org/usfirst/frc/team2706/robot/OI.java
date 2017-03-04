@@ -67,7 +67,7 @@ public class OI {
         // Closes gear holder mechanism so holder can hold gears
         EJoystickButton bButton = new EJoystickButton(controlStick, 2);
         bButton.whenPressed(new CloseGearMechanism());
-        
+
         // Opens gear holder mechanism for when peg is in gear
         EJoystickButton yButton = new EJoystickButton(controlStick, 4);
         yButton.whenPressed(new OpenGearMechanism());
