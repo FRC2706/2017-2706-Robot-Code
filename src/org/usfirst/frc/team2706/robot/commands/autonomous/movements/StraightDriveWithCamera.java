@@ -1,6 +1,8 @@
 package org.usfirst.frc.team2706.robot.commands.autonomous.movements;
 
 import org.usfirst.frc.team2706.robot.Robot;
+import org.usfirst.frc.team2706.robot.commands.GetTargets;
+import org.usfirst.frc.team2706.robot.commands.teleop.EncodersNoReturn;
 
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.command.Command;
@@ -15,10 +17,10 @@ public class StraightDriveWithCamera extends Command {
 
     private final PIDController PID;
 
-    private final double P = 1.0, I = 0.06, D = 0.25;
+    private final double P = 0.5, I = 0.06, D = 0.25;
 
     /**
-     * Drive at a specific speed for a certain amount of time
+     * Drive at a specific speed based on camera
      * 
      * @param speed Speed in range [-1,1]
      * @param distance The encoder distance to travel
@@ -34,11 +36,12 @@ public class StraightDriveWithCamera extends Command {
         this.error = error / 12.0;
 
         PID = new PIDController(P, I, D, Robot.driveTrain.getDistanceSensorPIDSource(),
-                        Robot.driveTrain.getDrivePIDOutput(true, true, false));
+                        Robot.driveTrain.getDrivePIDOutput(true, true, true));
     }
-
+    GetTargets t = new GetTargets();
     // Called just before this Command runs the first time
     protected void initialize() {
+        t.start();
         Robot.driveTrain.resetEncoders();
         
         Robot.driveTrain.brakeMode(true);
@@ -64,15 +67,21 @@ public class StraightDriveWithCamera extends Command {
         // Start going to location
         PID.enable();
     }
-
+EncodersNoReturn c = new EncodersNoReturn();
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return PID.onTarget();
+        boolean b = PID.onTarget();
+       // if(b) {
+           // c.start();
+      //  }
+        return false;
     }
 
     // Called once after isFinished returns true
     protected void end() {
         Robot.driveTrain.brakeMode(false);
+      //  c.cancel();
+        t.cancel();
         // Disable PID output and stop robot to be safe
         PID.disable();
         Robot.driveTrain.drive(0, 0);

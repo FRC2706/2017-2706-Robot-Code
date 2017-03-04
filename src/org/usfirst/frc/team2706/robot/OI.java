@@ -3,10 +3,12 @@ package org.usfirst.frc.team2706.robot;
 import java.lang.reflect.Field;
 
 import org.usfirst.frc.team2706.robot.commands.GetTargets;
+import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithCamera;
 import org.usfirst.frc.team2706.robot.commands.mechanismcontrol.CloseGearMechanism;
 import org.usfirst.frc.team2706.robot.commands.mechanismcontrol.OpenGearMechanism;
 import org.usfirst.frc.team2706.robot.commands.teleop.ClimbManually;
 import org.usfirst.frc.team2706.robot.commands.teleop.HandBrake;
+import org.usfirst.frc.team2706.robot.commands.teleop.StopAtGearWall;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -56,8 +58,10 @@ public class OI {
 
         // Stop the robot by going into break mode
         EJoystickButton backRightButton = new EJoystickButton(driverStick, 6);
-        backRightButton.runWhileHeld(new HandBrake(false));
+        backRightButton.runWhileHeld(new StopAtGearWall(14,40));
 
+        EJoystickButton x = new EJoystickButton(driverStick,4);
+        x.runWhileHeld(new StraightDriveWithCamera(0.6,14,1));
         // test the camera integration
         EJoystickButton cameraButton = new EJoystickButton(driverStick, 3);
         cameraButton.whenPressed(new GetTargets());
