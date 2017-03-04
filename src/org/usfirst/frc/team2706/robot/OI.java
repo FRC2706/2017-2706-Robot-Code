@@ -58,13 +58,18 @@ public class OI {
 
         // Stop the robot by going into break mode
         EJoystickButton backRightButton = new EJoystickButton(driverStick, 6);
-        backRightButton.runWhileHeld(new StopAtGearWall(14,40));
+        backRightButton.runWhileHeld(new HandBrake(false));
+        
+        EJoystickButton xButton = new EJoystickButton(driverStick,3);
+        xButton.runWhileHeld(new StopAtGearWall(14,40));
 
-        EJoystickButton x = new EJoystickButton(driverStick,4);
-        x.runWhileHeld(new StraightDriveWithCamera(0.6,14,1));
+        EJoystickButton y = new EJoystickButton(driverStick,4);
+        y.runWhileHeld(new StraightDriveWithCamera(0.6,14,1));
         // test the camera integration
         EJoystickButton cameraButton = new EJoystickButton(driverStick, 3);
         cameraButton.whenPressed(new GetTargets());
+        
+        
         
         // Joystick for controlling the mechanisms of the robot
         this.controlStick = controlStick;
