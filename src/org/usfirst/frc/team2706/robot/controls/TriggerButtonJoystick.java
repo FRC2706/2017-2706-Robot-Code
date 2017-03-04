@@ -1,14 +1,17 @@
 package org.usfirst.frc.team2706.robot.controls;
 
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.buttons.Button;
+import org.usfirst.frc.team2706.robot.EJoystickButton;
 
-public class TriggerButtonJoystick extends Button {
+import edu.wpi.first.wpilibj.Joystick;
+
+public class TriggerButtonJoystick extends EJoystickButton {
 
     private Joystick joystick;
     private int axis;
     
     public TriggerButtonJoystick(Joystick joystick, int axis) {
+        super(joystick, axis);
+        
         this.joystick = joystick;
         this.axis = axis;
     }

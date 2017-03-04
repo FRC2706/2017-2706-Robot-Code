@@ -55,41 +55,39 @@ public class OI {
         this.driverStick = driverStick;
 
         // Stop driving and go into breakmode, stopping the robot
-        EJoystickButton backLeftButton = new EJoystickButton(driverStick, 5);
-        backLeftButton.runWhileHeld(new HandBrake(true));
+        TriggerButtonJoystick driverBackLeftTrigger = new TriggerButtonJoystick(driverStick, 2);
+        driverBackLeftTrigger.runWhileHeld(new HandBrake(true));
 
         // Stop the robot by going into break mode
-        EJoystickButton backRightButton = new EJoystickButton(driverStick, 6);
-        backRightButton.runWhileHeld(new HandBrake(false));
+        TriggerButtonJoystick driverBackRightTrigger = new TriggerButtonJoystick(driverStick, 3);
+        driverBackRightTrigger.runWhileHeld(new HandBrake(false));
         
-        EJoystickButton xButton = new EJoystickButton(driverStick,3);
-        xButton.runWhileHeld(new StopAtGearWall(14,40));
+        EJoystickButton driverBackRightButton = new EJoystickButton(driverStick, 6);
+        driverBackRightButton.runWhileHeld(new StopAtGearWall(14,40));
 
-        EJoystickButton y = new EJoystickButton(driverStick,4);
-        y.runWhileHeld(new StraightDriveWithCamera(0.5,0,12));
+        EJoystickButton driverYButton = new EJoystickButton(driverStick, 4);
+        driverYButton.runWhileHeld(new StraightDriveWithCamera(0.5,0,12));
         // test the camera integration
-        EJoystickButton cameraButton = new EJoystickButton(driverStick, 7);
-        cameraButton.whenPressed(new GetTargets());
-        
-        
+        EJoystickButton driverSelectButton = new EJoystickButton(driverStick, 7);
+        driverSelectButton.whenPressed(new GetTargets());
         
         // Joystick for controlling the mechanisms of the robot
         this.controlStick = controlStick;
         
-        TriggerButtonJoystick climberTrigger = new TriggerButtonJoystick(controlStick, 3);
-        climberTrigger.whenPressed(new ClimbVariableManually());
+        TriggerButtonJoystick operatorBackRightTrigger = new TriggerButtonJoystick(controlStick, 3);
+        operatorBackRightTrigger.whenPressed(new ClimbVariableManually());
 
         // Runs a motor at a set speed to make the robot climb the rope
-        EJoystickButton aButton = new EJoystickButton(controlStick, 1);
-        aButton.runWhileHeld(new ClimbManually());
+        EJoystickButton operatorAButton = new EJoystickButton(controlStick, 1);
+        operatorAButton.runWhileHeld(new ClimbManually());
 
         // Closes gear holder mechanism so holder can hold gears
-        EJoystickButton bButton = new EJoystickButton(controlStick, 2);
-        bButton.whenPressed(new CloseGearMechanism());
+        EJoystickButton operatorBButton = new EJoystickButton(controlStick, 2);
+        operatorBButton.whenPressed(new CloseGearMechanism());
 
         // Opens gear holder mechanism for when peg is in
-        EJoystickButton yButton = new EJoystickButton(controlStick, 4);
-        yButton.whenPressed(new OpenGearMechanism());
+        EJoystickButton operatorYButton = new EJoystickButton(controlStick, 4);
+        operatorYButton.whenPressed(new OpenGearMechanism());
     }
 
     /**
