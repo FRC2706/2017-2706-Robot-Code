@@ -241,7 +241,7 @@ public class DriveTrain extends Subsystem {
      * @return The robot's drive PIDOutput
      */
     public PIDOutput getDrivePIDOutput(boolean useGyroStraightening, boolean invert) {
-        return new DrivePIDOutput(drive, useGyroStraightening, invert);
+        return new DrivePIDOutput(drive, useGyroStraightening, false, invert);
     }
 
     /**
