@@ -57,6 +57,10 @@ public class OI {
         EJoystickButton backRightButton = new EJoystickButton(driverStick, 6);
         backRightButton.runWhileHeld(new HandBrake(false));
 
+        // test the camera integration
+        EJoystickButton cameraButton = new EJoystickButton(driverStick, 3);
+        cameraButton.whenPressed(new GetTargets());
+        
         // Joystick for controlling the mechanisms of the robot
         this.controlStick = controlStick;
 

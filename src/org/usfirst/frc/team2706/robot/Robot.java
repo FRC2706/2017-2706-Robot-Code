@@ -70,9 +70,8 @@ public class Robot extends IterativeRobot {
     public void robotInit() {
         // Instantiate the robot subsystems
         driveTrain = new DriveTrain();
-        // camera = new Camera(Camera.CAMERA_IP);
 
-        oi = new OI();
+        camera = new Camera(Camera.CAMERA_IP);
 
         gearHandler = new GearHandler();
 
@@ -81,8 +80,8 @@ public class Robot extends IterativeRobot {
         // New bling subsystem class.
         blingSystem = new Bling();
         
+        oi = new OI();
         // WARNING DO NOT AUTOFORMAT THIS OR BAD THINGS WILL HAPPEN TO YOU
-
         // Set up our autonomous modes with the hardware selector switch
         hardwareChooser = new AutonomousSelector(
                          /* no switch: do nothing */ new ArcadeDriveWithJoystick(),
