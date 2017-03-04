@@ -64,7 +64,7 @@ public class OI {
         
         // Joystick for controlling the mechanisms of the robot
         this.controlStick = controlStick;
-        
+
         // Runs a motor at a set speed to make the robot climb the rope
         EJoystickButton aButton = new EJoystickButton(controlStick, 1);
         aButton.runWhileHeld(new ClimbManually());
