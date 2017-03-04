@@ -2,6 +2,7 @@ package org.usfirst.frc.team2706.robot;
 
 import java.lang.reflect.Field;
 
+import org.usfirst.frc.team2706.robot.bling.ToggleFlashiness;
 import org.usfirst.frc.team2706.robot.commands.autonomous.plays.AlignAndDistance;
 import org.usfirst.frc.team2706.robot.commands.teleop.ClimbAutomatically;
 import org.usfirst.frc.team2706.robot.commands.teleop.ClimbManually;
@@ -64,6 +65,9 @@ public class OI {
         
         EJoystickButton c = new EJoystickButton(driverStick, 3);
         c.toggleWhenPressed(climbAutomatically);
+        
+        EJoystickButton DpadDown = new EJoystickButton(driverStick, 7);
+        DpadDown.whenPressed(new ToggleFlashiness());
 
         // Joystick for controlling the mechanisms of the robot
         this.controlStick = controlStick;

@@ -46,12 +46,13 @@ public class Robot extends IterativeRobot {
 
     // The climber
     public static Climber climber;
+    
+    // This will be the bling subsystem controller
+    public static Bling blingSystem;
 
     // Stores all of the joysticks, and returns them as read only.
     public static OI oi;
 
-    // This will be the bling subsystem controller
-    public static Bling blingSystem;
 
     // Which command is going to be ran based on the hardwareChooser
     Command autonomousCommand;

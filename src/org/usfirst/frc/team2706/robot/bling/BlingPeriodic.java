@@ -1,4 +1,4 @@
-package org.usfirst.frc.team2706.robot.commands.teleop;
+package org.usfirst.frc.team2706.robot.bling;
 
 import org.usfirst.frc.team2706.robot.Robot;
 import org.usfirst.frc.team2706.robot.controls.StickRumble;
@@ -12,14 +12,14 @@ import edu.wpi.first.wpilibj.command.Command;
  * distance to gear delivery, if we're ready to get another gear or if it is time to climb/ we're
  * ready to climb.
  */
-public class BlingTeleop extends Command {
+public class BlingPeriodic extends Command {
 
     // Will tell us which teleop thing we're displaying
     private static String teleopDisplayState = "";
     
     private static StickRumble rumbler;
 
-    public BlingTeleop() {
+    public BlingPeriodic() {
         requires(Robot.blingSystem);
     }
     
@@ -37,7 +37,8 @@ public class BlingTeleop extends Command {
     @Override
     public void execute() {
 
-        int gearState = Robot.gearHandler.gearHandlerState();
+        // TODO int gearState = Robot.gearHandler.gearHandlerState();
+        int gearState = 1;
         if (DriverStation.getInstance().isAutonomous())
             return;
 
@@ -48,16 +49,21 @@ public class BlingTeleop extends Command {
             return;
 
         // Get the average distance from whatever obstacle.
-        double distance = (Robot.driveTrain.getRightDistanceToObstacle()
-                        + Robot.driveTrain.getLeftDistanceToObstacle()) / 2;
+       //TODO double distance = (Robot.driveTrain.getRightDistanceToObstacle()
+                        //+ Robot.driveTrain.getLeftDistanceToObstacle()) / 2;
+        
+        double distance = 5;
 
         // Need this to determine if we're ready to climb
-        double timeLeft = 150 - Timer.getMatchTime();
+        // TODO double timeLeft = 150 - Timer.getMatchTime();
+        double timeLeft = 29;
 
         // We use the teleopDisplayState to make sure we only call each of these once.
         
         // Basically, if we're in range and have a gear.
         if (distance < 3 && ((1 <= gearState && 3>= gearState) | gearState == 5)) {
+            
+            System.out.println("Distance");
             
             // Basically, if we have the gear, either arm open or closed.
             if (gearState >= 2 && gearState <= 3) {
@@ -83,12 +89,18 @@ public class BlingTeleop extends Command {
             Robot.blingSystem.showDistance(distance, pegIn);
             teleopDisplayState = "distance";
             
+          // Basically, if we're ready to get a gear   
         } else if (gearState == 0 && teleopDisplayState != "gear") {
+            System.out.println("Ready to get gear");
+            
 
             Robot.blingSystem.showReadyToReceiveGear(true);
             teleopDisplayState = "gear";
-            
+           
+          // Basically, if we must climb  
         } else if (timeLeft <= 30 && teleopDisplayState != "climb") {
+            System.out.println("Climb");
+            
             Robot.blingSystem.showReadyToClimb(true);
             teleopDisplayState = "climb";
         }

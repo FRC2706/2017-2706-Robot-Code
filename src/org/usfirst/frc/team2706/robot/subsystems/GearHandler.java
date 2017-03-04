@@ -100,8 +100,8 @@ public class GearHandler extends Subsystem {
     private static final double PEG_DETECTED = 2.0;    
 
   // Calls limit switches from robot map
-    private DigitalInput limitSwitchLeft = new DigitalInput(RobotMap.LIMIT_SWITCH_LEFT_CHANNEL);
-    private DigitalInput limitSwitchRight = new DigitalInput(RobotMap.LIMIT_SWITCH_RIGHT_CHANNEL);
+  // TODO  private DigitalInput limitSwitchLeft = new DigitalInput(RobotMap.LIMIT_SWITCH_LEFT_CHANNEL);
+  // TODO  private DigitalInput limitSwitchRight = new DigitalInput(RobotMap.LIMIT_SWITCH_RIGHT_CHANNEL);
 
    
     // Let's use this to keep track of whether the arm is closed :)
@@ -148,11 +148,13 @@ public class GearHandler extends Subsystem {
     }    
 
         
+    // TODO
     // Uses limit switch to help see if arm is open
-    public boolean checkArmOpen() {
-        if (limitSwitchLeft.get() || limitSwitchRight.get()) {
-            return true;
-        }
-        return false;
-    }
+      public boolean checkArmOpen() {
+          return false;
+//        if (limitSwitchLeft.get() || limitSwitchRight.get()) {
+//            return true;
+//        }
+//        return false;
+     }
 }

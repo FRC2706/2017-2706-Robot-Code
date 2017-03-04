@@ -3,7 +3,7 @@ package org.usfirst.frc.team2706.robot.subsystems;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.usfirst.frc.team2706.robot.commands.teleop.BlingTeleop;
+import org.usfirst.frc.team2706.robot.bling.BlingPeriodic;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SerialPort;
@@ -24,6 +24,24 @@ public class Bling extends Subsystem {
     public static boolean connected = false;
 
     public static SerialPort blingPort;
+    
+    Map<String, String> lastCommand = new HashMap<String,String>() {
+        private static final long serialVersionUID = 1L;
+
+        {
+        put("pattern", "0");
+        put("colour", "MERGE");
+        put("delay", "150");
+        put("startPoint", "0");
+        put("endPoint", "1");
+        put("brightness", "100");
+        
+        }
+    };
+    
+    /* In case we get complaints of bling subsystem being distracting
+       We will have the ability to turn off flashy stuff */
+    public static boolean flashyOff = false;
     
     // The number of pixels on one LED strip
     int pixels = 120;
@@ -76,6 +94,42 @@ public class Bling extends Subsystem {
             DriverStation.reportWarning("Can not connect to arduino :(", false);
         }
     }
+    /**
+     * This command will toggle if we're displaying flashy patterns
+     * in case of possible complaints, a button on the driver joystick will
+     * call this to toggle it.
+     */
+    public void toggleFlashiness() {
+        
+        if (!flashyOff) {
+            flashyOff = true;
+            
+            if (Integer.parseInt(lastCommand.get("pattern")) <= 9)
+                blingPort.writeString("F6C" + lastCommand.get("colour") + "D" + lastCommand.get("delay")
+                + "B" + lastCommand.get("brightness") + "P" + lastCommand.get("startPoint") + 
+                "Q" + lastCommand.get("endPoint") + "E6Z");
+            
+            else
+                blingPort.writeString("F12C" + lastCommand.get("colour") + "D" +
+                                lastCommand.get("delay") + "B" + lastCommand.get("brightness")
+                                + "E12Z");
+        }
+        else {
+            flashyOff = false;
+            
+            if (Integer.parseInt(lastCommand.get("pattern")) <= 9)
+                blingPort.writeString("F" + lastCommand.get("pattern") + "C" + lastCommand.get("colour") + "D" + lastCommand.get("delay")
+                + "B" + lastCommand.get("brightness") + "P" + lastCommand.get("startPoint") + 
+                "Q" + lastCommand.get("endPoint") + "E" + lastCommand.get("pattern") + "Z");
+            
+            else
+                blingPort.writeString("F" + lastCommand.get("pattern") + "C" + lastCommand.get("colour") + "D" +
+                                lastCommand.get("delay") + "B" + lastCommand.get("brightness")
+                                + "E" + lastCommand.get("pattern") + "Z");
+        }
+        System.out.println(flashyOff);
+        
+    }
 
     /**
      * This function should be run at the beginning of autonomous to get the proper light pattern.
@@ -87,7 +141,7 @@ public class Bling extends Subsystem {
 
         blingPort.writeString("I");
         blingPort.writeString("E0Z"); // Clear the LED strip
-        blingPort.writeString("F1C" + colours.get("MERGE") + "D150E1Z");
+        customDisplay("MERGE", 1, 150, 100, 0, 1);
     }
 
     /**
@@ -95,7 +149,7 @@ public class Bling extends Subsystem {
      */
     public void teleopInit(){
         blingPort.writeString("I");
-        blingPort.writeString("F7C" + colours.get("YELLOW") + "B100D100E7Z");
+        customDisplay("YELLOW", 7, 100, 100, 0, 1);
     }
     
     
@@ -137,7 +191,7 @@ public class Bling extends Subsystem {
             bColour = colours.get("GREEN");
 
         // Use multi-colour display
-        blingPort.writeString("F12C" + bColour + "D" + Math.round(percent * 100) + "E12Z");
+        customDisplay(bColour, 12, Math.round(percent * 100), 100, 0, 1);
     }
 
     /**
@@ -206,7 +260,7 @@ public class Bling extends Subsystem {
      * Note that for functions above 9, pixelStart and pixelEnd and delay will do nothing.
      * 
      * @param pattern The type of motion or animation pattern you would like to display. Patterns range from 1-12.
-     * 1 : Color wipe
+     * 1 : Colour wipe
      * 2 : Colour wipe with blank period
      * 3 : Theatre chase
      * 4 : Rainbow
@@ -220,7 +274,7 @@ public class Bling extends Subsystem {
      * 12: Multi colour wipe
      * @param colour Colour, either as a preset such as "RED", "GREEN", "WHITE" (either caps or
      *        no caps) or in decimal format. Use a programmer calculator to determine decimal
-     *        format.
+     *        format.\n
      * 
      *        Presets: GREEN, RED, BLUE, YELLOW, ORANGE, PURPLE, TAN, VIOLET, MERGE, PINK, WHITE,
      *        TURQUOISE, BLACK, GOLD, SILVER
@@ -233,7 +287,7 @@ public class Bling extends Subsystem {
                     int brightness, int pixelStart, int pixelEnd) {
         if (!connected)
             return;
-
+        
         // Get rid of all the spaces
         String gColour = colour.replace(" ", "");
 
@@ -250,12 +304,27 @@ public class Bling extends Subsystem {
 
         blingPort.writeString("I");
         
-        if (pattern <= 9)
+        lastCommand.put("pattern", Integer.toString(pattern));
+        lastCommand.put("brightness", Integer.toString(brightness));
+        lastCommand.put("colour", gColour);
+        lastCommand.put("delay", Double.toString(delay));
+        lastCommand.put("startPoint", Integer.toString(startPixel));
+        lastCommand.put("endPoint", Integer.toString(endPixel));
+        
+        if (flashyOff && pattern <= 9) 
+            pattern = 6;
+        else if (flashyOff && pattern > 9)
+            pattern = 12;        
+        
+        if (pattern <= 9) {
             blingPort.writeString("F" + pattern + "C" + gColour + "B" + brightness + "D" + delay
                                    + "P" + startPixel + "Q" + endPixel + "E" + pattern + "Z");
-        else 
+        
+        }
+        else {
             blingPort.writeString("F" + pattern + "C" + gColour + "B" + brightness + "E" + 
                                    pattern + "Z");
+        }
     }
 
     /**
@@ -272,7 +341,7 @@ public class Bling extends Subsystem {
     @Override
     public Command getDefaultCommand() {
         if (defaultCommand == null) {
-            defaultCommand = new BlingTeleop();
+            defaultCommand = new BlingPeriodic();
         }
         return defaultCommand;
     }
