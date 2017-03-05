@@ -12,8 +12,8 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class Camera extends Subsystem {
     
-    TrackerBox2 trackerbox = new TrackerBox2(RobotMap.RPI_IP);
-    public boolean PRINT_STUFF = false;
+    TrackerBox2 trackerbox = new TrackerBox2(RobotMap.RPI_IPS);
+    public boolean PRINT_STUFF = true;
     public final int visionDataPort = 1182;
     private TargetObject target = null;
 
@@ -35,8 +35,9 @@ public class Camera extends Subsystem {
                 System.out.println();
             }
         }
-        if (!targets.isEmpty()) {
-            target = targets.get(0);
+        if (targets != null) {
+            if(!targets.isEmpty())
+                target = targets.get(0);
         }
     }
 

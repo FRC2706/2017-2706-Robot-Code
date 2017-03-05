@@ -396,10 +396,13 @@ public class DriveTrain extends Subsystem {
 
         @Override
         public void pidWrite(double output) {
-            double rotateVal = (useCamera
-                            ? (Robot.camera.getTarget() != null
-                                            ? Robot.camera.getTarget().ctrY * 5 : 0)
-                            : normalize(getHeading() - initGyro) * 0.1);
+            double rotateVal;
+            if(useCamera) {
+                rotateVal = Robot.camera.getTarget() != null ? Robot.camera.getTarget().ctrY : 0;  
+            }
+            else {
+                rotateVal = normalize(getHeading() - initGyro) * 0.1;
+            }
 
             // System.out.println("Rotate:\t"+rotateVal);
 
