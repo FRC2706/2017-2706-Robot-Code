@@ -36,7 +36,8 @@ public class TrackerBox2 {
 
         Socket sock = new Socket();
         try {
-            sock.connect(new InetSocketAddress(RPi_addr, visionDataPort), 20);
+            System.out.println(visionDataPort);
+            sock.connect(new InetSocketAddress(RPi_addr, visionDataPort), 100);
         } catch (Exception e) {
             try {
                 sock.close();
@@ -44,6 +45,7 @@ public class TrackerBox2 {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
+            e.printStackTrace();
             return null;
         }
 
