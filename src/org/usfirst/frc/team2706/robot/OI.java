@@ -2,11 +2,15 @@ package org.usfirst.frc.team2706.robot;
 
 import java.lang.reflect.Field;
 
+
 import org.usfirst.frc.team2706.robot.bling.ToggleFlashiness;
 import org.usfirst.frc.team2706.robot.commands.autonomous.plays.AlignAndDistance;
 import org.usfirst.frc.team2706.robot.commands.teleop.ClimbAutomatically;
+import org.usfirst.frc.team2706.robot.commands.GetTargets;
+import org.usfirst.frc.team2706.robot.commands.mechanismcontrol.CloseGearMechanism;
+import org.usfirst.frc.team2706.robot.commands.mechanismcontrol.OpenGearMechanism;
 import org.usfirst.frc.team2706.robot.commands.teleop.ClimbManually;
-import org.usfirst.frc.team2706.robot.commands.teleop.GearHandlerToggle;
+import org.usfirst.frc.team2706.robot.commands.teleop.HandBrake;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -20,9 +24,7 @@ public class OI {
 
     // Joystick for driving the robot around
     private final Joystick driverStick;
-    // Only want one instance of this at a time since
-    private ClimbAutomatically climbAutomatically = new ClimbAutomatically();
-    
+
     // Joystick for controlling the mechanisms of the robot
     private final Joystick controlStick;
 
@@ -52,27 +54,37 @@ public class OI {
         // Joystick for driving the robot around
         this.driverStick = driverStick;
 
-        // TODO we need to start using controlStick and not driverStick for non-testing buttons
-
+        // Stop driving and go into breakmode, stopping the robot
         EJoystickButton backLeftButton = new EJoystickButton(driverStick, 5);
-        backLeftButton.runWhileHeld(new AlignAndDistance(24));
+        backLeftButton.runWhileHeld(new HandBrake(true));
 
-        EJoystickButton a = new EJoystickButton(driverStick, 1);
-        a.runWhileHeld(new ClimbManually());
+        // Stop the robot by going into break mode
+        EJoystickButton backRightButton = new EJoystickButton(driverStick, 6);
+        backRightButton.runWhileHeld(new HandBrake(false));
 
-        EJoystickButton b = new EJoystickButton(driverStick, 2);
-        b.whenPressed(new GearHandlerToggle());
-        
-        EJoystickButton c = new EJoystickButton(driverStick, 3);
-        c.toggleWhenPressed(climbAutomatically);
+        // test the camera integration
+        EJoystickButton cameraButton = new EJoystickButton(driverStick, 3);
+        cameraButton.whenPressed(new GetTargets());
         
         EJoystickButton DpadDown = new EJoystickButton(driverStick, 7);
         DpadDown.whenPressed(new ToggleFlashiness());
-
+        
         // Joystick for controlling the mechanisms of the robot
         this.controlStick = controlStick;
+
+        // Runs a motor at a set speed to make the robot climb the rope
+        EJoystickButton aButton = new EJoystickButton(controlStick, 1);
+        aButton.runWhileHeld(new ClimbManually());
+
+        // Closes gear holder mechanism so holder can hold gears
+        EJoystickButton bButton = new EJoystickButton(controlStick, 2);
+        bButton.whenPressed(new CloseGearMechanism());
+
+        // Opens gear holder mechanism for when peg is in gear
+        EJoystickButton yButton = new EJoystickButton(controlStick, 4);
+        yButton.whenPressed(new OpenGearMechanism());
     }
-    
+
     /**
      * Removes ButtonSchedulers that run commands that were added in Oi
      */

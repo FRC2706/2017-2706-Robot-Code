@@ -18,6 +18,7 @@ import org.usfirst.frc.team2706.robot.subsystems.Climber;
 import org.usfirst.frc.team2706.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team2706.robot.subsystems.GearHandler;
 
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -70,9 +71,8 @@ public class Robot extends IterativeRobot {
     public void robotInit() {
         // Instantiate the robot subsystems
         driveTrain = new DriveTrain();
-        // camera = new Camera(Camera.CAMERA_IP);
 
-        oi = new OI();
+        camera = new Camera();
 
         gearHandler = new GearHandler();
 
@@ -81,13 +81,13 @@ public class Robot extends IterativeRobot {
         // New bling subsystem class.
         blingSystem = new Bling();
         
+        oi = new OI();
         // WARNING DO NOT AUTOFORMAT THIS OR BAD THINGS WILL HAPPEN TO YOU
-
         // Set up our autonomous modes with the hardware selector switch
         hardwareChooser = new AutonomousSelector(
                          /* no switch: do nothing */ new ArcadeDriveWithJoystick(),
                         /* position 1: do nothing */ new ArcadeDriveWithJoystick(),
-                 /* position 2: Drive to baseline */ new StraightDriveWithEncoders(0.65, 6, 25),
+                 /* position 2: Drive to baseline */ new StraightDriveWithEncoders(0.376, 6, 1),
      /* position 3: Drive to opposing launch line */ new StraightDriveWithEncoders(0.65, 31, 0),
         /* position 4: Center Position place gear */ new DrivePlaceGear(0.5, 6.5, 2),
 /* position 5: Right position place gear > launch */ new SideStartSideGear(true, 0.6, 7, 45, 5, 2, 20),
@@ -102,7 +102,7 @@ public class Robot extends IterativeRobot {
         );
 
         // Set up the Microsoft LifeCam and start streaming it to the Driver Station
-        // CameraServer.getInstance().startAutomaticCapture();
+        CameraServer.getInstance().startAutomaticCapture();
 
         recordAJoystick = new RecordJoystick(oi.getDriverJoystick(), oi.getOperatorJoystick(),
                         () -> SmartDashboard.getString("record-joystick-name", "default"));

@@ -37,8 +37,7 @@ public class BlingPeriodic extends Command {
     @Override
     public void execute() {
 
-        // TODO int gearState = Robot.gearHandler.gearHandlerState();
-        int gearState = 1;
+        int gearState = Robot.gearHandler.gearHandlerState();
         if (DriverStation.getInstance().isAutonomous())
             return;
 
@@ -49,14 +48,11 @@ public class BlingPeriodic extends Command {
             return;
 
         // Get the average distance from whatever obstacle.
-       //TODO double distance = (Robot.driveTrain.getRightDistanceToObstacle()
-                        //+ Robot.driveTrain.getLeftDistanceToObstacle()) / 2;
+       double distance = (Robot.driveTrain.getRightDistanceToObstacle()
+                        + Robot.driveTrain.getLeftDistanceToObstacle()) / 2;
         
-        double distance = 5;
-
         // Need this to determine if we're ready to climb
-        // TODO double timeLeft = 150 - Timer.getMatchTime();
-        double timeLeft = 29;
+        double timeLeft = 150 - Timer.getMatchTime();
 
         // We use the teleopDisplayState to make sure we only call each of these once.
         
