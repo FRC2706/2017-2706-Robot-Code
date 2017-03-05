@@ -1,11 +1,14 @@
 package org.usfirst.frc.team2706.robot.commands.autonomous.movements;
 
 import org.usfirst.frc.team2706.robot.Robot;
-import org.usfirst.frc.team2706.robot.commands.GetTargets;
 
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.command.Command;
 
+/**
+ * Drives the robot in a straight line towards the target found by the camera.
+ * Used for lining up the peg at short distances
+ */
 public class StraightDriveWithCamera extends Command {
 
     private double speed;
@@ -37,10 +40,9 @@ public class StraightDriveWithCamera extends Command {
         PID = new PIDController(P, I, D, Robot.driveTrain.getDistanceSensorPIDSource(),
                         Robot.driveTrain.getDrivePIDOutput(true, true, true));
     }
-    GetTargets t = new GetTargets();
+
     // Called just before this Command runs the first time
     protected void initialize() {
-        t.start();
         Robot.driveTrain.resetEncoders();
         
         Robot.driveTrain.brakeMode(true);
@@ -66,6 +68,11 @@ public class StraightDriveWithCamera extends Command {
         // Start going to location
         PID.enable();
     }
+    
+    protected void execute() {
+        Robot.camera.GetTargets();
+    }
+    
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
         return false;
@@ -74,7 +81,7 @@ public class StraightDriveWithCamera extends Command {
     // Called once after isFinished returns true
     protected void end() {
         Robot.driveTrain.brakeMode(false);
-        t.cancel();
+
         // Disable PID output and stop robot to be safe
         PID.disable();
         Robot.driveTrain.drive(0, 0);

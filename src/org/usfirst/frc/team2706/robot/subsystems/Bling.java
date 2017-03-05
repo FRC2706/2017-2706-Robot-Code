@@ -95,6 +95,15 @@ public class Bling extends Subsystem {
         }
     }
     /**
+     * Tells other subsystems if the bling system has displayed a battery 
+     * critical sigh yet.    
+     * @return True if battery is critical, false otherwise.
+     */
+    public boolean getBatteryCriticality() {
+        return batCritical;
+        
+    }
+    /**
      * This command will toggle if we're displaying flashy patterns
      * in case of possible complaints, a button on the driver joystick will
      * call this to toggle it.
@@ -104,6 +113,7 @@ public class Bling extends Subsystem {
         if (!flashyOff) {
             flashyOff = true;
             
+            // If the command was lower than 9, show a command 6.
             if (Integer.parseInt(lastCommand.get("pattern")) <= 9)
                 blingPort.writeString("F6C" + lastCommand.get("colour") + "D" + lastCommand.get("delay")
                 + "B" + lastCommand.get("brightness") + "P" + lastCommand.get("startPoint") + 
@@ -126,9 +136,10 @@ public class Bling extends Subsystem {
                 blingPort.writeString("F" + lastCommand.get("pattern") + "C" + lastCommand.get("colour") + "D" +
                                 lastCommand.get("delay") + "B" + lastCommand.get("brightness")
                                 + "E" + lastCommand.get("pattern") + "Z");
-        }
-        System.out.println(flashyOff);
-        
+            
+        }   
+        DriverStation.getInstance();
+        DriverStation.reportWarning("Bling Flashiness toggled. Is now " + flashyOff, false);
     }
 
     /**
@@ -139,8 +150,6 @@ public class Bling extends Subsystem {
         if (!connected)
             return;
 
-        blingPort.writeString("I");
-        blingPort.writeString("E0Z"); // Clear the LED strip
         customDisplay("MERGE", 1, 150, 100, 0, 1);
     }
 
@@ -148,8 +157,7 @@ public class Bling extends Subsystem {
      * This function initializes teleop period
      */
     public void teleopInit(){
-        blingPort.writeString("I");
-        customDisplay("YELLOW", 7, 100, 100, 0, 1);
+        customDisplay("MERGE", 7, 400, 100, 0, 1);
     }
     
     
@@ -178,8 +186,6 @@ public class Bling extends Subsystem {
 
         batCritical = criticalStatus;
       
-        blingPort.writeString("I"); // Let them know we need to send another command
-      
         String bColour;
         if (percent <= 0.25)
             bColour = colours.get("RED");
@@ -205,10 +211,6 @@ public class Bling extends Subsystem {
         if (!connected)
             return;
 
-        blingPort.writeString("I");
-        // Clear the LED strip
-        blingPort.writeString("E0Z");
-
         // Only showing 3 metres from the object.
         if (distance > 3.0)
             return;
@@ -226,9 +228,8 @@ public class Bling extends Subsystem {
         else
             dColour = colours.get("RED");
 
-        // Colour flash
-        blingPort.writeString(
-                        "F7C" + dColour + "P0" + "Q" + Math.round(percentDist * pixels) + "E7Z");
+        // Multi-colour wipe
+        customDisplay(dColour, 12, Math.round(percentDist * 100), 100, 0, 1);
     }
 
     /**
@@ -243,7 +244,7 @@ public class Bling extends Subsystem {
         // Do not interfere with critical battery warning.
         // Show a theatre chase
         if (ready && !batCritical)
-            customDisplay("Orange", 3, -1, 100, 0, 100);
+            customDisplay("ORANGE", 3, -1, 100, 0, 100);
     }
     
     /**
@@ -259,22 +260,22 @@ public class Bling extends Subsystem {
      * This is used to display a basic pattern on the bling LED lights.
      * Note that for functions above 9, pixelStart and pixelEnd and delay will do nothing.
      * 
-     * @param pattern The type of motion or animation pattern you would like to display. Patterns range from 1-12.
-     * 1 : Colour wipe
-     * 2 : Colour wipe with blank period
-     * 3 : Theatre chase
-     * 4 : Rainbow
-     * 5 : Theatre chase rainbow
-     * 6 : Color bar
-     * 7 : Color bar flash
-     * 8 : Bounce
-     * 9 : Bounce wipe
-     * 10: Multi bounce
-     * 11: Multi bouce wipe
-     * 12: Multi colour wipe
+     * @param pattern The type of motion or animation pattern you would like to display. Patterns range from 1-12. <p>
+     * 1 : Colour wipe <p>
+     * 2 : Colour wipe with blank period <p>
+     * 3 : Theatre chase<p>
+     * 4 : Rainbow<p>
+     * 5 : Theatre chase rainbow<p>
+     * 6 : Color bar<p>
+     * 7 : Color bar flash<p>
+     * 8 : Bounce<p>
+     * 9 : Bounce wipe<p>
+     * 10: Multi bounce<p>
+     * 11: Multi bouce wipe<p>
+     * 12: Multi colour wipe<p>
      * @param colour Colour, either as a preset such as "RED", "GREEN", "WHITE" (either caps or
      *        no caps) or in decimal format. Use a programmer calculator to determine decimal
-     *        format.\n
+     *        format.<p>
      * 
      *        Presets: GREEN, RED, BLUE, YELLOW, ORANGE, PURPLE, TAN, VIOLET, MERGE, PINK, WHITE,
      *        TURQUOISE, BLACK, GOLD, SILVER

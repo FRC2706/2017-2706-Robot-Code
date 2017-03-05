@@ -19,9 +19,6 @@ public class BlingPeriodic extends Command {
     
     private static StickRumble rumbler;
     
-    // Will be used to make sure we only run certain stuff every so often
-    private static double timeVar;
-
     public BlingPeriodic() {
         requires(Robot.blingSystem);
     }
@@ -32,7 +29,8 @@ public class BlingPeriodic extends Command {
     public void initialize() {
         if (DriverStation.getInstance().isAutonomous()) {
             Robot.blingSystem.auto();
-        } else {
+        }
+        else {
             Robot.blingSystem.teleopInit();
         }
     }
@@ -49,11 +47,16 @@ public class BlingPeriodic extends Command {
         /* Wait some seconds from initialization to tell drivers entering teleop.
          * Also don't want to spam the arduino so only run around every 0.5 seconds.
          */
-        if (timePassed < 3 || (timePassed % 0.5) <= 0.05 && (timePassed % 0.5) >= 0.05)
+        if (timePassed < 3 || ((timePassed % 0.5) <= 0.1 || (timePassed % 0.5) >= 0.1))
             return;
+       
+        // Do nothing else if we are displaying low battery.
+        if (Robot.blingSystem.getBatteryCriticality()) 
+            return;
+        
 
         // Get the average distance from whatever obstacle.
-       double distance = (Robot.driveTrain.getRightDistanceToObstacle()
+        double distance = (Robot.driveTrain.getRightDistanceToObstacle()
                         + Robot.driveTrain.getLeftDistanceToObstacle()) / 2;
         
         // Need this to determine if we're ready to climb
@@ -62,7 +65,7 @@ public class BlingPeriodic extends Command {
         // We use the teleopDisplayState to make sure we only call each of these once.
         
         // Basically, if we're in range and have a gear.
-        if (distance < 3 && ((1 <= gearState && 3 >= gearState) | gearState == 5)) {
+        if (distance < 3 && ((1 <= gearState && 3 >= gearState) || gearState == 5)) {
             
             // Basically, if we have the gear, either arm open or closed.
             if (gearState >= 2 && gearState <= 3) {
@@ -85,6 +88,7 @@ public class BlingPeriodic extends Command {
                 }
                 pegIn = false;
             }
+            
             Robot.blingSystem.showDistance(distance, pegIn);
             teleopDisplayState = "distance";
             
@@ -95,7 +99,7 @@ public class BlingPeriodic extends Command {
             teleopDisplayState = "gear";
            
           // Basically, if we must climb  
-        } else if (timeLeft <= 30 && teleopDisplayState != "climb") {
+        } else if ((timeLeft <= 30 || timeSinceInitialized() >= 135) && teleopDisplayState != "climb") {
           
             Robot.blingSystem.showReadyToClimb(true);
             teleopDisplayState = "climb";
