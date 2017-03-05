@@ -18,6 +18,9 @@ public class BlingPeriodic extends Command {
     private static String teleopDisplayState = "";
     
     private static StickRumble rumbler;
+    
+    // Will be used to make sure we only run certain stuff every so often
+    private static double timeVar;
 
     public BlingPeriodic() {
         requires(Robot.blingSystem);
@@ -43,8 +46,10 @@ public class BlingPeriodic extends Command {
 
         double timePassed = timeSinceInitialized();
 
-        // Wait some seconds from initialization to tell drivers entering teleop.
-        if (timePassed < 3)
+        /* Wait some seconds from initialization to tell drivers entering teleop.
+         * Also don't want to spam the arduino so only run around every 0.5 seconds.
+         */
+        if (timePassed < 3 || (timePassed % 0.5) <= 0.05 && (timePassed % 0.5) >= 0.05)
             return;
 
         // Get the average distance from whatever obstacle.
@@ -57,9 +62,7 @@ public class BlingPeriodic extends Command {
         // We use the teleopDisplayState to make sure we only call each of these once.
         
         // Basically, if we're in range and have a gear.
-        if (distance < 3 && ((1 <= gearState && 3>= gearState) | gearState == 5)) {
-            
-            System.out.println("Distance");
+        if (distance < 3 && ((1 <= gearState && 3 >= gearState) | gearState == 5)) {
             
             // Basically, if we have the gear, either arm open or closed.
             if (gearState >= 2 && gearState <= 3) {
@@ -86,17 +89,14 @@ public class BlingPeriodic extends Command {
             teleopDisplayState = "distance";
             
           // Basically, if we're ready to get a gear   
-        } else if (gearState == 0 && teleopDisplayState != "gear") {
-            System.out.println("Ready to get gear");
-            
+        } else if (gearState == 0 && teleopDisplayState != "gear") {    
 
             Robot.blingSystem.showReadyToReceiveGear(true);
             teleopDisplayState = "gear";
            
           // Basically, if we must climb  
         } else if (timeLeft <= 30 && teleopDisplayState != "climb") {
-            System.out.println("Climb");
-            
+          
             Robot.blingSystem.showReadyToClimb(true);
             teleopDisplayState = "climb";
         }
