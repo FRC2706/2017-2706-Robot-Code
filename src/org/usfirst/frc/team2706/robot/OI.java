@@ -2,7 +2,6 @@ package org.usfirst.frc.team2706.robot;
 
 import java.lang.reflect.Field;
 
-import org.usfirst.frc.team2706.robot.commands.GetTargets;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithCamera;
 import org.usfirst.frc.team2706.robot.commands.mechanismcontrol.CloseGearMechanism;
 import org.usfirst.frc.team2706.robot.commands.mechanismcontrol.OpenGearMechanism;
@@ -54,26 +53,26 @@ public class OI {
         // Joystick for driving the robot around
         this.driverStick = driverStick;
 
-        // Stop driving and go into breakmode, stopping the robot
+        // Stop driving and go into brake mode, stopping the robot
         TriggerButtonJoystick driverBackLeftTrigger = new TriggerButtonJoystick(driverStick, 2);
         driverBackLeftTrigger.runWhileHeld(new HandBrake(true));
 
-        // Stop the robot by going into break mode
+        // Stop the robot by going into brake mode
         TriggerButtonJoystick driverBackRightTrigger = new TriggerButtonJoystick(driverStick, 3);
         driverBackRightTrigger.runWhileHeld(new HandBrake(false));
-        
-        EJoystickButton driverBackRightButton = new EJoystickButton(driverStick, 6);
-        driverBackRightButton.runWhileHeld(new StopAtGearWall(14,40));
 
+        // Will stop the robot as it approaches the gear wall
+        EJoystickButton driverBackRightButton = new EJoystickButton(driverStick, 6);
+        driverBackRightButton.runWhileHeld(new StopAtGearWall(14, 40));
+
+        // Hold to align with the peg when within a couple feet of the peg
         EJoystickButton driverYButton = new EJoystickButton(driverStick, 4);
-        driverYButton.runWhileHeld(new StraightDriveWithCamera(0.5,0,12));
-        // test the camera integration
-        EJoystickButton driverSelectButton = new EJoystickButton(driverStick, 7);
-        driverSelectButton.whenPressed(new GetTargets());
-        
+        driverYButton.runWhileHeld(new StraightDriveWithCamera(0.5, 0, 12));
+
         // Joystick for controlling the mechanisms of the robot
         this.controlStick = controlStick;
-        
+
+        // Climb at the speed the analog trigger is pressed
         TriggerButtonJoystick operatorBackRightTrigger = new TriggerButtonJoystick(controlStick, 3);
         operatorBackRightTrigger.whenPressed(new ClimbVariableManually());
 
