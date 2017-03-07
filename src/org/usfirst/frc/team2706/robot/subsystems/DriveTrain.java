@@ -396,16 +396,27 @@ public class DriveTrain extends Subsystem {
 
         @Override
         public void pidWrite(double output) {
+            System.out.println("write");
+
             double rotateVal;
             if(useCamera) {
-                rotateVal = Robot.camera.getTarget() != null ? Robot.camera.getTarget().ctrY : 0;  
+                if(Robot.camera.getTarget() != null) {
+                    if(Robot.camera.getTarget().ctrX > -0.8 && Robot.camera.getTarget().ctrX < 0.8) {
+                        rotateVal = Robot.camera.getTarget() != null ? Robot.camera.getTarget().ctrY : 0;     
+                    }
+                    else {
+                        rotateVal = 0;
+                    }
+                }
+                else {
+                    rotateVal = 0;
+                }
             }
             else {
                 rotateVal = normalize(getHeading() - initGyro) * 0.3;
             }
 
-            // System.out.println("Rotate:\t"+rotateVal);
-
+            
             if (useGyroStraightening)
                 if (invert) {
                     drive.arcadeDrive(output, rotateVal);

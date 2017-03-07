@@ -64,7 +64,7 @@ public class StraightDriveWithCamera extends Command {
 
         // Will accept within 5 inch of target
         PID.setAbsoluteTolerance(error);
-
+        System.out.println("init");
         // Start going to location
         PID.enable();
     }
@@ -75,7 +75,7 @@ public class StraightDriveWithCamera extends Command {
     
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return false;
+        return PID.onTarget();
     }
 
     // Called once after isFinished returns true
