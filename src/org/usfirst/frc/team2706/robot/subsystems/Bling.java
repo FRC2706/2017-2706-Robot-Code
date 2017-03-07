@@ -100,8 +100,7 @@ public class Bling extends Subsystem {
      * @return True if battery is critical, false otherwise.
      */
     public boolean getBatteryCriticality() {
-        return batCritical;
-        
+        return batCritical;  
     }
     /**
      * This command will toggle if we're displaying flashy patterns
@@ -113,29 +112,35 @@ public class Bling extends Subsystem {
         if (!flashyOff) {
             flashyOff = true;
             
+            if (lastCommand.get("pattern") == "0")
+                return;
+            
             // If the command was lower than 9, show a command 6.
-            if (Integer.parseInt(lastCommand.get("pattern")) <= 9)
+            else if (Integer.parseInt(lastCommand.get("pattern")) <= 9)
                 blingPort.writeString("F6C" + lastCommand.get("colour") + "D" + lastCommand.get("delay")
                 + "B" + lastCommand.get("brightness") + "P" + lastCommand.get("startPoint") + 
-                "Q" + lastCommand.get("endPoint") + "E6Z");
+                "Q" + lastCommand.get("endPoint") + "R500E6Z");
             
             else
                 blingPort.writeString("F12C" + lastCommand.get("colour") + "D" +
                                 lastCommand.get("delay") + "B" + lastCommand.get("brightness")
-                                + "E12Z");
+                                + "R500E12Z");
         }
         else {
             flashyOff = false;
             
-            if (Integer.parseInt(lastCommand.get("pattern")) <= 9)
+            if (lastCommand.get("pattern") == "0")
+                return;
+            
+            else if (Integer.parseInt(lastCommand.get("pattern")) <= 9)
                 blingPort.writeString("F" + lastCommand.get("pattern") + "C" + lastCommand.get("colour") + "D" + lastCommand.get("delay")
                 + "B" + lastCommand.get("brightness") + "P" + lastCommand.get("startPoint") + 
-                "Q" + lastCommand.get("endPoint") + "E" + lastCommand.get("pattern") + "Z");
+                "Q" + lastCommand.get("endPoint") + "R500E" + lastCommand.get("pattern") + "Z");
             
             else
                 blingPort.writeString("F" + lastCommand.get("pattern") + "C" + lastCommand.get("colour") + "D" +
                                 lastCommand.get("delay") + "B" + lastCommand.get("brightness")
-                                + "E" + lastCommand.get("pattern") + "Z");
+                                + "R500E" + lastCommand.get("pattern") + "Z");
             
         }   
         DriverStation.getInstance();
@@ -150,7 +155,7 @@ public class Bling extends Subsystem {
         if (!connected)
             return;
 
-        customDisplay("MERGE", 1, 150, 100, 0, 1);
+        customDisplay("gold", 1, 150, 100, 0, 1);
     }
 
     /**
@@ -171,6 +176,7 @@ public class Bling extends Subsystem {
         blingPort.writeString("I");
         // Clear the LED strip
         blingPort.writeString("E0Z");
+        lastCommand.put("pattern", "0");
     }
 
     /**
@@ -188,13 +194,13 @@ public class Bling extends Subsystem {
       
         String bColour;
         if (percent <= 0.25)
-            bColour = colours.get("RED");
+            bColour = "red";
         else if (percent <= 0.5)
-            bColour = colours.get("YELLOW");
+            bColour = "yellow";
         else if (percent <= 0.75)
-            bColour = colours.get("PURPLE");
+            bColour = "purple";
         else
-            bColour = colours.get("GREEN");
+            bColour = "green";
 
         // Use multi-colour display
         customDisplay(bColour, 12, Math.round(percent * 100), 100, 0, 1);
@@ -216,17 +222,14 @@ public class Bling extends Subsystem {
             return;
 
         double percentDist = distance / 3;
-        System.out.println(Math.round(percentDist * pixels));
+        
         String dColour;
 
-        // Peg in is true if the peg is going through the gear hole
-        if (distance < 1.5 && !pegIn)
-            dColour = colours.get("YELLOW");
-        
-        else if (distance <1.5 && pegIn)
-            dColour = colours.get("GREEN");
+        // Peg in is true if the peg is going through the gear hole       
+        if (distance < 1.5 && pegIn)
+            dColour = "green";
         else
-            dColour = colours.get("RED");
+            dColour = "red";
 
         // Multi-colour wipe
         customDisplay(dColour, 12, Math.round(percentDist * 100), 100, 0, 1);
@@ -244,7 +247,7 @@ public class Bling extends Subsystem {
         // Do not interfere with critical battery warning.
         // Show a theatre chase
         if (ready && !batCritical)
-            customDisplay("ORANGE", 3, -1, 100, 0, 100);
+            customDisplay("green", 3, 100, 100, 0, 100);
     }
     
     /**
@@ -253,7 +256,7 @@ public class Bling extends Subsystem {
      * @param ready A boolean that indicate true for ready or false for not ready.
      */
     public void showReadyToClimb(boolean ready) {  
-        if (ready) customDisplay("White", 11, 250, 60, 0, 100);   
+        if (ready && connected) customDisplay("White", 11, 25, 100, 0, 100);   
     }
 
     /**
@@ -275,7 +278,7 @@ public class Bling extends Subsystem {
      * 12: Multi colour wipe<p>
      * @param colour Colour, either as a preset such as "RED", "GREEN", "WHITE" (either caps or
      *        no caps) or in decimal format. Use a programmer calculator to determine decimal
-     *        format.<p>
+     *        format. <p>
      * 
      *        Presets: GREEN, RED, BLUE, YELLOW, ORANGE, PURPLE, TAN, VIOLET, MERGE, PINK, WHITE,
      *        TURQUOISE, BLACK, GOLD, SILVER
@@ -284,19 +287,24 @@ public class Bling extends Subsystem {
      * @param pixelStart The percent of the bar where the pixel pattern will start in decimal format.
      * @param pixelEnd The percent of the bar where the pattern will end in decimal format.
      */
-    public void customDisplay(String colour, int pattern, double delay,
+    public void customDisplay(String colour, int pattern, double tDelay,
                     int brightness, int pixelStart, int pixelEnd) {
         if (!connected)
             return;
+        clear();
+               
+        int delay = (int) Math.round(tDelay);
         
         // Get rid of all the spaces
         String gColour = colour.replace(" ", "");
 
-        // Make sure that any letters are uppercase.
-        gColour = gColour.toUpperCase();
-
-        // Preset colour that we need to convert to RGB888.
-        if ((gColour.charAt(0)) != '0') {
+        // Preset colour that we need to convert to proper format
+        try {
+            Integer.parseInt(gColour);
+        }
+        catch (Exception e) {
+            // Make sure that any letters are uppercase.
+            gColour = gColour.toUpperCase();
             gColour = colours.get(gColour);
         }
 
@@ -320,10 +328,9 @@ public class Bling extends Subsystem {
         if (pattern <= 9) {
             blingPort.writeString("F" + pattern + "C" + gColour + "B" + brightness + "D" + delay
                                    + "P" + startPixel + "Q" + endPixel + "E" + pattern + "Z");
-        
         }
         else {
-            blingPort.writeString("F" + pattern + "C" + gColour + "B" + brightness + "E" + 
+            blingPort.writeString("F" + pattern + "C" + gColour + "D" + delay + "B" + brightness + "R500E" + 
                                    pattern + "Z");
         }
     }
