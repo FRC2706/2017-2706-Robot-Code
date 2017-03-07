@@ -102,7 +102,7 @@ public class Robot extends IterativeRobot {
         CameraServer.getInstance().startAutomaticCapture();
 
         recordAJoystick = new RecordJoystick(oi.getDriverJoystick(), oi.getOperatorJoystick(),
-                        () -> SmartDashboard.getString("record-joystick-name", "default"));
+                        () -> SmartDashboard.getString("record-joystick-name", "default"));        
     }
 
     /**
@@ -128,6 +128,9 @@ public class Robot extends IterativeRobot {
     public void autonomousInit() {
         driveTrain.reset();
 
+        // Activate the camera ring light
+        camera.enableRingLight(true);
+        
         // Get the bling doing autonomous patterns.
         blingSystem.auto(); 
 
@@ -162,6 +165,10 @@ public class Robot extends IterativeRobot {
             recordAJoystick.start();
 
         blingSystem.startTeleOp();
+        
+        // Deactivate the camera ring light
+        camera.enableRingLight(false);
+        
     }
 
     /**
