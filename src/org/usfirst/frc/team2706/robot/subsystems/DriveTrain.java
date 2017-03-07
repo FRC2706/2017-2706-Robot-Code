@@ -401,7 +401,7 @@ public class DriveTrain extends Subsystem {
                 rotateVal = Robot.camera.getTarget() != null ? Robot.camera.getTarget().ctrY : 0;  
             }
             else {
-                rotateVal = normalize(getHeading() - initGyro) * 0.1;
+                rotateVal = normalize(getHeading() - initGyro) * 0.3;
             }
 
             // System.out.println("Rotate:\t"+rotateVal);
