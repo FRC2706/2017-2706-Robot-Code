@@ -140,10 +140,7 @@ public class Robot extends IterativeRobot {
         if (autonomousCommand != null)
             autonomousCommand.start();
 
-        // Tell drive team we're in auto
-        rumbler = new StickRumble(1.0, 1.0, 3, 0, 1, 1.0);
-        rumbler.start();
-    }
+        }
 
     /**
      * This function is called periodically during autonomous
@@ -166,13 +163,14 @@ public class Robot extends IterativeRobot {
             recordAJoystick.start();
 
         // Tell drive team to drive
-        rumbler = new StickRumble(0.2, 0.15, 3, 0.5, 2, 1.0);
+        rumbler = new StickRumble(0.4, 0.15, 1, 0, 1, 1.0);
         rumbler.start();
         
         if(blingSystem.getDefaultCommand().isRunning()) {
             blingSystem.getDefaultCommand().cancel();
-            blingSystem.getDefaultCommand().start();
         }
+        blingSystem.getDefaultCommand().start();
+        
     }
 
     /**
