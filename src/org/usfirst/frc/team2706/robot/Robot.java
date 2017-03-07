@@ -94,7 +94,7 @@ public class Robot extends IterativeRobot {
         // TODO build a hopper popper
  /* position 9: Left/ gear double side hopper pop */ new QuickRotate(90),
                   /* position 10: Record n replay */ new ReplayRecordedJoystick(oi.getDriverJoystick(), oi.getOperatorJoystick(),() -> SmartDashboard.getString("record-joystick-name", "default"),false),
-          /* position 11: Curve from left to gear */ new SideGearCurve(0.6, 5, 8.75, 65, 4, 5)
+          /* position 11: Curve from left to gear */ new SideGearCurve(0.6, 5, 10.75, 65, 4, 5)
      /* position 12: Right gear middle hopper pop */ 
         );
 
