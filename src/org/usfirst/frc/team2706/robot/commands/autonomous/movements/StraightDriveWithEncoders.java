@@ -43,7 +43,7 @@ public class StraightDriveWithEncoders extends Command {
     // Called just before this Command runs the first time
     protected void initialize() {
         System.out.println("straighting");
-        Robot.driveTrain.resetEncoders();
+        Robot.driveTrain.reset();
         
         Robot.driveTrain.brakeMode(true);
 
@@ -57,7 +57,7 @@ public class StraightDriveWithEncoders extends Command {
             PID.setOutputRange(speed, -speed);
         }
 
-        Robot.driveTrain.initGyro = Robot.driveTrain.getHeading();
+        Robot.driveTrain.initGyro = 0;
 
         PID.setSetpoint(distance);
 
@@ -76,6 +76,7 @@ public class StraightDriveWithEncoders extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
+        System.out.println("ending");
         Robot.driveTrain.brakeMode(false);
         // Disable PID output and stop robot to be safe
         PID.disable();

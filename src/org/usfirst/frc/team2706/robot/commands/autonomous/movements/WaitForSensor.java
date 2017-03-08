@@ -17,6 +17,7 @@ public class WaitForSensor extends Command {
     
     @Override
     protected boolean isFinished() {
+        System.out.println("waiting");
         // TODO Auto-generated method stub
         return Robot.gearHandler.pegDetected() && Robot.driveTrain.getDistanceToObstacle() < distance;
     }

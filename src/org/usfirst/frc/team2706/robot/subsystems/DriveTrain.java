@@ -396,7 +396,6 @@ public class DriveTrain extends Subsystem {
 
         @Override
         public void pidWrite(double output) {
-            System.out.println("write");
 
             double rotateVal;
             if(useCamera) {
@@ -413,7 +412,7 @@ public class DriveTrain extends Subsystem {
                 }
             }
             else {
-                rotateVal = normalize(getHeading() - initGyro) * 0.3;
+                rotateVal = normalize(getHeading() - initGyro) * 0.1;
             }
 
             
