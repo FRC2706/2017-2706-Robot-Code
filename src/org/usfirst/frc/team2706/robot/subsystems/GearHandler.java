@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * @author wakandacat, FilledWithDetermination, Crazycat200
  */
 public class GearHandler extends Subsystem {
+    
 
     private DoubleSolenoid solenoid = new DoubleSolenoid(RobotMap.SOLENOID_FORWARD_CHANNEL, RobotMap.SOLENOID_REVERSE_CHANNEL);
     
@@ -110,12 +111,14 @@ public class GearHandler extends Subsystem {
     
     public void openArm() {
         solenoid.set(DoubleSolenoid.Value.kForward);
+
         // Check to see if arm is open (see bottom of code)
         closed = checkArmOpen();
     }
     
     public void closeArm() {
         solenoid.set(DoubleSolenoid.Value.kReverse); 
+
         // Check to see if arm is open (see bottom of code)
         closed = checkArmOpen();   
     }
@@ -151,9 +154,9 @@ public class GearHandler extends Subsystem {
         }
         return false;
     }
+
     public void log() {
         SmartDashboard.putNumber("Peg Sensor", irPegSensor.getVoltage());
         SmartDashboard.putNumber("Gear Sensor", irGearSensor.getVoltage());
-    }
 }
-
+}
