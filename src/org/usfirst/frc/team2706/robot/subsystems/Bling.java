@@ -91,7 +91,7 @@ public class Bling extends Subsystem {
         
         catch (Exception e){
             DriverStation.getInstance();
-            DriverStation.reportWarning("Can not connect to arduino :(", false);
+            DriverStation.reportWarning("Cannot connect to arduino :(", false);
         }
     }
     /**
@@ -102,6 +102,7 @@ public class Bling extends Subsystem {
     public boolean getBatteryCriticality() {
         return batCritical;  
     }
+    
     /**
      * This command will toggle if we're displaying flashy patterns
      * in case of possible complaints, a button on the driver joystick will
@@ -151,7 +152,7 @@ public class Bling extends Subsystem {
      * This function should be run at the beginning of autonomous to get the proper light pattern.
      */
     public void auto() {
-        // IF THE BLINGPORT FAILED, DON'T CAUSE MORE ERRORS
+        // IF THE BLINGPORT FAILED, DON'T CAUSE ERRORS
         if (!connected)
             return;
 
@@ -203,7 +204,7 @@ public class Bling extends Subsystem {
             bColour = "green";
 
         // Use multi-colour display
-        customDisplay(bColour, 12, Math.round(percent * 100), 100, 0, 1);
+        customDisplay(bColour, 12, (int) Math.round(percent * 100), 100, 0, 1);
     }
 
     /**
@@ -214,11 +215,9 @@ public class Bling extends Subsystem {
      * the hole, false otherwise.
      */
     public void showDistance(double distance, boolean pegIn) {
-        if (!connected)
-            return;
-
+        
         // Only showing 3 metres from the object.
-        if (distance > 3.0)
+        if (distance > 3.0 || !connected)
             return;
 
         double percentDist = distance / 3;
@@ -232,7 +231,7 @@ public class Bling extends Subsystem {
             dColour = "red";
 
         // Multi-colour wipe
-        customDisplay(dColour, 12, Math.round(percentDist * 100), 100, 0, 1);
+        customDisplay(dColour, 12, (int) Math.round(percentDist * 100), 100, 0, 1);
     }
 
     /**
@@ -241,12 +240,10 @@ public class Bling extends Subsystem {
      * @param ready A boolean that indicates whether or not the robot is ready. True if yes.
      */
     public void showReadyToReceiveGear(boolean ready) {
-        if (!connected)
-            return;
 
         // Do not interfere with critical battery warning.
         // Show a theatre chase
-        if (ready && !batCritical)
+        if (ready && connected)
             customDisplay("green", 3, 100, 100, 0, 100);
     }
     
@@ -291,6 +288,7 @@ public class Bling extends Subsystem {
                     int brightness, int pixelStart, int pixelEnd) {
         if (!connected)
             return;
+        
         clear();
                
         int delay = (int) Math.round(tDelay);
@@ -303,9 +301,16 @@ public class Bling extends Subsystem {
             Integer.parseInt(gColour);
         }
         catch (Exception e) {
-            // Make sure that any letters are uppercase.
-            gColour = gColour.toUpperCase();
-            gColour = colours.get(gColour);
+            // In case the colour is not in the Map.
+            try { 
+                // Make sure that any letters are uppercase.
+                gColour = gColour.toUpperCase();
+                gColour = colours.get(gColour);
+            }
+            
+            catch (Exception f) {
+                return;
+            }
         }
 
         int startPixel = Math.round(pixelStart * pixels);
@@ -313,6 +318,7 @@ public class Bling extends Subsystem {
 
         blingPort.writeString("I");
         
+        // Record all of what is inputted
         lastCommand.put("pattern", Integer.toString(pattern));
         lastCommand.put("brightness", Integer.toString(brightness));
         lastCommand.put("colour", gColour);

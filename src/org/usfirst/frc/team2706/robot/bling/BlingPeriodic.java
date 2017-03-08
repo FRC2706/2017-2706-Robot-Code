@@ -19,10 +19,6 @@ public class BlingPeriodic extends Command {
     
     private static StickRumble rumbler;
     
-    public BlingPeriodic() {
-        requires(Robot.blingSystem);
-    }
-    
     private static boolean rumbleOn = false;
     
     private static double timePoint = Timer.getFPGATimestamp();
@@ -30,11 +26,16 @@ public class BlingPeriodic extends Command {
     // Used to know if specific pattern has been started. 
     private static boolean autoInitialized = false;
     private static boolean teleopInitialized = false;
+    
+    public BlingPeriodic() {
+        requires(Robot.blingSystem);
+    }
 
     @Override
     public void initialize() {
-               
-        if (DriverStation.getInstance().isAutonomous()) {
+        
+        // autoInitialized won't ever be true here, but just in case.
+        if (DriverStation.getInstance().isAutonomous() && !autoInitialized) {
             Robot.blingSystem.auto();
             autoInitialized = true;
         }
@@ -46,6 +47,7 @@ public class BlingPeriodic extends Command {
 
     @Override
     public void execute() {
+        
         if (DriverStation.getInstance().isAutonomous() && autoInitialized)
             return;
         else if (DriverStation.getInstance().isAutonomous() && !autoInitialized) {
@@ -70,10 +72,6 @@ public class BlingPeriodic extends Command {
         }
         
         timePoint += timePassed;
-       
-        // Do nothing else if we are displaying low battery.
-        if (Robot.blingSystem.getBatteryCriticality()) 
-            return;
         
         // Below is the stuff that we need for the following conditions 
         
@@ -127,7 +125,8 @@ public class BlingPeriodic extends Command {
             Robot.blingSystem.showDistance(distance, rumbleOn);
             teleopDisplayState = "distance";
         }
-          // Basically, if we're ready to get a gear   
+        
+        // Basically, if we're ready to get a gear from loading station  
         else if (gearState == 0 && distance < 1.5) {
             doingSomethingElse = true;
             
@@ -141,7 +140,7 @@ public class BlingPeriodic extends Command {
                 teleopDisplayState = "gear";
             }
         }   
-          // Basically, if we must climb  
+        // Basically, if we must climb  
         else if ((timeLeft <= 30 || timeSinceInitialized() >= 105) && !doingSomethingElse) {
             
             doingSomethingElse = true;
@@ -152,7 +151,7 @@ public class BlingPeriodic extends Command {
             }
         }
         
-        // Basically, just running around the field having fun.
+        // Just running around the field having fun.
         else if (teleopDisplayState != "fun" && !doingSomethingElse) {
             Robot.blingSystem.teleopInit();
             teleopDisplayState = "fun";

@@ -130,19 +130,10 @@ public class Robot extends IterativeRobot {
      */
     public void autonomousInit() {
         driveTrain.reset();
-<<<<<<< HEAD
-        // Activate the camera ring light
-        camera.enableRingLight(true);
-        
-=======
 
         // Activate the camera ring light
         camera.enableRingLight(true);
 
-        // Get the bling doing autonomous patterns.
-        blingSystem.auto(); 
-
->>>>>>> origin/master
         // Great for safety just in case you set the wrong one in practice ;)
         System.out.println("Running " + hardwareChooser.getSelected() + "...");
 
@@ -151,8 +142,8 @@ public class Robot extends IterativeRobot {
         // Schedule the autonomous command that was selected
         if (autonomousCommand != null)
             autonomousCommand.start();
-        
-        blingSystem.getDefaultCommand().start();
+        if (!blingSystem.getDefaultCommand().isRunning())
+            blingSystem.getDefaultCommand().start();
         
         }
 
@@ -180,20 +171,8 @@ public class Robot extends IterativeRobot {
         rumbler = new StickRumble(0.4, 0.15, 1, 0, 1, 1.0);
         rumbler.start();
         
-<<<<<<< HEAD
-        
         // Deactivate the camera ring light
         camera.enableRingLight(false);
-        
-=======
-        if(blingSystem.getDefaultCommand().isRunning()) {
-            blingSystem.getDefaultCommand().cancel();
-        }
-        blingSystem.getDefaultCommand().start();
-
-        // Deactivate the camera ring light
-        camera.enableRingLight(false);
->>>>>>> origin/master
     }
 
     /**
