@@ -18,6 +18,11 @@ public class StopAtGearWall extends Command {
 
     boolean part = true;
 
+    /**
+     * Stops at the wall to pick up a gear
+     * @param stopRange the range at which you should stop
+     * @param encoderTakeOverRange the range at which the encoders take over the distance sensors.
+     */
     public StopAtGearWall(double stopRange, double encoderTakeOverRange) {
         this.stopRange = stopRange;
         this.encoderTakeOverRange = encoderTakeOverRange;
@@ -39,6 +44,9 @@ public class StopAtGearWall extends Command {
 
     boolean doneOne = false;
 
+    /**
+     * Gets the distance sensor distance and sees if the encoders should take over
+     */
     public boolean PartOne() {
         distance = Robot.driveTrain.getDistanceToObstacle();
         System.out.println(distance);
