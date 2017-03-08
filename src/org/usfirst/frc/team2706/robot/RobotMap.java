@@ -92,7 +92,7 @@ public class RobotMap {
     private static final int[] SELECTOR_CHANNEL_VALS = {0, 0, 0};
     public static final int SELECTOR_CHANNEL = getConstant("SELECTOR_CHANNEL");
 
-    private static final int[] RING_LIGHT_VALS = {6, 6, 6};
+    private static final int[] RING_LIGHT_VALS = {12, 12, 12};
     public static final int RING_LIGHT = getConstant("RING_LIGHT");
 
     private static final int[] LEFT_ULTRASONIC_PING_CHANNEL_VALS = {4, 4, 4};
@@ -158,7 +158,7 @@ public class RobotMap {
     private static final String ROBOT_ID_LOC = "/home/lvuser/robot-type.conf";
 
     // Raspberry Pi IP for vision
-    private static final String[] RPI_IPS_VALS = {"10.27.6.240", "10.27.6.240", "10.27.6.240"};
+    private static final String[] RPI_IPS_VALS = {"10.27.6.10", "10.27.6.10", "10.27.6.10"};
     public static final String RPI_IPS = getConstant("RPI_IPS");
 
     private static int getRobotID() {

@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /** 
  * Coordinates commands for the Gear Handler Arm mechanisms. 
@@ -93,11 +94,11 @@ public class GearHandler extends Subsystem {
      * line 21 = 0.9V +++++++++
      */
     private AnalogInput irGearSensor = new AnalogInput(RobotMap.INFRARED_SENSOR_GEAR_ANALOG);
-    private static final double GEAR_CAPTURED = 1.2;
+    private static final double GEAR_CAPTURED = 0.5;
     
 
     private AnalogInput irPegSensor = new AnalogInput(RobotMap.INFRARED_SENSOR_PEG_ANALOG);
-    private static final double PEG_DETECTED = 2.0;    
+    private static final double PEG_DETECTED = 0.2;    
 
     // Calls limit switches from robot map
     private DigitalInput limitSwitchLeft = new DigitalInput(RobotMap.LIMIT_SWITCH_LEFT_CHANNEL);
@@ -146,11 +147,16 @@ public class GearHandler extends Subsystem {
     }    
 
         
-      // Uses limit switch to help see if arm is open
-      public boolean checkArmOpen() {
+    // Uses limit switch to help see if arm is open
+    public boolean checkArmOpen() {
         if (limitSwitchLeft.get() || limitSwitchRight.get()) {
             return true;
         }
         return false;
-     }
+    }
+
+    public void log() {
+        SmartDashboard.putNumber("Peg Sensor", irPegSensor.getVoltage());
+        SmartDashboard.putNumber("Gear Sensor", irGearSensor.getVoltage());
+    }
 }
