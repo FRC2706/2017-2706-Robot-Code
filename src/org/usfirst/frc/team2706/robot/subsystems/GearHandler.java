@@ -153,18 +153,10 @@ public class GearHandler extends Subsystem {
             return true;
         }
         return false;
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/master
     }
 
     public void log() {
         SmartDashboard.putNumber("Peg Sensor", irPegSensor.getVoltage());
         SmartDashboard.putNumber("Gear Sensor", irGearSensor.getVoltage());
-    }
-<<<<<<< HEAD
 }
-=======
 }
->>>>>>> origin/master
