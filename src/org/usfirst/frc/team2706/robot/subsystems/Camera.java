@@ -52,14 +52,6 @@ public class Camera extends Subsystem {
                 target = targets.get(0);
             }
         }
-<<<<<<< HEAD
-        if (targets != null) {
-            if(!targets.isEmpty())
-                target = targets.get(0);
-        }
-=======
-        
->>>>>>> refs/remotes/origin/master
     }
 
     public TargetObject getTarget() {
