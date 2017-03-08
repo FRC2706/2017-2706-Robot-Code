@@ -147,16 +147,24 @@ public class GearHandler extends Subsystem {
     }    
 
         
-      // Uses limit switch to help see if arm is open
-      public boolean checkArmOpen() {
+    // Uses limit switch to help see if arm is open
+    public boolean checkArmOpen() {
         if (limitSwitchLeft.get() || limitSwitchRight.get()) {
             return true;
         }
         return false;
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/master
     }
+
     public void log() {
         SmartDashboard.putNumber("Peg Sensor", irPegSensor.getVoltage());
         SmartDashboard.putNumber("Gear Sensor", irGearSensor.getVoltage());
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> origin/master
