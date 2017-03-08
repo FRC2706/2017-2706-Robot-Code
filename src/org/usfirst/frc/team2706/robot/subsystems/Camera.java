@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.usfirst.frc.team2706.robot.RobotMap;
 import org.usfirst.frc.team2706.robot.subsystems.TrackerBox2.TargetObject;
 
+import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -14,8 +15,9 @@ public class Camera extends Subsystem {
     
     TrackerBox2 trackerbox = new TrackerBox2(RobotMap.RPI_IP);
     public boolean PRINT_STUFF = false;
-    public final int visionDataPort = 1182;
     private TargetObject target = null;
+    
+    private DigitalOutput ringLightRelay = new DigitalOutput(RobotMap.RING_LIGHT);
 
     @Override
     protected void initDefaultCommand() {}
@@ -24,6 +26,15 @@ public class Camera extends Subsystem {
         super();
     }
 
+    /**
+     * Enable the camera ring light.
+     * 
+     * @param enable the desired ring light state
+     */
+    public void enableRingLight(boolean enable) {
+        ringLightRelay.set(enable);
+    }
+    
     public void GetTargets() {
         ArrayList<TrackerBox2.TargetObject> targets = trackerbox.getVisionData();
 
@@ -34,10 +45,11 @@ public class Camera extends Subsystem {
                     System.out.println("\tI found: " + target.toString());
                 System.out.println();
             }
+            if (!targets.isEmpty()) {
+                target = targets.get(0);
+            }
         }
-        if (!targets.isEmpty()) {
-            target = targets.get(0);
-        }
+        
     }
 
     public TargetObject getTarget() {
