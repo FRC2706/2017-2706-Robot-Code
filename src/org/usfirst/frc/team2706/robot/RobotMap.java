@@ -92,7 +92,7 @@ public class RobotMap {
     private static final int[] SELECTOR_CHANNEL_VALS = {0, 0, 0};
     public static final int SELECTOR_CHANNEL = getConstant("SELECTOR_CHANNEL");
 
-    private static final int[] RING_LIGHT_VALS = {6, 6, 6};
+    private static final int[] RING_LIGHT_VALS = {12, 12, 12};
     public static final int RING_LIGHT = getConstant("RING_LIGHT");
 
     private static final int[] LEFT_ULTRASONIC_PING_CHANNEL_VALS = {4, 4, 4};
