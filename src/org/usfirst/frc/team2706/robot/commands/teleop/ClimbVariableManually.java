@@ -29,6 +29,6 @@ public class ClimbVariableManually extends Command {
     }
     
     private double getTriggerValue() {
-        return Robot.oi.getDriverJoystick().getRawAxis(3);
+        return Robot.oi.getOperatorJoystick().getRawAxis(3);
     }
 }
