@@ -26,7 +26,6 @@ public class HandBrake extends Command {
 
     @Override
     protected void end() {
-        System.out.println("ended");
         Robot.driveTrain.brakeMode(false);
     }
 

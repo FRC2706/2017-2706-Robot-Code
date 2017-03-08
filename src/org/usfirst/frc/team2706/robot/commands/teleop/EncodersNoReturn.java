@@ -4,6 +4,10 @@ import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriv
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
+/**
+ * Does a full stop on the spot as best as possible and rights itself it you go too far too quick
+ *
+ */
 public class EncodersNoReturn extends CommandGroup {
     
     public EncodersNoReturn() {

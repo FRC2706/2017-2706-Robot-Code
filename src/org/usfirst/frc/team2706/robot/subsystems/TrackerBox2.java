@@ -8,7 +8,7 @@ public class TrackerBox2 {
     public final  int visionDataPort = 1182;
     public static final String DATA_VERSION_CODE = "2017";
 
-    public boolean PRINT_STUFF = true;
+    public boolean PRINT_STUFF = false;
 
     public class TargetObject {
           public float boundingArea = -1;     // % of cam [0, 1.0]
@@ -36,7 +36,8 @@ public class TrackerBox2 {
 
         Socket sock = new Socket();
         try {
-            System.out.println(visionDataPort);
+            if(PRINT_STUFF)
+                System.out.println(visionDataPort);
             sock.connect(new InetSocketAddress(RPi_addr, visionDataPort), 100);
         } catch (Exception e) {
             try {
