@@ -63,7 +63,7 @@ public class BlingPeriodic extends Command {
         /* Wait some seconds from initialization to tell drivers entering teleop.
          * Also don't want to spam the arduino so only run around every 0.5 seconds.
          */
-        if (timeSinceInit < 3 || ((timePassed / 1) < 1)) {
+        if (timeSinceInit < 3 || ((timePassed / 0.5) < 1)) {
             if (!teleopInitialized) {
                 teleopInitialized = true;
                 Robot.blingSystem.teleopInit();
@@ -100,7 +100,7 @@ public class BlingPeriodic extends Command {
         if (distance < 3 && ((1 <= gearState && 3 >= gearState) || gearState == 5)) {
             doingSomethingElse = true;
             
-            // Basically, if we have the gear, either arm open or closed.
+            // Basically, if we have the gear, either arm open or closed and the peg is in.
             if (gearState >= 2 && gearState <= 3) {
                 
                 // Only want to run this the first time.
