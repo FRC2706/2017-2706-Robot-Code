@@ -18,6 +18,7 @@ import org.usfirst.frc.team2706.robot.subsystems.Climber;
 import org.usfirst.frc.team2706.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team2706.robot.subsystems.GearHandler;
 
+import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -102,8 +103,9 @@ public class Robot extends IterativeRobot {
         );
 
         // Set up the Microsoft LifeCam and start streaming it to the Driver Station
-        CameraServer.getInstance().startAutomaticCapture();
-
+        UsbCamera forwardCamera = CameraServer.getInstance().startAutomaticCapture(0);
+        UsbCamera rearCamera = CameraServer.getInstance().startAutomaticCapture(1);
+        
         recordAJoystick = new RecordJoystick(oi.getDriverJoystick(), oi.getOperatorJoystick(),
                         () -> SmartDashboard.getString("record-joystick-name", "default"));        
     }
