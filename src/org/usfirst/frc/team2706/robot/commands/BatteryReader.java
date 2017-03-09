@@ -27,8 +27,6 @@ public class BatteryReader extends Command {
         double batteryPercent = (batteryOutputVoltage - 10) / (FULL_BATTERY_CAPACITY - 10);
         
         System.out.println("Battery Percentage: " + batteryPercent * 100);
-        
-        Robot.blingSystem.batteryInd(batteryPercent, false);
     }
 
     /**
@@ -47,7 +45,6 @@ public class BatteryReader extends Command {
             DriverStation.reportWarning("Battery low. " + (batteryPercent * 100) + "% remaining.",
                             false);
             batCritical = true;
-            Robot.blingSystem.batteryInd(batteryPercent, batCritical);
         }
         if (batteryPercent > 0.2 && batCritical)
             batCritical = false;
