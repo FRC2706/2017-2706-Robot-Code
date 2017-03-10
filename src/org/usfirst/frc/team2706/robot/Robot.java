@@ -10,6 +10,7 @@ import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriv
 import org.usfirst.frc.team2706.robot.commands.autonomous.plays.DrivePlaceGear;
 import org.usfirst.frc.team2706.robot.commands.teleop.ArcadeDriveWithJoystick;
 import org.usfirst.frc.team2706.robot.commands.teleop.RecordJoystick;
+import org.usfirst.frc.team2706.robot.controls.StickRumble;
 import org.usfirst.frc.team2706.robot.subsystems.AutonomousSelector;
 import org.usfirst.frc.team2706.robot.subsystems.Bling;
 import org.usfirst.frc.team2706.robot.subsystems.Camera;
@@ -17,6 +18,7 @@ import org.usfirst.frc.team2706.robot.subsystems.Climber;
 import org.usfirst.frc.team2706.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team2706.robot.subsystems.GearHandler;
 
+import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -40,44 +42,46 @@ public class Robot extends IterativeRobot {
 
     // The spinny dial on the robot that selects what autonomous mode we are going to do
     public static AutonomousSelector hardwareChooser;
-    
+
     // The gear handler arm
     public static GearHandler gearHandler;
-    
+
     // The climber
     public static Climber climber;
+    
+    // This will be the bling subsystem controller
+    public static Bling blingSystem;
 
     // Stores all of the joysticks, and returns them as read only.
     public static OI oi;
 
-    // This will be the bling subsystem controller
-    public static Bling blingSystem;
 
     // Which command is going to be ran based on the hardwareChooser
     Command autonomousCommand;
 
     // Records joystick states to file for later replaying
     RecordJoystick recordAJoystick;
+    
+    // Rumbles joystick to tell drive team which mode we're in
+    StickRumble rumbler;
 
     /**
      * This function is run when the robot is first started up and should be used for any
      * initialization code.
      */
     public void robotInit() {
-
         // Instantiate the robot subsystems
         driveTrain = new DriveTrain();
 
         camera = new Camera();
-        
+
         gearHandler = new GearHandler();
-        
+
         climber = new Climber();
 
-        // New bling system class.
+        // New bling subsystem class.
         blingSystem = new Bling();
-        blingSystem.batteryInd(1.0); // Display battery voltage.
-
+        
         oi = new OI();
         // WARNING DO NOT AUTOFORMAT THIS OR BAD THINGS WILL HAPPEN TO YOU
         // Set up our autonomous modes with the hardware selector switch
@@ -99,8 +103,9 @@ public class Robot extends IterativeRobot {
         );
 
         // Set up the Microsoft LifeCam and start streaming it to the Driver Station
-        CameraServer.getInstance().startAutomaticCapture();
-
+        UsbCamera forwardCamera = CameraServer.getInstance().startAutomaticCapture(0);
+        UsbCamera rearCamera = CameraServer.getInstance().startAutomaticCapture(1);
+        
         recordAJoystick = new RecordJoystick(oi.getDriverJoystick(), oi.getOperatorJoystick(),
                         () -> SmartDashboard.getString("record-joystick-name", "default"));        
     }
@@ -130,9 +135,6 @@ public class Robot extends IterativeRobot {
 
         // Activate the camera ring light
         camera.enableRingLight(true);
-        
-        // Get the bling doing autonomous patterns.
-        blingSystem.auto(); 
 
         // Great for safety just in case you set the wrong one in practice ;)
         System.out.println("Running " + hardwareChooser.getSelected() + "...");
@@ -142,7 +144,10 @@ public class Robot extends IterativeRobot {
         // Schedule the autonomous command that was selected
         if (autonomousCommand != null)
             autonomousCommand.start();
-    }
+        if (!blingSystem.getDefaultCommand().isRunning())
+            blingSystem.getDefaultCommand().start();
+        
+        }
 
     /**
      * This function is called periodically during autonomous
@@ -164,11 +169,12 @@ public class Robot extends IterativeRobot {
         if (SmartDashboard.getBoolean("record-joystick", false))
             recordAJoystick.start();
 
-        blingSystem.startTeleOp();
+        // Tell drive team to drive
+        rumbler = new StickRumble(0.4, 0.15, 1, 0, 1, 1.0);
+        rumbler.start();
         
         // Deactivate the camera ring light
         camera.enableRingLight(false);
-        
     }
 
     /**
