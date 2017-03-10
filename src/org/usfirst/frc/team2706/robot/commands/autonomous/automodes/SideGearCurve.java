@@ -1,7 +1,6 @@
 package org.usfirst.frc.team2706.robot.commands.autonomous.automodes;
 
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.CurveDrive;
-import org.usfirst.frc.team2706.robot.commands.autonomous.movements.RetryPegUntilComplete;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.RotateDriveWithGyro;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithEncoders;
 import org.usfirst.frc.team2706.robot.commands.autonomous.plays.DrivePlaceGear;

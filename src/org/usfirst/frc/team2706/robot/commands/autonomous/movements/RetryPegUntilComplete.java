@@ -18,9 +18,9 @@ public class RetryPegUntilComplete extends Command {
         this.distance = distance;
     }
     protected void initialize() {
-        r = new Realign(0.5,1.5);
+        
     }
-    Realign r;
+    Realign r = new Realign(0.5,1.5);
     protected void execute() {
         if(!r.isRunning() && (!Robot.gearHandler.pegDetected()
                         || Robot.driveTrain.getDistanceToObstacle() > distance)) {
