@@ -72,7 +72,7 @@ public class OI {
         driverYButton.runWhileHeld(new StraightDriveWithCamera(0.5, 0, 12));
 
         // Joystick for controlling the mechanisms of the robot
-        this.controlStick = controlStick;
+        this.controlStick = controlStick;                                                                                                                                                                                                                                                                                                                                                                                       
 
         // Climb at the speed the analog trigger is pressed
         TriggerButtonJoystick operatorBackRightTrigger = new TriggerButtonJoystick(controlStick, 3);

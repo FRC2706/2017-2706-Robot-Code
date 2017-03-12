@@ -14,12 +14,21 @@ public class WaitForSensor extends Command {
     public WaitForSensor(double distance) {
         this.distance = distance;
     }
-    
+    protected void execute() {
+      
+        if(Robot.gearHandler.pegDetected()) {
+            //System.out.println("Blinging");
+        //    Robot.blingSystem.showReadyToReceiveGear(true);
+        }
+    }
     @Override
     protected boolean isFinished() {
-        System.out.println("waiting");
+      //  System.out.println("waiting");
+        if(Robot.gearHandler.pegDetected()) {
+            System.out.println("Detected");
+        }
         // TODO Auto-generated method stub
-        return Robot.gearHandler.pegDetected() && Robot.driveTrain.getDistanceToObstacle() < distance;
+        return Robot.gearHandler.pegDetected();
     }
 
 }
