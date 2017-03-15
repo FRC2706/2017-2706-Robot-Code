@@ -12,6 +12,6 @@ public class EncodersNoReturn extends CommandGroup {
     
     public EncodersNoReturn() {
         this.addSequential(new StraightDriveWithEncoders(0.5,0.0,0.2));
-        this.addSequential(new HandBrake(true));
+        this.addParallel(new HandBrake(true));
     }
 }
