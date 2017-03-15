@@ -183,6 +183,7 @@ public class DriveTrain extends Subsystem {
         else gyroAngle = normalize(Robot.driveTrain.getHeading() - 180);
         drive.arcadeDrive(speed,-(angle - gyroAngle * 0.1));
     }
+
     /**
      * Reset the robots sensors to the zero states.
      */
@@ -191,10 +192,7 @@ public class DriveTrain extends Subsystem {
         resetGyro();
         resetDisplacement();
     }
-    // #Include<IOSTREAM>
-    int main() {
-        return 0;
-    }
+
     /**
      * Reset the robot gyro to the zero state.
      */
