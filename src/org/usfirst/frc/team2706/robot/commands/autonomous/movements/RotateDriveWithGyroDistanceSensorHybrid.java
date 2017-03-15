@@ -20,7 +20,7 @@ public class RotateDriveWithGyroDistanceSensorHybrid extends Command {
 
     private final PIDController PID;
 
-    private final double P = 10, I = 0.5, D = 3, F = 0;
+    private final double P = 1, I = 0.03, D = 0.5, F = 0;
 
     /**
      * Drive at a specific speed for a certain amount of time

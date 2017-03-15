@@ -244,7 +244,7 @@ public class Bling extends Subsystem {
         // Do not interfere with critical battery warning.
         // Show a theatre chase
         if (ready && connected)
-            customDisplay("green", 3, 100, 100, 0, 100);
+            customDisplay("green", 6, 1, 100, 0, 100);
     }
     
     /**

@@ -34,33 +34,27 @@ public class GearHandler extends Subsystem {
                 if (pegDetected()) {
                     state = ARMS_OPEN_PEG_IN_WITH_GEAR;
                 } else {
-                    // pegDetected() == false)
                     state = ARMS_OPEN_WITH_GEAR;
                 }
             } else {
-                // gearCaptured() == false
                 if (pegDetected()) {
                     state = ARMS_OPEN_PEG_IN_NO_GEAR;
                 } else {
-                    // pegDetecter() == false
                     state = ARMS_OPEN_NO_GEAR;
                 }
             }
         } else {
-            // arm closed
+            // Arm closed
             if (gearCaptured()) {
                 if (pegDetected()) {
                     state = ARMS_CLOSED_PEG_IN_WITH_GEAR;
                 } else {
-                    // pegDetected() == false
                     state = ARMS_CLOSED_WITH_GEAR;
                 }
             } else {
-                // gearCaptured() == false
                 if (pegDetected()) {
                     state = ARMS_CLOSED_PEG_IN_NO_GEAR;
                 } else {
-                    // pegDetected() == false
                     state = ARMS_CLOSED_NO_GEAR;
                 }
             }
@@ -98,7 +92,7 @@ public class GearHandler extends Subsystem {
     
 
     private AnalogInput irPegSensor = new AnalogInput(RobotMap.INFRARED_SENSOR_PEG_ANALOG);
-    private static final double PEG_DETECTED = 0.2;    
+    private static final double PEG_DETECTED = 0.25;    
 
     // Calls limit switches from robot map
     private DigitalInput limitSwitchLeft = new DigitalInput(RobotMap.LIMIT_SWITCH_LEFT_CHANNEL);
