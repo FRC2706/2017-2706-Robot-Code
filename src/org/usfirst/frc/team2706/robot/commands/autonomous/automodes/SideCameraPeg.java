@@ -30,7 +30,7 @@ public class SideCameraPeg extends CommandGroup {
         this.addSequential(new StraightDriveWithEncoders(0.4, 4, 0.2), 3);
         // this.addSequential(new RetryPegUntilComplete(10));
         this.addSequential(new DrivePlaceGear(0.5, 0, 4));
-        this.addSequential(new RotateDriveWithGyro(0.6, -endAngle));
+        this.addSequential(new RotateDriveWithGyro(0.6, -endAngle, 5));
         this.addSequential(new StraightDriveWithEncoders(0.5, toLaunchPadDistance, 0.2));
     }
 }

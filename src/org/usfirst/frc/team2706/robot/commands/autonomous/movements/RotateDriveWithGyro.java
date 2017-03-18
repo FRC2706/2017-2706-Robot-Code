@@ -4,6 +4,7 @@ import org.usfirst.frc.team2706.robot.Robot;
 
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * This mostly works, but use the QuickRotate command instead. PID control using gyro heading is
@@ -18,9 +19,11 @@ public class RotateDriveWithGyro extends Command {
 
     private final double angle;
 
-    private final PIDController PID;
+    private PIDController PID;
 
     private final double P = 1, I = 0, D = 0, F = 0;
+    
+    private final int minDoneCycles;
 
     /**
      * Drive at a specific speed for a certain amount of time
@@ -28,19 +31,28 @@ public class RotateDriveWithGyro extends Command {
      * @param speed Speed in range [-1,1]
      * @param angle The angle to rotate to
      */
-    public RotateDriveWithGyro(double speed, double angle) {
+    public RotateDriveWithGyro(double speed, double angle, int minDonecycles) {
         requires(Robot.driveTrain);
 
         this.speed = speed;
 
         this.angle = angle;
 
-        PID = new PIDController(P, I, D, F, Robot.driveTrain.getGyroPIDSource(false),
-                        Robot.driveTrain.getDrivePIDOutput(false, false, true));
+        this.minDoneCycles = minDonecycles;
+        
+        SmartDashboard.putNumber("P", SmartDashboard.getNumber("P", P));
+        SmartDashboard.putNumber("I", SmartDashboard.getNumber("I", I));
+        SmartDashboard.putNumber("D", SmartDashboard.getNumber("D", D));
+        SmartDashboard.putNumber("FF", SmartDashboard.getNumber("FF", F));
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
+        PID = new PIDController(SmartDashboard.getNumber("P", P), SmartDashboard.getNumber("I", I),
+                        SmartDashboard.getNumber("D", D), SmartDashboard.getNumber("FF", F),
+                        Robot.driveTrain.getGyroPIDSource(false),
+                        Robot.driveTrain.getDrivePIDOutput(false, false, true));
+
         Robot.driveTrain.reset();
 
 
@@ -64,9 +76,16 @@ public class RotateDriveWithGyro extends Command {
         PID.enable();
     }
 
+    private int doneTicks;
+    
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-       return PID.onTarget();
+        if(PID.onTarget())
+            doneTicks++;
+        else
+            doneTicks = 0;
+        
+        return doneTicks >= minDoneCycles;
     }
 
     // Called once after isFinished returns true

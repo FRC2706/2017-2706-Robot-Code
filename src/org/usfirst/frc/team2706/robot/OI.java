@@ -3,6 +3,7 @@ package org.usfirst.frc.team2706.robot;
 import java.lang.reflect.Field;
 
 import org.usfirst.frc.team2706.robot.bling.ToggleFlashiness;
+import org.usfirst.frc.team2706.robot.commands.autonomous.movements.RotateDriveWithGyro;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithCamera;
 import org.usfirst.frc.team2706.robot.commands.mechanismcontrol.CloseGearMechanism;
 import org.usfirst.frc.team2706.robot.commands.mechanismcontrol.OpenGearMechanism;
@@ -86,6 +87,10 @@ public class OI {
         EJoystickButton operatorBButton = new EJoystickButton(controlStick, 2);
         operatorBButton.whenPressed(new CloseGearMechanism());
 
+        // Run RotateDriveWithGyro using custom PID values from SmartDashboard
+        EJoystickButton operatorXButton = new EJoystickButton(controlStick, 3);
+        operatorXButton.runWhileHeld(new RotateDriveWithGyro(0.4, 90, 10));
+        
         // Opens gear holder mechanism for when peg is in
         EJoystickButton operatorYButton = new EJoystickButton(controlStick, 4);
         operatorYButton.whenPressed(new OpenGearMechanism());
