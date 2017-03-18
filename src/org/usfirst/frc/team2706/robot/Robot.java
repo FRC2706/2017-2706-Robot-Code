@@ -137,10 +137,10 @@ public class Robot extends IterativeRobot {
 
         // Activate the camera ring light
         camera.enableRingLight(true);
-
+        
         // Great for safety just in case you set the wrong one in practice ;)
-        System.out.println("Running " + hardwareChooser.getSelected() + "...");
-
+        Log.i("Robot.autonomousInit()", 0);
+        
         autonomousCommand = hardwareChooser.getSelected();
 
         // Schedule the autonomous command that was selected
