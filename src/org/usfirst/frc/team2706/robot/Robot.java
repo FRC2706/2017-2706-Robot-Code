@@ -139,7 +139,7 @@ public class Robot extends IterativeRobot {
         camera.enableRingLight(true);
         
         // Great for safety just in case you set the wrong one in practice ;)
-        Log.i("Robot.autonomousInit()", 0);
+        Log.i("Autonomous Selector", "Running " + hardwareChooser.getSelected() + "...");
         
         autonomousCommand = hardwareChooser.getSelected();
 

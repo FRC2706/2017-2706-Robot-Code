@@ -1,11 +1,68 @@
 package org.usfirst.frc.team2706.robot;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Formatter;
+import java.util.logging.Handler;
 import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 public class Log {
+
+    public static final String ROOT_LOGGER_NAME = "";
+
+    private static final Logger logger = Logger.getLogger(ROOT_LOGGER_NAME);
+
+    public static String getCallerClassName() throws ClassNotFoundException {
+        StackTraceElement[] stElements = Thread.currentThread().getStackTrace();
+        return Class.forName(stElements[4].getClassName()).getSimpleName() + "."
+                        + stElements[4].getMethodName();
+    }
+
+    /**
+     * Configures the logger
+     */
+    public static void setUpLogging() {
+        try {
+            logger.setUseParentHandlers(false);
+            logger.setLevel(Level.ALL);
+
+            for (Handler h : logger.getHandlers()) {
+                logger.removeHandler(h);
+            }
+
+            ConsoleHandler ch = new ConsoleHandler();
+
+            ch.setFormatter(new Formatter() {
+                @Override
+                public String format(LogRecord record) {
+                    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+                    Date dt = new Date(record.getMillis());
+                    String S = sdf.format(dt);
+
+                    return record.getLevel() + " " + S + " " + record.getSourceClassName() + "."
+                                    + record.getSourceMethodName() + "() " + record.getLoggerName()
+                                    + " " + record.getMessage() + "\n";
+                }
+            });
+
+            logger.addHandler(ch);
+
+            ch.setLevel(Level.ALL);
+
+            Runtime.getRuntime().addShutdownHook(new Thread() {
+                @Override
+                public void run() {
+                    ch.flush();
+                    ch.close();
+                }
+            });
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static void d(Object name, Object message) {
         LogLevels.DEBUG.log(name, message);
@@ -39,31 +96,6 @@ public class Log {
         LogLevels.ERROR.log(name, message, t);
     }
 
-    /**
-     * Handy function to get a loggable stack trace from a Throwable
-     * @param tr An exception to log
-     */
-    private static String getStackTraceString(Throwable tr) {
-        if (tr == null) {
-            return "";
-        }
-        // This is to reduce the amount of log spew that apps do in the non-error
-        // condition of the network being unavailable.
-        Throwable t = tr;
-        while (t != null) {
-            if (t instanceof UnknownHostException) {
-                return "";
-            }
-            t = t.getCause();
-        }
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw, false);
-        tr.printStackTrace(pw);
-        pw.flush();
-        pw.close();
-        return sw.toString();
-    }
-    
     private static enum LogLevels {
         DEBUG(Level.CONFIG), INFO(Level.INFO), WARNING(Level.WARNING), ERROR(Level.SEVERE);
 
@@ -74,11 +106,27 @@ public class Log {
         }
 
         public void log(Object name, Object message) {
-            System.out.println(level.getName() + " " + name + " " + message);
+            String[] cm = new String[] {"Unknown", "Unknown"};
+
+            try {
+                cm = getCallerClassName().split("\\.");
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            Logger.getLogger(name.toString()).logp(level, cm[0], cm[1], message.toString());
         }
 
         public void log(Object name, Object message, Throwable t) {
-            System.out.println(level.getName() + " " + name +  " "  + getStackTraceString(t));
+            String[] cm = new String[] {"Unknown", "Unknown"};
+
+            try {
+                cm = getCallerClassName().split("\\.");
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            Logger.getLogger(name.toString()).logp(level, cm[0], cm[1], message.toString());
         }
     }
 }
