@@ -2,6 +2,7 @@ package org.usfirst.frc.team2706.robot;
 
 import java.lang.reflect.Field;
 
+import org.usfirst.frc.team2706.robot.bling.BlingTest;
 import org.usfirst.frc.team2706.robot.bling.ToggleFlashiness;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithCamera;
 import org.usfirst.frc.team2706.robot.commands.mechanismcontrol.CloseGearMechanism;
@@ -67,8 +68,7 @@ public class OI {
         driverBackRightButton.runWhileHeld(new StopAtGearWall(14, 40));
 
         // Hold to align with the peg when within a couple feet of the peg
-        EJoystickButton driverYButton = new EJoystickButton(driverStick, 4);
-               
+        EJoystickButton driverYButton = new EJoystickButton(driverStick, 4);     
         driverYButton.runWhileHeld(new StraightDriveWithCamera(0.5, 0, 12));
 
         // Joystick for controlling the mechanisms of the robot
@@ -80,15 +80,22 @@ public class OI {
 
         // Runs a motor at a set speed to make the robot climb the rope
         EJoystickButton operatorAButton = new EJoystickButton(controlStick, 1);
-        operatorAButton.runWhileHeld(new ClimbManually());
+        // TODO operatorAButton.runWhileHeld(new ClimbManually());
+        operatorAButton.whenPressed(new BlingTest(1));
 
         // Closes gear holder mechanism so holder can hold gears
         EJoystickButton operatorBButton = new EJoystickButton(controlStick, 2);
-        operatorBButton.whenPressed(new CloseGearMechanism());
+        // TODO operatorBButton.whenPressed(new CloseGearMechanism());
+        operatorBButton.whenPressed(new BlingTest(4));
 
         // Opens gear holder mechanism for when peg is in
         EJoystickButton operatorYButton = new EJoystickButton(controlStick, 4);
-        operatorYButton.whenPressed(new OpenGearMechanism());
+        // TODO operatorYButton.whenPressed(new OpenGearMechanism());
+        operatorYButton.whenPressed(new BlingTest(3));
+        
+        // TODO remove this bottom part.
+        EJoystickButton operatorXButton = new EJoystickButton(controlStick, 3);
+        operatorXButton.whenPressed(new BlingTest(5));
         
         // This will toggle whether or not we have flashy patterns on the LED strips
         EJoystickButton displayButton = new EJoystickButton(controlStick, 7);

@@ -1,7 +1,5 @@
 package org.usfirst.frc.team2706.robot.commands;
 
-import org.usfirst.frc.team2706.robot.Robot;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.command.Command;

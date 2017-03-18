@@ -25,6 +25,11 @@ public class Bling extends Subsystem {
 
     public static SerialPort blingPort;
     
+    // TODO get rid of the values below
+    public static double testDistance = 20;
+    public static int testGearState = 3;
+    public static double testTimeLeft = 50;
+    
     Map<String, String> lastCommand = new HashMap<String,String>() {
         private static final long serialVersionUID = 1L;
 
@@ -42,6 +47,13 @@ public class Bling extends Subsystem {
     /* In case we get complaints of bling subsystem being distracting
        We will have the ability to turn off flashy stuff */
     public static boolean flashyOff = false;
+    
+    /* Used to tell the bling command whether or not to display green 
+    or nothing during autonomous */
+    private static String specialState = "";
+        
+    // The command, in a ready state to send.
+    private static String command = "";
     
     // The number of pixels on one LED strip
     int pixels = 120;
@@ -104,11 +116,34 @@ public class Bling extends Subsystem {
     }
     
     /**
+     * Call this to change the boolean state of autonomous.
+     * @param good Send a true to display green, false to display nothing.
+     */
+    public void autonomousState(boolean good) {
+        if (good) 
+            specialState = "autoTrue";
+    }
+    
+    /**
+     * Returns the value of autostate to tell bling command
+     * whether or not to display a green during autonomous.
+     * @return True if autonomous is good, false otherwise.
+     */
+    public String getSpecialState() {
+        String returnable = specialState;
+        specialState = "";
+        return returnable;
+    }
+    
+    /**
      * This command will toggle if we're displaying flashy patterns
      * in case of possible complaints, a button on the driver joystick will
      * call this to toggle it.
      */
     public void toggleFlashiness() {
+        
+        getReady();
+        specialState = "flashiness";
         
         if (!flashyOff) {
             flashyOff = true;
@@ -118,12 +153,12 @@ public class Bling extends Subsystem {
             
             // If the command was lower than 9, show a command 6.
             else if (Integer.parseInt(lastCommand.get("pattern")) <= 9)
-                blingPort.writeString("F6C" + lastCommand.get("colour") + "D" + lastCommand.get("delay")
+                command = ("F6C" + lastCommand.get("colour") + "D" + lastCommand.get("delay")
                 + "B" + lastCommand.get("brightness") + "P" + lastCommand.get("startPoint") + 
                 "Q" + lastCommand.get("endPoint") + "R500E6Z");
             
             else
-                blingPort.writeString("F12C" + lastCommand.get("colour") + "D" +
+                command = ("F12C" + lastCommand.get("colour") + "D" +
                                 lastCommand.get("delay") + "B" + lastCommand.get("brightness")
                                 + "R500E12Z");
         }
@@ -134,12 +169,12 @@ public class Bling extends Subsystem {
                 return;
             
             else if (Integer.parseInt(lastCommand.get("pattern")) <= 9)
-                blingPort.writeString("F" + lastCommand.get("pattern") + "C" + lastCommand.get("colour") + "D" + lastCommand.get("delay")
+                command = ("F" + lastCommand.get("pattern") + "C" + lastCommand.get("colour") + "D" + lastCommand.get("delay")
                 + "B" + lastCommand.get("brightness") + "P" + lastCommand.get("startPoint") + 
                 "Q" + lastCommand.get("endPoint") + "R500E" + lastCommand.get("pattern") + "Z");
             
             else
-                blingPort.writeString("F" + lastCommand.get("pattern") + "C" + lastCommand.get("colour") + "D" +
+                command = ("F" + lastCommand.get("pattern") + "C" + lastCommand.get("colour") + "D" +
                                 lastCommand.get("delay") + "B" + lastCommand.get("brightness")
                                 + "R500E" + lastCommand.get("pattern") + "Z");
             
@@ -147,7 +182,18 @@ public class Bling extends Subsystem {
         DriverStation.getInstance();
         DriverStation.reportWarning("Bling Flashiness toggled. Is now " + flashyOff, false);
     }
-
+    /**
+     * Used to show if there is an error.
+     * Will be red if there is, green otherwise.
+     * @param error True if there is an error, false otherwise.
+     */
+    public void showError(boolean error) {
+        if (error) 
+            customDisplay("red", 7, 50, 100, 0, 1);
+        else
+            customDisplay("green", 7, 350, 100, 0, 1);
+    }
+    
     /**
      * This function should be run at the beginning of autonomous to get the proper light pattern.
      */
@@ -156,7 +202,7 @@ public class Bling extends Subsystem {
         if (!connected)
             return;
 
-        customDisplay("gold", 1, 150, 100, 0, 1);
+        customDisplay("green", 1, 150, 100, 0, 1);
     }
 
     /**
@@ -164,6 +210,12 @@ public class Bling extends Subsystem {
      */
     public void teleopInit(){
         customDisplay("MERGE", 7, 400, 100, 0, 1);
+    }
+    /**
+     * Just displays a fun rainbow of colours during teleop when we're not doing anything.
+     */
+    public void funDisplay () {
+        customDisplay("Blue", 4, 50, 100, 0, 1);
     }
     
     
@@ -173,10 +225,9 @@ public class Bling extends Subsystem {
     public void clear() {
         if (!connected)
             return;
-
-        blingPort.writeString("I");
+        
         // Clear the LED strip
-        blingPort.writeString("E0Z");
+        blingPort.writeString("IE0Z");
         lastCommand.put("pattern", "0");
     }
 
@@ -188,7 +239,7 @@ public class Bling extends Subsystem {
      * @param criticalStatus Needs to be true if the battery level is below 20%.
      */
     public void batteryInd(double percent, boolean criticalStatus) {
-        if (!connected)
+        if (!connected || false)
             return;
 
         batCritical = criticalStatus;
@@ -216,11 +267,10 @@ public class Bling extends Subsystem {
      */
     public void showDistance(double distance, boolean pegIn) {
         
-        // Only showing 3 metres from the object.
-        if (distance > 3.0 || !connected)
+        if (!connected)
             return;
 
-        double percentDist = distance / 3;
+        double percentDist = distance / 15;
         
         String dColour;
 
@@ -254,6 +304,13 @@ public class Bling extends Subsystem {
      */
     public void showReadyToClimb(boolean ready) {  
         if (ready && connected) customDisplay("White", 11, 25, 100, 0, 100);   
+    }
+    
+    /**
+     * Basic command that tells the arduino to get ready for a command.
+     */
+    public void getReady() {
+        blingPort.writeString("I");
     }
 
     /**
@@ -289,8 +346,8 @@ public class Bling extends Subsystem {
         if (!connected)
             return;
         
-        clear();
-               
+        getReady();
+        
         int delay = (int) Math.round(tDelay);
         
         // Get rid of all the spaces
@@ -315,9 +372,7 @@ public class Bling extends Subsystem {
 
         int startPixel = Math.round(pixelStart * pixels);
         int endPixel = Math.round(pixelEnd * pixels);
-
-        blingPort.writeString("I");
-        
+       
         // Record all of what is inputted
         lastCommand.put("pattern", Integer.toString(pattern));
         lastCommand.put("brightness", Integer.toString(brightness));
@@ -331,16 +386,32 @@ public class Bling extends Subsystem {
         else if (flashyOff && pattern > 9)
             pattern = 12;        
         
-        if (pattern <= 9) {
-            blingPort.writeString("F" + pattern + "C" + gColour + "B" + brightness + "D" + delay
-                                   + "P" + startPixel + "Q" + endPixel + "E" + pattern + "Z");
+        String LEDStripRange = "";
+        if (startPixel != 0 || endPixel != 1) {
+            LEDStripRange = "P" + startPixel + "Q" + endPixel;            
+        }
+        
+        // Let's make it easy for rainbow displaying
+        if (pattern == 4) {
+            command = ("E4Z");
+        }
+        
+        else if (pattern <= 9) {
+            command = ("F" + pattern + "C" + gColour + "B" + brightness + "D" + delay
+                                   + LEDStripRange + "E" + pattern + "Z");
         }
         else {
-            blingPort.writeString("F" + pattern + "C" + gColour + "D" + delay + "B" + brightness + "R500E" + 
+            command = ("F" + pattern + "C" + gColour + "D" + delay + "B" + brightness + "R500E" + 
                                    pattern + "Z");
         }
     }
 
+    public void send() {
+        blingPort.writeString(command);
+        // TODO remove printing
+        System.out.println("SENT : \n" + command);
+    }
+    
     /**
      * When no other command is running let the operator drive around using the Xbox joystick.
      */
