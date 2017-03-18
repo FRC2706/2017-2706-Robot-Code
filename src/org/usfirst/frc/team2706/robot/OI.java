@@ -3,6 +3,7 @@ package org.usfirst.frc.team2706.robot;
 import java.lang.reflect.Field;
 
 import org.usfirst.frc.team2706.robot.bling.ToggleFlashiness;
+import org.usfirst.frc.team2706.robot.commands.autonomous.movements.RotateDriveWithGyro;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithCamera;
 import org.usfirst.frc.team2706.robot.commands.mechanismcontrol.CloseGearMechanism;
 import org.usfirst.frc.team2706.robot.commands.mechanismcontrol.OpenGearMechanism;
@@ -93,6 +94,9 @@ public class OI {
         // This will toggle whether or not we have flashy patterns on the LED strips
         EJoystickButton displayButton = new EJoystickButton(controlStick, 7);
         displayButton.whenPressed(new ToggleFlashiness());
+        
+        EJoystickButton rotateButton = new EJoystickButton(controlStick, 3);
+        rotateButton.runWhileHeld(new RotateDriveWithGyro(0.5, 90));
     }
 
     /**
