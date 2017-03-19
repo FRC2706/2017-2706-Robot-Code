@@ -24,12 +24,7 @@ public class Bling extends Subsystem {
     public static boolean connected = false;
 
     public static SerialPort blingPort;
-    
-    // TODO get rid of the values below
-    public static double testDistance = 20;
-    public static int testGearState = 3;
-    public static double testTimeLeft = 50;
-    
+       
     Map<String, String> lastCommand = new HashMap<String,String>() {
         private static final long serialVersionUID = 1L;
 
@@ -47,6 +42,9 @@ public class Bling extends Subsystem {
     /* In case we get complaints of bling subsystem being distracting
        We will have the ability to turn off flashy stuff */
     public static boolean flashyOff = false;
+
+    // We only want to show distances if this is true.
+    public static boolean showDistance = false;
     
     /* Used to tell the bling command whether or not to display green 
     or nothing during autonomous */
@@ -54,6 +52,8 @@ public class Bling extends Subsystem {
         
     // The command, in a ready state to send.
     private static String command = "";
+    
+    public final double distanceThreshold = 20;
     
     // The number of pixels on one LED strip
     int pixels = 120;
@@ -134,6 +134,24 @@ public class Bling extends Subsystem {
         specialState = "";
         return returnable;
     }
+    /**
+     * Simple function that toggles the value of the distance
+     * shower variable.
+     */
+    public void toggleDistanceShower() {
+        showDistance = !showDistance;
+    }
+    
+    /**
+     * Returns the value of the distance shower variable.
+     * Used to determine whether or not the drivers want to
+     * see distance when lining up.
+     * @return A boolean with the value of whether or not we want
+     * to show distance.
+     */
+    public boolean getDistanceShower() {
+        return showDistance;
+    }
     
     /**
      * This command will toggle if we're displaying flashy patterns
@@ -142,7 +160,6 @@ public class Bling extends Subsystem {
      */
     public void toggleFlashiness() {
         
-        getReady();
         specialState = "flashiness";
         
         if (!flashyOff) {
@@ -181,6 +198,7 @@ public class Bling extends Subsystem {
         }   
         DriverStation.getInstance();
         DriverStation.reportWarning("Bling Flashiness toggled. Is now " + flashyOff, false);
+        send();
     }
     /**
      * Used to show if there is an error.
@@ -270,12 +288,18 @@ public class Bling extends Subsystem {
         if (!connected)
             return;
 
-        double percentDist = distance / 15;
+        double percentDist = distance / distanceThreshold;
+        
+        /* We want an inverse percentDist, so the 
+         * closer you are the more the LED strip is filled
+         */
+        percentDist = 1 - percentDist;
         
         String dColour;
 
-        // Peg in is true if the peg is going through the gear hole       
-        if (distance < 1.5 && pegIn)
+        // Peg in is true if the peg is going through the gear hole
+        // TODO get more accurate ideal distance
+        if (pegIn)
             dColour = "green";
         else
             dColour = "red";
@@ -289,12 +313,17 @@ public class Bling extends Subsystem {
      * 
      * @param ready A boolean that indicates whether or not the robot is ready. True if yes.
      */
-    public void showReadyToReceiveGear(boolean ready) {
+    public void showReadyToReceiveGear(double distance, boolean armsClosed) {
 
-        // Do not interfere with critical battery warning.
-        // Show a theatre chase
-        if (ready && connected)
-            customDisplay("green", 3, 100, 100, 0, 100);
+        // Show a theatre chase TODO get better values for this.
+        if (!connected || !showDistance)
+            return;
+        else if (distance < 15 && distance > 5 && armsClosed)
+            customDisplay("green", 3, 100, 100, 0, 1);
+        else if (distance <= 5 && armsClosed)
+            customDisplay("yellow", 3, 100, 100, 0, 1);
+        else if (distance >= 15 || !armsClosed)
+            customDisplay("red", 3, 100, 100, 0, 1);
     }
     
     /**
@@ -345,8 +374,6 @@ public class Bling extends Subsystem {
                     int brightness, int pixelStart, int pixelEnd) {
         if (!connected)
             return;
-        
-        getReady();
         
         int delay = (int) Math.round(tDelay);
         
@@ -404,10 +431,11 @@ public class Bling extends Subsystem {
             command = ("F" + pattern + "C" + gColour + "D" + delay + "B" + brightness + "R500E" + 
                                    pattern + "Z");
         }
+        send();
     }
 
     public void send() {
-        blingPort.writeString(command);
+        blingPort.writeString("I" + command);
         // TODO remove printing
         System.out.println("SENT : \n" + command);
     }
