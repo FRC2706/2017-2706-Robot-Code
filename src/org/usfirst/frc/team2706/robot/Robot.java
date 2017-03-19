@@ -88,18 +88,18 @@ public class Robot extends IterativeRobot {
         hardwareChooser = new AutonomousSelector(
                          /* no switch: do nothing */ new ArcadeDriveWithJoystick(),
                         /* position 1: do nothing */ new ArcadeDriveWithJoystick(),
-                 /* position 2: Drive to baseline */ new StraightDriveWithEncoders(0.376, 6, 1),
-     /* position 3: Drive to opposing launch line */ new StraightDriveWithEncoders(0.65, 31, 0),
+                 /* position 2: Drive to baseline */ new StraightDriveWithEncoders(0.376, 10, 1),
+     /* position 3: Drive to opposing launch line */ new StraightDriveWithEncoders(0.65, 20, 0),
         /* position 4: Center Position place gear */ new DrivePlaceGear(0.5, 7+2.35/3, 3),
 /* position 5: Right position place gear > launch */ new SideStartSideGear(true, 0.6, 7, 45, 5, 2, 20),
  /* position 6: Left position place gear > launch */ new SideStartSideGear(false, 0.6, 7, 45, 5, 2, 20),
-         /* position 7: Center and left to launch */ new CenterToLaunch(false, 0.6, 6.5, 2, 90, 8, 8),
-        /* position 8: Center and right to launch */ new CenterToLaunch(true, 0.6, 6.5, 2, 90, 8, 8),
+         /* position 7: Center and left to launch */ new CenterToLaunch(false, 0.55, 7+2.35/3, 3, 90, 8, 8),
+        /* position 8: Center and right to launch */ new CenterToLaunch(true, 0.5, 7+2.35/3, 3, 90, 8, 8),
         // TODO build a hopper popper
  /* position 9: Left/ gear double side hopper pop */ new QuickRotate(90),
                   /* position 10: Record n replay */ new ReplayRecordedJoystick(oi.getDriverJoystick(), oi.getOperatorJoystick(),() -> SmartDashboard.getString("record-joystick-name", "default"),false),
-          /* position 11: Curve from left to gear */ new SideGearCurve(0.6, 5, 10.75, 65, 4, 5),
-     /* position 12: Right gear middle hopper pop */ new SideGearCurve(0.6, -5, 10.75, 65, 4, 5)
+          /* position 11: Curve from left to gear */ new SideGearCurve(0.6, 5.0, 10.75, 65, 4, 5),
+     /* position 12: Right gear middle hopper pop */ new SideGearCurve(0.6, -5.0, 10.75, 65, 4, 5)
         );
 
         // Set up the Microsoft LifeCam and start streaming it to the Driver Station

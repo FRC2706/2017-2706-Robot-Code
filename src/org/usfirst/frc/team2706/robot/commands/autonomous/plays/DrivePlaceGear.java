@@ -1,5 +1,6 @@
 package org.usfirst.frc.team2706.robot.commands.autonomous.plays;
 
+import org.usfirst.frc.team2706.robot.Robot;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithEncoders;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithTime;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.WaitForSensor;
@@ -18,6 +19,7 @@ public class DrivePlaceGear extends CommandGroup {
      * @param reverseDistance How far in reverse do we want to go after placing the gear?
      */
     public DrivePlaceGear(double speed, double distance, double reverseDistance) {
+        requires(Robot.driveTrain);
         if (distance != 0) {
             // Adds a movement one after another instead of at the same time
             this.addSequential(new StraightDriveWithEncoders(speed, distance, 0.1),6);

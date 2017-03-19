@@ -76,7 +76,7 @@ public class OI {
         driverAButton.whenPressed(new DistanceShowerToggle());
 
         // Joystick for controlling the mechanisms of the robot
-        this.controlStick = controlStick;
+        this.controlStick = controlStick;                                                                                                                                                                                                                                                                                                                                                                                       
 
         // Climb at the speed the analog trigger is pressed
         TriggerButtonJoystick operatorBackRightTrigger = new TriggerButtonJoystick(controlStick, 3);
