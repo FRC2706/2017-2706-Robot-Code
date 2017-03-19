@@ -77,7 +77,7 @@ public class StraightDriveWithEncoders extends Command {
     // Called once after isFinished returns true
     protected void end() {
         System.out.println("ending");
-        Robot.driveTrain.brakeMode(false);
+     //   Robot.driveTrain.brakeMode(false);
         // Disable PID output and stop robot to be safe
         PID.disable();
         Robot.driveTrain.drive(0, 0);

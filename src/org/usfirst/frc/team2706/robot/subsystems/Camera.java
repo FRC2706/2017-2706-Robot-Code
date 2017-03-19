@@ -15,7 +15,7 @@ public class Camera extends Subsystem {
     
 
     TrackerBox2 trackerbox = new TrackerBox2(RobotMap.RPI_IPS);
-    public boolean PRINT_STUFF = false;
+    public boolean PRINT_STUFF = true;
     public final int visionDataPort = 1182;
 
     private TargetObject target = null;
@@ -51,7 +51,13 @@ public class Camera extends Subsystem {
             if (!targets.isEmpty()) {
                 target = targets.get(0);
             }
+            else {
+                target = null;
+            }
         }
+        else {
+            target = null;
+            }
     }
 
     public TargetObject getTarget() {
