@@ -44,7 +44,7 @@ public class Bling extends Subsystem {
     public static boolean flashyOff = false;
 
     // We only want to show distances if this is true.
-    public static boolean showDistance = false;
+    public static boolean showDistance = true;
     
     /* Used to tell the bling command whether or not to display green 
     or nothing during autonomous */
@@ -53,7 +53,7 @@ public class Bling extends Subsystem {
     // The command, in a ready state to send.
     private static String command = "";
     
-    public final double distanceThreshold = 20;
+    public final double distanceThreshold = 40;
     
     // The number of pixels on one LED strip
     int pixels = 120;
@@ -318,11 +318,11 @@ public class Bling extends Subsystem {
         // Show a theatre chase TODO get better values for this.
         if (!connected || !showDistance)
             return;
-        else if (distance < 15 && distance > 5 && armsClosed)
+        else if (distance < 20 && distance > 11 && armsClosed)
             customDisplay("green", 3, 100, 100, 0, 1);
-        else if (distance <= 5 && armsClosed)
+        else if (distance <= 11 && armsClosed)
             customDisplay("yellow", 3, 100, 100, 0, 1);
-        else if (distance >= 15 || !armsClosed)
+        else if (distance >= 20 || !armsClosed)
             customDisplay("red", 3, 100, 100, 0, 1);
     }
     

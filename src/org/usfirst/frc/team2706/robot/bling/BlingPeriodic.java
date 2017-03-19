@@ -67,7 +67,7 @@ public class BlingPeriodic extends Command {
         double timeSinceInit = timeSinceInitialized();
 
          // Only want to run this every so often.       
-        if (((timePassed / 0.5) < 1)) {               
+        if (((timePassed / 0.15) < 1)) {               
             return;
         }
         
@@ -79,8 +79,7 @@ public class BlingPeriodic extends Command {
         int gearState = Robot.gearHandler.gearHandlerState();
 
         // Get the average distance from whatever obstacle.
-        double distance = (Robot.driveTrain.getRightDistanceToObstacle()
-                           + Robot.driveTrain.getLeftDistanceToObstacle()) / 2;
+        double distance = (Robot.driveTrain.getLeftDistanceToObstacle());
         
         // Used to make sure we don't do the fun loop while doing other stuff.
         boolean doingSomethingElse = false;
@@ -95,7 +94,7 @@ public class BlingPeriodic extends Command {
         }
         
         // Basically, if we're ready to get a gear from loading station  
-        else if (!doingSomethingElse && (gearState == 0 || gearState == 4) && distance < distanceThreshold && Robot.blingSystem.getDistanceShower()) {
+        else if (!doingSomethingElse && (gearState == 0 || gearState == 4) && (distance < distanceThreshold) && Robot.blingSystem.getDistanceShower()) {
             doingSomethingElse = true;
             
             if (displayState != 3) {
