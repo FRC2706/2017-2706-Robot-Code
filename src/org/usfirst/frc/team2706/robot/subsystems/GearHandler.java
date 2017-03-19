@@ -34,33 +34,27 @@ public class GearHandler extends Subsystem {
                 if (pegDetected()) {
                     state = ARMS_OPEN_PEG_IN_WITH_GEAR;
                 } else {
-                    // pegDetected() == false)
                     state = ARMS_OPEN_WITH_GEAR;
                 }
             } else {
-                // gearCaptured() == false
                 if (pegDetected()) {
                     state = ARMS_OPEN_PEG_IN_NO_GEAR;
                 } else {
-                    // pegDetecter() == false
                     state = ARMS_OPEN_NO_GEAR;
                 }
             }
         } else {
-            // arm closed
+            // Arm closed
             if (gearCaptured()) {
                 if (pegDetected()) {
                     state = ARMS_CLOSED_PEG_IN_WITH_GEAR;
                 } else {
-                    // pegDetected() == false
                     state = ARMS_CLOSED_WITH_GEAR;
                 }
             } else {
-                // gearCaptured() == false
                 if (pegDetected()) {
                     state = ARMS_CLOSED_PEG_IN_NO_GEAR;
                 } else {
-                    // pegDetected() == false
                     state = ARMS_CLOSED_NO_GEAR;
                 }
             }

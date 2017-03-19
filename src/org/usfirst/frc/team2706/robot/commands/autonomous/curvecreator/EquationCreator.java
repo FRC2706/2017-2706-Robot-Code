@@ -11,6 +11,7 @@ public class EquationCreator {
      * @param x amount right (any unit)
      * @param y amount up(any unit)
      * @param theta ending angle(degrees)
+     * @param rightInvert instead of making the values negative and maybe breaking the graph, just invert the graph
      * @return the cubic equation that it creates
      */
     public static CubicEquation MakeCubicEquation(double x, double y, double theta, boolean rightInvert) {

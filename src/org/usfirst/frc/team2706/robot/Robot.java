@@ -4,9 +4,9 @@ package org.usfirst.frc.team2706.robot;
 import org.usfirst.frc.team2706.robot.commands.autonomous.automodes.CenterToLaunch;
 import org.usfirst.frc.team2706.robot.commands.autonomous.automodes.SideGearCurve;
 import org.usfirst.frc.team2706.robot.commands.autonomous.automodes.SideStartSideGear;
-import org.usfirst.frc.team2706.robot.commands.autonomous.movements.QuickRotate;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.ReplayRecordedJoystick;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithEncoders;
+import org.usfirst.frc.team2706.robot.commands.autonomous.movements.WaitForSensor;
 import org.usfirst.frc.team2706.robot.commands.autonomous.plays.DrivePlaceGear;
 import org.usfirst.frc.team2706.robot.commands.teleop.ArcadeDriveWithJoystick;
 import org.usfirst.frc.team2706.robot.commands.teleop.RecordJoystick;
@@ -69,6 +69,7 @@ public class Robot extends IterativeRobot {
      * This function is run when the robot is first started up and should be used for any
      * initialization code.
      */
+    @SuppressWarnings("unused")
     public void robotInit() {
         // Instantiate the robot subsystems
         driveTrain = new DriveTrain();
@@ -96,13 +97,14 @@ public class Robot extends IterativeRobot {
          /* position 7: Center and left to launch */ new CenterToLaunch(false, 0.55, 7+2.35/3, 3, 90, 8, 8),
         /* position 8: Center and right to launch */ new CenterToLaunch(true, 0.5, 7+2.35/3, 3, 90, 8, 8),
         // TODO build a hopper popper
- /* position 9: Left/ gear double side hopper pop */ new QuickRotate(90),
+ /* position 9: Left/ gear double side hopper pop */ new WaitForSensor(12),
                   /* position 10: Record n replay */ new ReplayRecordedJoystick(oi.getDriverJoystick(), oi.getOperatorJoystick(),() -> SmartDashboard.getString("record-joystick-name", "default"),false),
-          /* position 11: Curve from left to gear */ new SideGearCurve(0.6, 5.0, 10.75, 65, 4, 5),
-     /* position 12: Right gear middle hopper pop */ new SideGearCurve(0.6, -5.0, 10.75, 65, 4, 5)
+          /* position 11: Curve from left to gear */ new SideGearCurve(0.6, 5.0, 9.2, 60, 4, 5, false),
+     /* position 12: Right gear middle hopper pop */ new SideGearCurve(0.6, 5.0, 9.2, 60, 4, 5, true)
         );
 
         // Set up the Microsoft LifeCam and start streaming it to the Driver Station
+        // TODO Do switching with cam switching or just get rid of the variable because unused
         UsbCamera forwardCamera = CameraServer.getInstance().startAutomaticCapture(0);
         UsbCamera rearCamera = CameraServer.getInstance().startAutomaticCapture(1);
         
