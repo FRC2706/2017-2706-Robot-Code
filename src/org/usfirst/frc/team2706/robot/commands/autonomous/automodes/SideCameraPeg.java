@@ -5,6 +5,7 @@ import org.usfirst.frc.team2706.robot.commands.autonomous.movements.RotateDriveW
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.RotateDriveWithGyroDistanceSensorHybrid;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithCamera;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithEncoders;
+import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithTime;
 import org.usfirst.frc.team2706.robot.commands.autonomous.plays.DrivePlaceGear;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -26,11 +27,12 @@ public class SideCameraPeg extends CommandGroup {
                     double reverseDistance, double toLaunchPadDistance, boolean isRight) {
         this.addSequential(new CurveDrive(xCurve, yCurve, endAngle, speed, isRight));
         this.addSequential(new StraightDriveWithCamera(0.5, 30, 2));
-        this.addSequential(new RotateDriveWithGyroDistanceSensorHybrid(0.4));
-        this.addSequential(new StraightDriveWithEncoders(0.4, 4, 0.2), 3);
+     //   this.addSequential(new RotateDriveWithGyroDistanceSensorHybrid(0.4));
+        this.addSequential(new StraightDriveWithTime(0.45, 2000));
         // this.addSequential(new RetryPegUntilComplete(10));
         this.addSequential(new DrivePlaceGear(0.5, 0, 4));
-        this.addSequential(new RotateDriveWithGyro(0.6, -endAngle));
-        this.addSequential(new StraightDriveWithEncoders(0.5, toLaunchPadDistance, 0.2));
+        this.addSequential(new RotateDriveWithGyro(0.6, -30));
+        this.addSequential(new StraightDriveWithTime(0.0, 300));
+        this.addSequential(new StraightDriveWithEncoders(0.65, toLaunchPadDistance, 0.2));
     }
 }
