@@ -9,11 +9,19 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
+import edu.wpi.first.wpilibj.tables.ITable;
+import edu.wpi.first.wpilibj.tables.ITableListener;
+
 public class Log {
 
+    public static final String LOGGER_TABLE = "logging-level";
+    
     public static final String ROOT_LOGGER_NAME = "";
 
     private static final Logger logger = Logger.getLogger(ROOT_LOGGER_NAME);
+    
+    private static ITableListener updateListener;
 
     public static String getCallerClassName() throws ClassNotFoundException {
         StackTraceElement[] stElements = Thread.currentThread().getStackTrace();
@@ -25,6 +33,8 @@ public class Log {
      * Configures the logger
      */
     public static void setUpLogging() {
+        ConsoleHandler ch = new ConsoleHandler();
+        
         try {
             logger.setUseParentHandlers(false);
             logger.setLevel(Level.ALL);
@@ -32,8 +42,6 @@ public class Log {
             for (Handler h : logger.getHandlers()) {
                 logger.removeHandler(h);
             }
-
-            ConsoleHandler ch = new ConsoleHandler();
 
             ch.setFormatter(new Formatter() {
                 @Override
@@ -62,6 +70,19 @@ public class Log {
         } catch (SecurityException e) {
             e.printStackTrace();
         }
+        
+        updateListener = new ITableListener() {
+            @Override
+            public void valueChanged(ITable source, String key, Object value, boolean isNew) {
+                if(source == NetworkTable.getTable(LOGGER_TABLE) && key.equals("level")) {
+                    Level level = Level.parse(source.getNumber(key, Level.ALL.intValue())+"");
+                    ch.setLevel(level);
+                    logger.setLevel(level);
+                }
+            }
+        };
+        
+        NetworkTable.getTable(LOGGER_TABLE).addTableListener(updateListener);
     }
 
     public static void d(Object name, Object message) {

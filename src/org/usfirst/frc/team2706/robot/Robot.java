@@ -71,6 +71,8 @@ public class Robot extends IterativeRobot {
      */
     @SuppressWarnings("unused")
     public void robotInit() {
+        Log.setUpLogging();
+        
         // Instantiate the robot subsystems
         driveTrain = new DriveTrain();
 
