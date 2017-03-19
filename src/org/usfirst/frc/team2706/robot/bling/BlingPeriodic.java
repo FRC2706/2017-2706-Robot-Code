@@ -67,7 +67,7 @@ public class BlingPeriodic extends Command {
         double timeSinceInit = timeSinceInitialized();
 
          // Only want to run this every so often.       
-        if (((timePassed / 0.15) < 1)) {               
+        if (((timePassed / 0.25) < 1)) {               
             return;
         }
         
@@ -115,10 +115,12 @@ public class BlingPeriodic extends Command {
         }
         
         // Just running around the field and we have a gear.
-        else if (displayState != 4 && !doingSomethingElse && gearState == 1) {
+        else if (!doingSomethingElse && gearState == 1) {
             doingSomethingElse = true;
-            Robot.blingSystem.funDisplay();
-            displayState = 4;
+            if (displayState != 4) {
+                Robot.blingSystem.funDisplay();
+                displayState = 4;
+            }
         }
         
         else if (displayState != 0 && !doingSomethingElse) {
