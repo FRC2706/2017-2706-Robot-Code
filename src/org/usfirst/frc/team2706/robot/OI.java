@@ -89,7 +89,7 @@ public class OI {
 
         // Run RotateDriveWithGyro using custom PID values from SmartDashboard
         EJoystickButton operatorXButton = new EJoystickButton(controlStick, 3);
-        operatorXButton.runWhileHeld(new RotateDriveWithGyro(0.4, 90, 10));
+        operatorXButton.runWhileHeld(new RotateDriveWithGyro(0.5, 90, 10));
         
         // Opens gear holder mechanism for when peg is in
         EJoystickButton operatorYButton = new EJoystickButton(controlStick, 4);

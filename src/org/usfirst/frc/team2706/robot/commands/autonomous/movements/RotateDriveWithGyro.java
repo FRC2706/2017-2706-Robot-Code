@@ -68,7 +68,7 @@ public class RotateDriveWithGyro extends Command {
             PID.setOutputRange(speed, -speed);
         }
         // Will accept within 1 degrees of target
-        PID.setAbsoluteTolerance(4);
+        PID.setAbsoluteTolerance(2);
 
         PID.setSetpoint(angle);
 
