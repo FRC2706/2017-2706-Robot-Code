@@ -29,15 +29,6 @@ public class Camera extends Subsystem {
         super();
     }
 
-    /**
-     * Enable the camera ring light.
-     * 
-     * @param enable the desired ring light state
-     */
-    public void enableRingLight(boolean enable) {
-        ringLightRelay.set(enable);
-    }
-    
     public void GetTargets() {
         ArrayList<TrackerBox2.TargetObject> targets = trackerbox.getVisionData();
 

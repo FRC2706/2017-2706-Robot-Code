@@ -95,8 +95,8 @@ public class Robot extends IterativeRobot {
                  /* position 2: Drive to baseline */ new StraightDriveWithEncoders(0.376, 10, 1),
      /* position 3: Drive to opposing launch line */ new StraightDriveWithEncoders(0.65, 20, 0),
         /* position 4: Center Position place gear */ new DrivePlaceGear(0.5, 7+2.35/3, 3),
-/* position 5: Left position place gear > launch */ new SideCameraPeg(0.6, 3.0, 7.2, 60, 4, 5, false),
- /* position 6: Right position place gear > launch */ new SideCameraPeg(0.6, 3.0, 7.2, 60, 4, 5, true),
+/* position 5: Left position place gear > launch */ new SideCameraPeg(0.7, 3.0, 7.2, 60, 4, 5, false),
+ /* position 6: Right position place gear > launch */ new SideCameraPeg(0.7, 3.0, 7.2, 60, 4, 5, true),
          /* position 7: Center and left to launch */ new CenterToLaunch(false, 0.55, 7+2.35/3, 3, 90, 8, 8),
         /* position 8: Center and right to launch */ new CenterToLaunch(true, 0.5, 7+2.35/3, 3, 90, 8, 8),
         // TODO build a hopper popper
@@ -138,14 +138,11 @@ public class Robot extends IterativeRobot {
     public void autonomousInit() {
         driveTrain.reset();
 
-        // Activate the camera ring light
-        camera.enableRingLight(true);
-
         // Great for safety just in case you set the wrong one in practice ;)
         System.out.println("Running " + hardwareChooser.getSelected() + "...");
 
         autonomousCommand = hardwareChooser.getSelected();
-
+        Robot.driveTrain.brakeMode(true);
         // Schedule the autonomous command that was selected
         if (autonomousCommand != null)
             autonomousCommand.start();
@@ -171,7 +168,6 @@ public class Robot extends IterativeRobot {
         if (autonomousCommand != null)
             autonomousCommand.cancel();
         Robot.driveTrain.brakeMode(false);
-        Robot.camera.enableRingLight(true);
         if (SmartDashboard.getBoolean("record-joystick", false))
             recordAJoystick.start();
 

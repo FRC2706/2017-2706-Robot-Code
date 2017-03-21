@@ -41,8 +41,6 @@ public class AlignWithCamera extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-       
-        Robot.camera.enableRingLight(true);
         
         CommandTimerTask interrupt = new CommandTimerTask();
         new Timer().schedule(interrupt, time);

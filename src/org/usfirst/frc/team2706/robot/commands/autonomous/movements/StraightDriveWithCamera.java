@@ -60,8 +60,7 @@ public class StraightDriveWithCamera extends Command {
         Robot.driveTrain.initGyro = Robot.driveTrain.getHeading();
 
         PID.setSetpoint(distance);
-        Robot.camera.enableRingLight(true);
-
+        
         // Will accept within 5 inch of target
         PID.setAbsoluteTolerance(error);
         System.out.println("init");
@@ -75,7 +74,7 @@ public class StraightDriveWithCamera extends Command {
     
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return Robot.driveTrain.getDistanceToObstacle() < distance;
+        return Robot.driveTrain.getRightDistanceToObstacle() < distance;
     }
 
     // Called once after isFinished returns true

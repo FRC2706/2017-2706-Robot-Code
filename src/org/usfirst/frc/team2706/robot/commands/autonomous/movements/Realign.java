@@ -8,7 +8,7 @@ public class Realign extends CommandGroup {
     public Realign(double speed, double distance) {
         requires(Robot.driveTrain);
         this.addSequential(new StraightDriveWithEncoders(speed,-distance,0.1));
-        this.addSequential(new RotateDriveWithGyroDistanceSensorHybrid(0.4));
-        this.addSequential(new StraightDriveWithEncoders(speed,distance,0.5),2);
+        this.addSequential(new RotateDriveWithGyroDistanceSensorHybrid(0.45));
+        this.addSequential(new StraightDriveWithTime(0.6,1500));
     }
 }

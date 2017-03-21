@@ -25,7 +25,7 @@ public class TeleopStraightDriveWithCamera extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {    
-        Robot.camera.enableRingLight(true);
+
     }
     
     protected void execute() {
@@ -34,10 +34,7 @@ public class TeleopStraightDriveWithCamera extends Command {
         double rotateVal;
         if(Robot.camera.getTarget() != null) {
             if(Robot.camera.getTarget().ctrX > -0.8 && Robot.camera.getTarget().ctrX < 0.8) {
-                rotateVal = Robot.camera.getTarget() != null ? (Robot.camera.getTarget().ctrY + 0.05) * 1.5 : 0;  
-                if(rotateVal < 0) {
-                    rotateVal *= 1.2
-;                }
+                rotateVal = Robot.camera.getTarget() != null ? (Robot.camera.getTarget().ctrY + 0.05) * 1.7 : 0;  
                 if(rotateVal > 0.5) {
                     rotateVal = 0.5;
                 }
@@ -52,7 +49,7 @@ public class TeleopStraightDriveWithCamera extends Command {
         else {
             rotateVal = 0;
         }
-        if(Robot.driveTrain.getDistanceToObstacle() < 25 || Robot.camera.getTarget() == null) {
+        if(Robot.driveTrain.getRightDistanceToObstacle() < 25 || Robot.camera.getTarget() == null) {
             rotateVal = 0;
         }
         System.out.println(rotateVal);

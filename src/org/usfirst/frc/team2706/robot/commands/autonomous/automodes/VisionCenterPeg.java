@@ -1,6 +1,7 @@
 package org.usfirst.frc.team2706.robot.commands.autonomous.automodes;
 
 import org.usfirst.frc.team2706.robot.Robot;
+import org.usfirst.frc.team2706.robot.commands.autonomous.movements.RetryPegUntilComplete;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithCamera;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithEncoders;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithTime;
@@ -21,12 +22,13 @@ public class VisionCenterPeg extends CommandGroup {
      */
     public VisionCenterPeg(double speed, double distance, double reverseDistance) {
         requires(Robot.driveTrain);
-        this.addSequential(new StraightDriveWithEncoders(0.7, 2.75, 1));
-        this.addSequential(new StraightDriveWithCamera(0.5,25,3));
-        this.addSequential(new StraightDriveWithTime(0.5, 1200));
+        this.addSequential(new StraightDriveWithEncoders(0.7, 2, 1));
+        this.addSequential(new StraightDriveWithCamera(0.6,25,3));
+        this.addSequential(new StraightDriveWithTime(0.6, 1200));
+        // this.addSequential(new RetryPegUntilComplete());
         this.addSequential(new WaitForSensor(10));
         this.addSequential(new OpenGearMechanism());
-        this.addSequential(new StraightDriveWithTime(0.5, 500));
+        this.addSequential(new StraightDriveWithTime(0.65, 500));
         this.addSequential(new StraightDriveWithEncoders(-speed, -reverseDistance, 5));
         this.addSequential(new CloseGearMechanism());
     }
