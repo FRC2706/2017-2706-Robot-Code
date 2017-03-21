@@ -74,11 +74,9 @@ public class Log {
         updateListener = new ITableListener() {
             @Override
             public void valueChanged(ITable source, String key, Object value, boolean isNew) {
-                if(source == NetworkTable.getTable(LOGGER_TABLE) && key.equals("level")) {
                     Level level = Level.parse(source.getNumber(key, Level.ALL.intValue())+"");
                     ch.setLevel(level);
                     logger.setLevel(level);
-                }
             }
         };
         

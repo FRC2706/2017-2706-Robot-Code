@@ -186,6 +186,7 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+        //Log.i("Test", "Can u c me?");
         log();
     }
 
