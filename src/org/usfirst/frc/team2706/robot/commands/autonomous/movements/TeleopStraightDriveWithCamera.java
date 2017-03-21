@@ -34,7 +34,7 @@ public class TeleopStraightDriveWithCamera extends Command {
         double rotateVal;
         if(Robot.camera.getTarget() != null) {
             if(Robot.camera.getTarget().ctrX > -0.8 && Robot.camera.getTarget().ctrX < 0.8) {
-                rotateVal = Robot.camera.getTarget() != null ? (Robot.camera.getTarget().ctrY + 0.05) * 1.7 : 0;  
+                rotateVal = Robot.camera.getTarget() != null ? (Robot.camera.getTarget().ctrY + 0.05) * 3 : 0;  
                 if(rotateVal > 0.5) {
                     rotateVal = 0.5;
                 }

@@ -418,7 +418,7 @@ public class DriveTrain extends Subsystem {
                 //Checks if target is found, cuts off the edges, and then creates a rotation value
                 if(Robot.camera.getTarget() != null) {
                     if(Robot.camera.getTarget().ctrX > -0.8 && Robot.camera.getTarget().ctrX < 0.8 && Robot.camera.getTarget().ctrY > -0.8 && Robot.camera.getTarget().ctrY < 0.8 ) {
-                        rotateVal = Robot.camera.getTarget() != null ? (Robot.camera.getTarget().ctrY + 0.05) * 1.7 : 0; 
+                        rotateVal = Robot.camera.getTarget() != null ? (Robot.camera.getTarget().ctrY + 0.05) * 1.5 : 0; 
                         
                         if(rotateVal > 0.6) {
                             rotateVal = 0.6;
