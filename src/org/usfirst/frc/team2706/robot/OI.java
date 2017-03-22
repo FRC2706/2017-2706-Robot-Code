@@ -2,6 +2,7 @@ package org.usfirst.frc.team2706.robot;
 
 import java.lang.reflect.Field;
 
+import org.usfirst.frc.team2706.robot.bling.DistanceShowerToggle;
 import org.usfirst.frc.team2706.robot.bling.ToggleFlashiness;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithCamera;
 import org.usfirst.frc.team2706.robot.commands.mechanismcontrol.CloseGearMechanism;
@@ -67,9 +68,12 @@ public class OI {
         driverBackRightButton.runWhileHeld(new StopAtGearWall(14, 40));
 
         // Hold to align with the peg when within a couple feet of the peg
-        EJoystickButton driverYButton = new EJoystickButton(driverStick, 4);
-               
+        EJoystickButton driverYButton = new EJoystickButton(driverStick, 4);     
         driverYButton.runWhileHeld(new StraightDriveWithCamera(0.5, 0, 12));
+        
+        // Press to toggle showing distance measure when lining up for gear pickup
+        EJoystickButton driverAButton = new EJoystickButton(driverStick, 1);
+        driverAButton.whenPressed(new DistanceShowerToggle());
 
         // Joystick for controlling the mechanisms of the robot
         this.controlStick = controlStick;
@@ -89,6 +93,7 @@ public class OI {
         // Opens gear holder mechanism for when peg is in
         EJoystickButton operatorYButton = new EJoystickButton(controlStick, 4);
         operatorYButton.whenPressed(new OpenGearMechanism());
+        
         
         // This will toggle whether or not we have flashy patterns on the LED strips
         EJoystickButton displayButton = new EJoystickButton(controlStick, 7);

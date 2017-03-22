@@ -4,9 +4,9 @@ package org.usfirst.frc.team2706.robot;
 import org.usfirst.frc.team2706.robot.commands.autonomous.automodes.CenterToLaunch;
 import org.usfirst.frc.team2706.robot.commands.autonomous.automodes.SideGearCurve;
 import org.usfirst.frc.team2706.robot.commands.autonomous.automodes.SideStartSideGear;
+import org.usfirst.frc.team2706.robot.commands.autonomous.movements.QuickRotate;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.ReplayRecordedJoystick;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithEncoders;
-import org.usfirst.frc.team2706.robot.commands.autonomous.movements.WaitForSensor;
 import org.usfirst.frc.team2706.robot.commands.autonomous.plays.DrivePlaceGear;
 import org.usfirst.frc.team2706.robot.commands.teleop.ArcadeDriveWithJoystick;
 import org.usfirst.frc.team2706.robot.commands.teleop.RecordJoystick;
@@ -18,8 +18,6 @@ import org.usfirst.frc.team2706.robot.subsystems.Climber;
 import org.usfirst.frc.team2706.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team2706.robot.subsystems.GearHandler;
 
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -69,7 +67,6 @@ public class Robot extends IterativeRobot {
      * This function is run when the robot is first started up and should be used for any
      * initialization code.
      */
-    @SuppressWarnings("unused")
     public void robotInit() {
         // Instantiate the robot subsystems
         driveTrain = new DriveTrain();
@@ -89,24 +86,20 @@ public class Robot extends IterativeRobot {
         hardwareChooser = new AutonomousSelector(
                          /* no switch: do nothing */ new ArcadeDriveWithJoystick(),
                         /* position 1: do nothing */ new ArcadeDriveWithJoystick(),
-                 /* position 2: Drive to baseline */ new StraightDriveWithEncoders(0.376, 10, 1),
-     /* position 3: Drive to opposing launch line */ new StraightDriveWithEncoders(0.65, 20, 0),
+                 /* position 2: Drive to baseline */ new StraightDriveWithEncoders(0.376, 6, 1),
+     /* position 3: Drive to opposing launch line */ new StraightDriveWithEncoders(0.65, 31, 0),
         /* position 4: Center Position place gear */ new DrivePlaceGear(0.5, 7+2.35/3, 3),
 /* position 5: Right position place gear > launch */ new SideStartSideGear(true, 0.6, 7, 45, 5, 2, 20),
  /* position 6: Left position place gear > launch */ new SideStartSideGear(false, 0.6, 7, 45, 5, 2, 20),
-         /* position 7: Center and left to launch */ new CenterToLaunch(false, 0.55, 7+2.35/3, 3, 90, 8, 8),
-        /* position 8: Center and right to launch */ new CenterToLaunch(true, 0.5, 7+2.35/3, 3, 90, 8, 8),
+         /* position 7: Center and left to launch */ new CenterToLaunch(false, 0.6, 6.5, 2, 90, 8, 8),
+        /* position 8: Center and right to launch */ new CenterToLaunch(true, 0.6, 6.5, 2, 90, 8, 8),
         // TODO build a hopper popper
- /* position 9: Left/ gear double side hopper pop */ new WaitForSensor(12),
+ /* position 9: Left/ gear double side hopper pop */ new QuickRotate(90),
                   /* position 10: Record n replay */ new ReplayRecordedJoystick(oi.getDriverJoystick(), oi.getOperatorJoystick(),() -> SmartDashboard.getString("record-joystick-name", "default"),false),
-          /* position 11: Curve from left to gear */ new SideGearCurve(0.6, 5.0, 9.2, 60, 4, 5, false),
-     /* position 12: Right gear middle hopper pop */ new SideGearCurve(0.6, 5.0, 9.2, 60, 4, 5, true)
+          /* position 11: Curve from left to gear */ new SideGearCurve(0.6, 5, 10.75, 65, 4, 5),
+     /* position 12: Right gear middle hopper pop */ new SideGearCurve(0.6, -5, 10.75, 65, 4, 5)
         );
 
-        // Set up the Microsoft LifeCam and start streaming it to the Driver Station
-        // TODO Do switching with cam switching or just get rid of the variable because unused
-        UsbCamera forwardCamera = CameraServer.getInstance().startAutomaticCapture(0);
-        UsbCamera rearCamera = CameraServer.getInstance().startAutomaticCapture(1);
         
         recordAJoystick = new RecordJoystick(oi.getDriverJoystick(), oi.getOperatorJoystick(),
                         () -> SmartDashboard.getString("record-joystick-name", "default"));        
@@ -172,7 +165,7 @@ public class Robot extends IterativeRobot {
             recordAJoystick.start();
 
         // Tell drive team to drive
-        rumbler = new StickRumble(0.4, 0.15, 1, 0, 1, 1.0);
+        rumbler = new StickRumble(0.4, 0.15, 1, 0, 1, 1.0, 1);
         rumbler.start();
         
         // Deactivate the camera ring light

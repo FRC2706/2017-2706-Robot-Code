@@ -143,7 +143,7 @@ public class GearHandler extends Subsystem {
         
     // Uses limit switch to help see if arm is open
     public boolean checkArmOpen() {
-        if (limitSwitchLeft.get() || limitSwitchRight.get()) {
+        if (!(limitSwitchLeft.get() || limitSwitchRight.get())) {
             return true;
         }
         return false;
