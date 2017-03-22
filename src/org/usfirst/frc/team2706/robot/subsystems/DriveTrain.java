@@ -353,7 +353,7 @@ public class DriveTrain extends Subsystem {
 
         @Override
         public double pidGet() {
-            return (right.getRangeInches());
+            return (left.getRangeInches() + right.getRangeInches()) / 2;
         }
 
     }
@@ -419,6 +419,9 @@ public class DriveTrain extends Subsystem {
                 if(Robot.camera.getTarget() != null) {
                     if(Robot.camera.getTarget().ctrX > -0.8 && Robot.camera.getTarget().ctrX < 0.8 && Robot.camera.getTarget().ctrY > -0.8 && Robot.camera.getTarget().ctrY < 0.8 ) {
                         rotateVal = Robot.camera.getTarget() != null ? (Robot.camera.getTarget().ctrY + 0.05) * 1.5 : 0; 
+                        if(rotateVal < 0) {
+                            rotateVal *= 1.2
+        ;                }
                         
                         if(rotateVal > 0.6) {
                             rotateVal = 0.6;

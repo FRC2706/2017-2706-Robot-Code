@@ -49,7 +49,7 @@ public class TeleopStraightDriveWithCamera extends Command {
         else {
             rotateVal = 0;
         }
-        if(Robot.driveTrain.getRightDistanceToObstacle() < 25 || Robot.camera.getTarget() == null) {
+        if(Robot.driveTrain.getDistanceToObstacle() < 25 || Robot.camera.getTarget() == null) {
             rotateVal = 0;
         }
         System.out.println(rotateVal);
