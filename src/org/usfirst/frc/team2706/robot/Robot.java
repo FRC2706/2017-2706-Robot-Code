@@ -18,8 +18,6 @@ import org.usfirst.frc.team2706.robot.subsystems.Climber;
 import org.usfirst.frc.team2706.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team2706.robot.subsystems.GearHandler;
 
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -102,9 +100,6 @@ public class Robot extends IterativeRobot {
      /* position 12: Right gear middle hopper pop */ new SideGearCurve(0.6, -5, 10.75, 65, 4, 5)
         );
 
-        // Set up the Microsoft LifeCam and start streaming it to the Driver Station
-        UsbCamera forwardCamera = CameraServer.getInstance().startAutomaticCapture(0);
-        UsbCamera rearCamera = CameraServer.getInstance().startAutomaticCapture(1);
         
         recordAJoystick = new RecordJoystick(oi.getDriverJoystick(), oi.getOperatorJoystick(),
                         () -> SmartDashboard.getString("record-joystick-name", "default"));        
@@ -170,7 +165,7 @@ public class Robot extends IterativeRobot {
             recordAJoystick.start();
 
         // Tell drive team to drive
-        rumbler = new StickRumble(0.4, 0.15, 1, 0, 1, 1.0);
+        rumbler = new StickRumble(0.4, 0.15, 1, 0, 1, 1.0, 1);
         rumbler.start();
         
         // Deactivate the camera ring light
