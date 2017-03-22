@@ -3,7 +3,7 @@ package org.usfirst.frc.team2706.robot.subsystems;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.usfirst.frc.team2706.robot.bling.BlingPeriodic;
+import org.usfirst.frc.team2706.robot.bling.BlingPeriodic2;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SerialPort;
@@ -12,8 +12,6 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
  * @author eAUE (Kyle Anderson)
- * @see <a href = "https://docs.google.com/drawings/d/1JQYcLj3Sdf0h_-DD0J7ceG14csBJ6LMhIWoIXoaeYVE/edit?usp=sharing"> 
- * Explanation of the light patterns</a> 
  */
 public class Bling extends Subsystem {
 
@@ -44,17 +42,17 @@ public class Bling extends Subsystem {
     public static boolean flashyOff = false;
 
     // We only want to show distances if this is true.
-    public static boolean showDistance = false;
+    public static boolean showDistance = true;
     
     /* Used to tell the bling command whether or not to display green 
     or nothing during autonomous */
     private static String specialState = "";
         
     // The command, in a ready state to send.
-    private static String command = "";
+    protected static String command = "";
     
-    public final double distanceThreshold = 20;
-    
+    protected static String previousCommand = "E0Z";
+        
     // The number of pixels on one LED strip
     int pixels = 120;
 
@@ -93,10 +91,7 @@ public class Bling extends Subsystem {
             blingPort = new SerialPort(9600, SerialPort.Port.kMXP);
             // Will wait a max of half a second.
             blingPort.setTimeout(0.8);
-            // Tell arduino we're sending a command.
-            blingPort.writeString("I");
-            // Clear the LED strip.
-            blingPort.writeString("E0Z");
+            clear();
             connected = true;
 
         }
@@ -216,10 +211,6 @@ public class Bling extends Subsystem {
      * This function should be run at the beginning of autonomous to get the proper light pattern.
      */
     public void auto() {
-        // IF THE BLINGPORT FAILED, DON'T CAUSE ERRORS
-        if (!connected)
-            return;
-
         customDisplay("green", 1, 150, 100, 0, 1);
     }
 
@@ -241,11 +232,10 @@ public class Bling extends Subsystem {
      * This command just quickly clear the LED Strip.
      */
     public void clear() {
-        if (!connected)
-            return;
-        
         // Clear the LED strip
-        blingPort.writeString("IE0Z");
+        command = ("E0Z");
+        send();
+        
         lastCommand.put("pattern", "0");
     }
 
@@ -257,8 +247,6 @@ public class Bling extends Subsystem {
      * @param criticalStatus Needs to be true if the battery level is below 20%.
      */
     public void batteryInd(double percent, boolean criticalStatus) {
-        if (!connected || false)
-            return;
 
         batCritical = criticalStatus;
       
@@ -283,29 +271,20 @@ public class Bling extends Subsystem {
      * @param pegIn Will be true if the peg is in 
      * the hole, false otherwise.
      */
-    public void showDistance(double distance, boolean pegIn) {
-        
-        if (!connected)
-            return;
+    public void showDistance(int percentDistance, boolean pegIn) {
 
-        double percentDist = distance / distanceThreshold;
-        
-        /* We want an inverse percentDist, so the 
-         * closer you are the more the LED strip is filled
-         */
-        percentDist = 1 - percentDist;
-        
         String dColour;
 
         // Peg in is true if the peg is going through the gear hole
-        // TODO get more accurate ideal distance
-        if (pegIn)
+        if (pegIn) {
             dColour = "green";
-        else
+        }
+        else {
             dColour = "red";
-
+        }
         // Multi-colour wipe
-        customDisplay(dColour, 12, (int) Math.round(percentDist * 100), 100, 0, 1);
+        customDisplay(dColour, 12, percentDistance, 100, 0, 1);
+
     }
 
     /**
@@ -313,17 +292,26 @@ public class Bling extends Subsystem {
      * 
      * @param ready A boolean that indicates whether or not the robot is ready. True if yes.
      */
-    public void showReadyToReceiveGear(double distance, boolean armsClosed) {
+    public void showReadyToReceiveGear(int stateOfReadiness) {
 
-        // Show a theatre chase TODO get better values for this.
+        String colour;
+        // Show a theatre chase
         if (!connected || !showDistance)
             return;
-        else if (distance < 15 && distance > 5 && armsClosed)
-            customDisplay("green", 3, 100, 100, 0, 1);
-        else if (distance <= 5 && armsClosed)
-            customDisplay("yellow", 3, 100, 100, 0, 1);
-        else if (distance >= 15 || !armsClosed)
-            customDisplay("red", 3, 100, 100, 0, 1);
+        // Just right
+        else if (stateOfReadiness == 1) {
+            colour = "green";
+        }
+        // Too close
+        else if (stateOfReadiness == 0) {
+            colour = "red";
+        }
+        // Too far
+        else {
+            colour = "red";
+        }
+        
+        customDisplay(colour, 3, 100, 100, 0, 1);
     }
     
     /**
@@ -332,7 +320,9 @@ public class Bling extends Subsystem {
      * @param ready A boolean that indicate true for ready or false for not ready.
      */
     public void showReadyToClimb(boolean ready) {  
-        if (ready && connected) customDisplay("White", 11, 25, 100, 0, 100);   
+        if (ready) 
+            customDisplay("White", 11, 25, 100, 0, 100);   
+        
     }
     
     /**
@@ -364,7 +354,7 @@ public class Bling extends Subsystem {
      *        format. <p>
      * 
      *        Presets: GREEN, RED, BLUE, YELLOW, ORANGE, PURPLE, TAN, VIOLET, MERGE, PINK, WHITE,
-     *        TURQUOISE, BLACK, GOLD, SILVER
+     *        TURQUOISE, BLACK, GOLD, SILVER 
      * @param delay The delay between animation segments in seconds, if applicable.
      * @param brightness The brightness of the LED pattern as an integer between 0 and 100.
      * @param pixelStart The percent of the bar where the pixel pattern will start in decimal format.
@@ -372,8 +362,6 @@ public class Bling extends Subsystem {
      */
     public void customDisplay(String colour, int pattern, double tDelay,
                     int brightness, int pixelStart, int pixelEnd) {
-        if (!connected)
-            return;
         
         int delay = (int) Math.round(tDelay);
         
@@ -414,7 +402,7 @@ public class Bling extends Subsystem {
             pattern = 12;        
         
         String LEDStripRange = "";
-        if (startPixel != 0 || endPixel != 1) {
+        if (pixelStart != 0 || pixelEnd != 1) {
             LEDStripRange = "P" + startPixel + "Q" + endPixel;            
         }
         
@@ -433,11 +421,14 @@ public class Bling extends Subsystem {
         }
         send();
     }
-
     public void send() {
-        blingPort.writeString("I" + command);
-        // TODO remove printing
-        System.out.println("SENT : \n" + command);
+        // IF THE BLINGPORT FAILED, DON'T CAUSE ERRORS
+        if (previousCommand != command && connected) {
+            blingPort.writeString("I" + command);     
+        }
+        
+        // Making sure we do not send the same command twice.
+        previousCommand = command;
     }
     
     /**
@@ -454,7 +445,7 @@ public class Bling extends Subsystem {
     @Override
     public Command getDefaultCommand() {
         if (defaultCommand == null) {
-            defaultCommand = new BlingPeriodic();
+            defaultCommand = new BlingPeriodic2();
         }
         return defaultCommand;
     }
