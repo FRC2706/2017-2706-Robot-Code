@@ -170,6 +170,21 @@ public class DriveTrain extends Subsystem {
     }
 
     /**
+     * Untested code that should allow you to drive relative to the field instead of the robot
+     * TODO add a rotation joystick function for robot relative control when needed to align
+     * @param joy The main drive joystick
+     * @param rotate Joystick to rotate the robot with
+     */
+    public void headlessDrive(GenericHID joy, GenericHID rotate) {
+        double angle = normalize(Math.toDegrees(Math.tanh(joy.getRawAxis(5) / joy.getRawAxis(4))));
+        double speed = (joy.getRawAxis(5) + joy.getRawAxis(4)) / 2; // hyp
+        double gyroAngle;
+        if(Math.abs(Robot.driveTrain.getHeading()) <= Math.abs(180 - Robot.driveTrain.getHeading())) gyroAngle = normalize(Robot.driveTrain.getHeading());
+        else gyroAngle = normalize(Robot.driveTrain.getHeading() - 180);
+        drive.arcadeDrive(speed,-(angle - gyroAngle * 0.1));
+    }
+
+    /**
      * Reset the robots sensors to the zero states.
      */
     public void reset() {
@@ -396,10 +411,10 @@ public class DriveTrain extends Subsystem {
 
         @Override
         public void pidWrite(double output) {
-            System.out.println("write");
 
             double rotateVal;
             if(useCamera) {
+                //Checks if target is found, cuts off the edges, and then creates a rotation value
                 if(Robot.camera.getTarget() != null) {
                     if(Robot.camera.getTarget().ctrX > -0.8 && Robot.camera.getTarget().ctrX < 0.8) {
                         rotateVal = Robot.camera.getTarget() != null ? Robot.camera.getTarget().ctrY : 0;     
@@ -413,7 +428,7 @@ public class DriveTrain extends Subsystem {
                 }
             }
             else {
-                rotateVal = normalize(getHeading() - initGyro) * 0.3;
+                rotateVal = normalize(getHeading() - initGyro) * 0.1;
             }
 
             
@@ -434,7 +449,6 @@ public class DriveTrain extends Subsystem {
             this.invert = invert;
         }
     }
-
     public double normalize(double input) {
         double normalizedValue = input;
         while (normalizedValue > 180)
