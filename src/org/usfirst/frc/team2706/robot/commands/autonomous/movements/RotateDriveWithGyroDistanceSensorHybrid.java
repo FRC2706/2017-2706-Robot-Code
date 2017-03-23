@@ -18,8 +18,6 @@ public class RotateDriveWithGyroDistanceSensorHybrid extends Command {
 
     private double angle;
 
-    private final PIDController PID;
-
     private final double P = 1, I = 0.03, D = 0.5, F = 0;
 
     /**
@@ -32,44 +30,26 @@ public class RotateDriveWithGyroDistanceSensorHybrid extends Command {
         requires(Robot.driveTrain);
 
         this.speed = speed;
-
-        PID = new PIDController(P, I, D, F, Robot.driveTrain.getGyroPIDSource(false),
-                        Robot.driveTrain.getDrivePIDOutput(false, false, true));
     }
-
+    QuickRotate q;
     // Called just before this Command runs the first time
     protected void initialize() {
-        Robot.driveTrain.reset();
-
-        angle = Robot.driveTrain.GetAngleWithDistanceSensors();
-        PID.setInputRange(-360.0, 360.0);
-
-        // Make input infinite
-        PID.setContinuous();
-        if (speed > 0) {
-            // Set output speed range
-            PID.setOutputRange(-speed, speed);
-        } else {
-            PID.setOutputRange(speed, -speed);
-        }
-        // Will accept within 1 degrees of target
-        PID.setAbsoluteTolerance(0.25);
-
-        PID.setSetpoint(angle);
-
-        // Start going to location
-        PID.enable();
+        q = new QuickRotate(Robot.driveTrain.GetAngleWithDistanceSensors());
     }
 
+    protected void execute() {
+        if(!q.isRunning()) {
+            System.out.println("started");
+            q.start();
+        }
+    }
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-       return PID.onTarget();
+       return !q.isRunning();
     }
 
     // Called once after isFinished returns true
     protected void end() {
-        // Disable PID output and stop robot to be safe
-        PID.disable();
 
         Robot.driveTrain.drive(0, 0);
     }
@@ -79,21 +59,5 @@ public class RotateDriveWithGyroDistanceSensorHybrid extends Command {
      */
     protected void interrupted() {
         end();
-    }
-
-    /**
-     * Turns the robot using gyro based on the distance sensor angle, just like in QuickRotate.java
-     */
-    public void turn() {
-        float slowSpeed = 0.2f;
-        float medSpeed = 0.4f;
-        
-        if (Robot.driveTrain.getGyroPIDSource(false).pidGet() - angle < 20
-                        && Robot.driveTrain.getGyroPIDSource(false).pidGet() - angle >= 0) {
-            Robot.driveTrain.drive(-slowSpeed, slowSpeed);
-        } else if (Robot.driveTrain.getGyroPIDSource(false).pidGet() - angle < 80
-                        && Robot.driveTrain.getGyroPIDSource(false).pidGet() - angle >= 21) {
-            Robot.driveTrain.drive(-medSpeed, medSpeed);
-        }
     }
 }

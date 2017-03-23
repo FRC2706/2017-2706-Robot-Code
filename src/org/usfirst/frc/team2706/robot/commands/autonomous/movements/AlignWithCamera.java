@@ -4,9 +4,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.usfirst.frc.team2706.robot.Robot;
-import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithTime.CommandTimerTask;
 
-import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**

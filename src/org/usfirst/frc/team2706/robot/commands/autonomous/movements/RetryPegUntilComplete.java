@@ -13,17 +13,16 @@ import edu.wpi.first.wpilibj.command.Command;
 public class RetryPegUntilComplete extends Command {
 
     public RetryPegUntilComplete() {
-        requires(Robot.driveTrain);
     }
 
     protected void initialize() {
         r = new Realign(0.6, 1.5);
     }
 
-    Realign r = new Realign(0.6, 1.5);
-
+    Realign r = new Realign(0.6, 3);
     protected void execute() {
         if (!r.isRunning() && !Robot.gearHandler.pegDetected()) {
+            System.out.println("STARTING");
             r.start();
         } else {
         }
@@ -33,10 +32,13 @@ public class RetryPegUntilComplete extends Command {
         end();
     }
 
+    protected void end() {
+        System.out.println("DEAD JIFOJAWIO");
+    }
     @Override
     protected boolean isFinished() {
         // TODO Auto-generated method stub
-        return Robot.gearHandler.pegDetected() && !r.isRunning();
+        return Robot.gearHandler.pegDetected();
     }
 
 }

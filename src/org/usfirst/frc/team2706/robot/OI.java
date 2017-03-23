@@ -67,12 +67,6 @@ public class OI {
         // Will stop the robot as it approaches the gear wall
         EJoystickButton driverBackRightButton = new EJoystickButton(driverStick, 6);
         driverBackRightButton.runWhileHeld(new StopAtGearWall(14, 40));
-
-        // Hold to align with the peg when within a couple feet of the peg
-
-        EJoystickButton driverYButton = new EJoystickButton(driverStick, 4);
-               
-        driverYButton.runWhileHeld(new StraightDriveWithCamera(0.5, 20, 3));
         
         // Press to toggle showing distance measure when lining up for gear pickup
         EJoystickButton driverAButton = new EJoystickButton(driverStick, 1);

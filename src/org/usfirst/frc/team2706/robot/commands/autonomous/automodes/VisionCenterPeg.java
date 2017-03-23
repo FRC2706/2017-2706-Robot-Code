@@ -21,11 +21,11 @@ public class VisionCenterPeg extends CommandGroup {
      * @param reverseDistance How far in reverse do we want to go after placing the gear?
      */
     public VisionCenterPeg(double speed, double distance, double reverseDistance) {
-        requires(Robot.driveTrain);
         this.addSequential(new StraightDriveWithEncoders(0.7, 2, 1));
         this.addSequential(new StraightDriveWithCamera(0.6,25,3));
         this.addSequential(new StraightDriveWithTime(0.6, 1200));
-        // this.addSequential(new RetryPegUntilComplete());
+      //  this.addSequential(new RetryPegUntilComplete());
+      //  this.addSequential(new StraightDriveWithTime(0.65, 500));
         this.addSequential(new WaitForSensor(10));
         this.addSequential(new OpenGearMechanism());
         this.addSequential(new StraightDriveWithTime(0.65, 500));
