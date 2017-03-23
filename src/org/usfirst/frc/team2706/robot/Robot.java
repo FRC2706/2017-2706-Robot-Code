@@ -172,7 +172,7 @@ public class Robot extends IterativeRobot {
             recordAJoystick.start();
 
         // Tell drive team to drive
-        rumbler = new StickRumble(0.4, 0.15, 1, 0, 1, 1.0);
+        rumbler = new StickRumble(0.4, 0.15, 1, 0, 1, 1.0, 1);
         rumbler.start();
         
         // Deactivate the camera ring light
