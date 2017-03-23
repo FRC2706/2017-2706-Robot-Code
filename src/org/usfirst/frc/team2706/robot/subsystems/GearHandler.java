@@ -1,5 +1,6 @@
 package org.usfirst.frc.team2706.robot.subsystems;
 
+import org.usfirst.frc.team2706.robot.Log;
 import org.usfirst.frc.team2706.robot.RobotMap;
 
 import edu.wpi.first.wpilibj.AnalogInput;
@@ -104,6 +105,8 @@ public class GearHandler extends Subsystem {
     public void initDefaultCommand() {}
     
     public void openArm() {
+        Log.d("Gear Handler", "Opening Gear Handler");
+        
         solenoid.set(DoubleSolenoid.Value.kForward);
 
         // Check to see if arm is open (see bottom of code)
@@ -111,6 +114,8 @@ public class GearHandler extends Subsystem {
     }
     
     public void closeArm() {
+        Log.d("Gear Handler", "Opening Gear Handler");
+        
         solenoid.set(DoubleSolenoid.Value.kReverse); 
 
         // Check to see if arm is open (see bottom of code)
