@@ -114,7 +114,7 @@ public class Bling extends Subsystem {
      * Call this to change the boolean state of autonomous.
      * @param good Send a true to display green, false to display nothing.
      */
-    public void autonomousState(boolean good) {
+    public void toggleAutoState(boolean good) {
         if (good) 
             specialState = "autoTrue";
     }
