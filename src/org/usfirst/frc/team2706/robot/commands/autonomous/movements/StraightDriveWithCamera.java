@@ -6,8 +6,8 @@ import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
- * Drives the robot in a straight line towards the target found by the camera.
- * Used for lining up the peg at short distances
+ * Drives the robot in a straight line towards the target found by the camera. Used for lining up
+ * the peg at short distances
  */
 public class StraightDriveWithCamera extends Command {
 
@@ -44,7 +44,7 @@ public class StraightDriveWithCamera extends Command {
     // Called just before this Command runs the first time
     protected void initialize() {
         Robot.driveTrain.resetEncoders();
-        
+
         Robot.driveTrain.brakeMode(true);
 
         // Make input infinite
@@ -60,7 +60,6 @@ public class StraightDriveWithCamera extends Command {
         Robot.driveTrain.initGyro = Robot.driveTrain.getHeading();
 
         PID.setSetpoint(distance);
-        Robot.camera.enableRingLight(true);
 
         // Will accept within 5 inch of target
         PID.setAbsoluteTolerance(error);
@@ -68,11 +67,11 @@ public class StraightDriveWithCamera extends Command {
         // Start going to location
         PID.enable();
     }
-    
+
     protected void execute() {
         Robot.camera.GetTargets();
     }
-    
+
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
         return Robot.driveTrain.getDistanceToObstacle() < distance;
@@ -80,7 +79,7 @@ public class StraightDriveWithCamera extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-       // Robot.camera.enableRingLight(false);
+        // Robot.camera.enableRingLight(false);
         Robot.driveTrain.brakeMode(false);
 
         // Disable PID output and stop robot to be safe

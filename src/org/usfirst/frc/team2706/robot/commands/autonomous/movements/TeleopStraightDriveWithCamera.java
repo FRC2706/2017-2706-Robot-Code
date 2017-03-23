@@ -7,8 +7,8 @@ import org.usfirst.frc.team2706.robot.Robot;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
- * Drives the robot in a straight line towards the target found by the camera.
- * Used for lining up the peg at short distances
+ * Drives the robot in a straight line towards the target found by the camera. Used for lining up
+ * the peg at short distances
  */
 public class TeleopStraightDriveWithCamera extends Command {
 
@@ -24,43 +24,40 @@ public class TeleopStraightDriveWithCamera extends Command {
     }
 
     // Called just before this Command runs the first time
-    protected void initialize() {    
-        Robot.camera.enableRingLight(true);
+    protected void initialize() {
+
     }
-    
+
     protected void execute() {
-        System.out.println("executing");
         Robot.camera.GetTargets();
         double rotateVal;
-        if(Robot.camera.getTarget() != null) {
-            if(Robot.camera.getTarget().ctrX > -0.8 && Robot.camera.getTarget().ctrX < 0.8) {
-                rotateVal = Robot.camera.getTarget() != null ? (Robot.camera.getTarget().ctrY + 0.05) * 1.5 : 0;  
-                if(rotateVal < 0) {
-                    rotateVal *= 1.2
-;                }
-                if(rotateVal > 0.5) {
+        if (Robot.camera.getTarget() != null) {
+            if (Robot.camera.getTarget().ctrX > -0.8 && Robot.camera.getTarget().ctrX < 0.8) {
+                rotateVal = Robot.camera.getTarget() != null ? (Robot.camera.getTarget().ctrY) * 2.5
+                                : 0;
+                if (rotateVal > 0.5) {
                     rotateVal = 0.5;
                 }
-                if(rotateVal < -0.5) {
+                if (rotateVal < -0.5) {
                     rotateVal = -0.5;
                 }
-            }
-            else {
+            } else {
                 rotateVal = 0;
             }
-        }
-        else {
+        } else {
             rotateVal = 0;
         }
-        if(Robot.driveTrain.getDistanceToObstacle() < 25 || Robot.camera.getTarget() == null) {
+        if (Robot.driveTrain.getDistanceToObstacle() < 25 || Robot.camera.getTarget() == null) {
             rotateVal = 0;
         }
         System.out.println(rotateVal);
-        Robot.driveTrain.arcadeDrive(-getTriggerValue(),rotateVal);
+        Robot.driveTrain.arcadeDrive(-getTriggerValue(), rotateVal);
     }
+
     private double getTriggerValue() {
         return Robot.oi.getDriverJoystick().getRawAxis(3);
     }
+
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
         return getTriggerValue() <= 0;
@@ -68,7 +65,7 @@ public class TeleopStraightDriveWithCamera extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-       // Robot.camera.enableRingLight(false);
+        // Robot.camera.enableRingLight(false);
         Robot.driveTrain.brakeMode(false);
 
         // Disable PID output and stop robot to be safe
@@ -80,7 +77,7 @@ public class TeleopStraightDriveWithCamera extends Command {
     protected void interrupted() {
         end();
     }
-    
+
 
     public boolean done;
 

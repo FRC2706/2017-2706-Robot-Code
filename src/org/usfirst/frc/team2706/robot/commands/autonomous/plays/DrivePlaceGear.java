@@ -27,7 +27,7 @@ public class DrivePlaceGear extends CommandGroup {
         
         this.addSequential(new WaitForSensor(10));
         this.addSequential(new OpenGearMechanism());
-        this.addSequential(new StraightDriveWithTime(0.5, 1000));
+        this.addSequential(new StraightDriveWithTime(0.7, 1000));
         this.addSequential(new StraightDriveWithEncoders(-speed, -reverseDistance, 5));
         this.addSequential(new CloseGearMechanism());
     }
