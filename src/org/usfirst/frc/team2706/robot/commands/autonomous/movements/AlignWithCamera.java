@@ -8,8 +8,8 @@ import org.usfirst.frc.team2706.robot.Robot;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
- * Drives the robot in a straight line towards the target found by the camera.
- * Used for lining up the peg at short distances
+ * Drives the robot in a straight line towards the target found by the camera. Used for lining up
+ * the peg at short distances
  */
 public class AlignWithCamera extends Command {
 
@@ -39,30 +39,29 @@ public class AlignWithCamera extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-        
+
         CommandTimerTask interrupt = new CommandTimerTask();
         new Timer().schedule(interrupt, time);
 
         done = false;
     }
-    
+
     protected void execute() {
         Robot.camera.GetTargets();
         double rotateVal;
-        if(Robot.camera.getTarget() != null) {
-            if(Robot.camera.getTarget().ctrX > -0.8 && Robot.camera.getTarget().ctrX < 0.8) {
-                rotateVal = Robot.camera.getTarget() != null ? Robot.camera.getTarget().ctrY * 0.8 : 0;     
-            }
-            else {
+        if (Robot.camera.getTarget() != null) {
+            if (Robot.camera.getTarget().ctrX > -0.8 && Robot.camera.getTarget().ctrX < 0.8) {
+                rotateVal = Robot.camera.getTarget() != null ? Robot.camera.getTarget().ctrY * 0.8
+                                : 0;
+            } else {
                 rotateVal = 0;
             }
-        }
-        else {
+        } else {
             rotateVal = 0;
         }
-        Robot.driveTrain.arcadeDrive(0.0,rotateVal);
+        Robot.driveTrain.arcadeDrive(0.0, rotateVal);
     }
-    
+
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
         return done;
@@ -70,7 +69,7 @@ public class AlignWithCamera extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-       // Robot.camera.enableRingLight(false);
+        // Robot.camera.enableRingLight(false);
         Robot.driveTrain.brakeMode(false);
 
         // Disable PID output and stop robot to be safe
@@ -82,7 +81,7 @@ public class AlignWithCamera extends Command {
     protected void interrupted() {
         end();
     }
-    
+
 
     public boolean done;
 

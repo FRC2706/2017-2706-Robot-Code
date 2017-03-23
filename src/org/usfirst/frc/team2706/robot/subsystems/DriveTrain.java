@@ -170,19 +170,23 @@ public class DriveTrain extends Subsystem {
     }
 
     /**
-     * Untested code that should allow you to drive relative to the field instead of the robot
-     * TODO add a rotation joystick function for robot relative control when needed to align
+     * Untested code that should allow you to drive relative to the field instead of the robot TODO
+     * add a rotation joystick function for robot relative control when needed to align
+     * 
      * @param joy The main drive joystick
      * @param rotate Joystick to rotate the robot with
      */
     public void headlessDrive(GenericHID joy, GenericHID rotate) {
-        double angle = normalize(Math.toDegrees(Math.tanh(joy.getRawAxis(5) / joy.getRawAxis(4))));     
+        double angle = normalize(Math.toDegrees(Math.tanh(joy.getRawAxis(5) / joy.getRawAxis(4))));
         double speed = (joy.getRawAxis(5) + joy.getRawAxis(4)) / 2; // hyp
         System.out.println("Angle: " + angle + ", Speed: " + speed);
         double gyroAngle;
-        if(Math.abs(Robot.driveTrain.getHeading()) <= Math.abs(180 - Robot.driveTrain.getHeading())) gyroAngle = normalize(Robot.driveTrain.getHeading());
-        else gyroAngle = normalize(Robot.driveTrain.getHeading() - 180);
-        drive.arcadeDrive(-speed,(angle - gyroAngle * 0.1));
+        if (Math.abs(Robot.driveTrain.getHeading()) <= Math
+                        .abs(180 - Robot.driveTrain.getHeading()))
+            gyroAngle = normalize(Robot.driveTrain.getHeading());
+        else
+            gyroAngle = normalize(Robot.driveTrain.getHeading() - 180);
+        drive.arcadeDrive(-speed, (angle - gyroAngle * 0.1));
     }
 
     /**
@@ -414,31 +418,31 @@ public class DriveTrain extends Subsystem {
         public void pidWrite(double output) {
 
             double rotateVal;
-            if(useCamera) {
-                //Checks if target is found, cuts off the edges, and then creates a rotation value
-                if(Robot.camera.getTarget() != null) {
-                    if(Robot.camera.getTarget().ctrX > -0.8 && Robot.camera.getTarget().ctrX < 0.8 && Robot.camera.getTarget().ctrY > -0.8 && Robot.camera.getTarget().ctrY < 0.8 ) {
-                        rotateVal = Robot.camera.getTarget() != null ? (Robot.camera.getTarget().ctrY) * 1.7 : 0; 
-                        if(rotateVal > 0.6) {
+            if (useCamera) {
+                // Checks if target is found, cuts off the edges, and then creates a rotation value
+                if (Robot.camera.getTarget() != null) {
+                    if (Robot.camera.getTarget().ctrX > -0.8 && Robot.camera.getTarget().ctrX < 0.8
+                                    && Robot.camera.getTarget().ctrY > -0.8
+                                    && Robot.camera.getTarget().ctrY < 0.8) {
+                        rotateVal = Robot.camera.getTarget() != null
+                                        ? (Robot.camera.getTarget().ctrY) * 1.7 : 0;
+                        if (rotateVal > 0.6) {
                             rotateVal = 0.6;
                         }
-                        if(rotateVal < -0.6) {
+                        if (rotateVal < -0.6) {
                             rotateVal = -0.6;
                         }
-                    }
-                    else {
+                    } else {
                         rotateVal = 0;
                     }
-                }
-                else {
+                } else {
                     rotateVal = 0;
                 }
-            }
-            else {
+            } else {
                 rotateVal = normalize(getHeading() - initGyro) * 0.1;
             }
 
-            
+
             if (useGyroStraightening)
                 if (invert) {
                     drive.arcadeDrive(output, rotateVal);
@@ -456,6 +460,7 @@ public class DriveTrain extends Subsystem {
             this.invert = invert;
         }
     }
+
     public double normalize(double input) {
         double normalizedValue = input;
         while (normalizedValue > 180)

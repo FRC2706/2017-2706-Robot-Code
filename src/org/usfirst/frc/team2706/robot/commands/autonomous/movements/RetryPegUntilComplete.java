@@ -12,14 +12,14 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class RetryPegUntilComplete extends Command {
 
-    public RetryPegUntilComplete() {
-    }
+    public RetryPegUntilComplete() {}
 
     protected void initialize() {
         r = new Realign(0.6, 1.5);
     }
 
     Realign r = new Realign(0.6, 3);
+
     protected void execute() {
         if (!r.isRunning() && !Robot.gearHandler.pegDetected()) {
             r.start();
@@ -31,8 +31,8 @@ public class RetryPegUntilComplete extends Command {
         end();
     }
 
-    protected void end() {
-    }
+    protected void end() {}
+
     @Override
     protected boolean isFinished() {
         // TODO Auto-generated method stub
