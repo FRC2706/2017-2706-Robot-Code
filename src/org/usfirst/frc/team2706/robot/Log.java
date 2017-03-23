@@ -74,7 +74,7 @@ public class Log {
         updateListener = new ITableListener() {
             @Override
             public void valueChanged(ITable source, String key, Object value, boolean isNew) {
-                    Level level = Level.parse(source.getNumber(key, Level.ALL.intValue())+"");
+                    Level level = Level.parse(((int)source.getNumber(key, Level.ALL.intValue()))+"");
                     ch.setLevel(level);
                     logger.setLevel(level);
             }

@@ -1,5 +1,6 @@
 package org.usfirst.frc.team2706.robot.subsystems;
 
+import org.usfirst.frc.team2706.robot.Log;
 import org.usfirst.frc.team2706.robot.Robot;
 import org.usfirst.frc.team2706.robot.RobotMap;
 import org.usfirst.frc.team2706.robot.commands.teleop.ArcadeDriveWithJoystick;
@@ -289,7 +290,7 @@ public class DriveTrain extends Subsystem {
         double adjacent = RobotMap.DISTANCE_SENSOR_SEPARATION_CM / 2.54;
         // Inverse tangent to take two sides of the triangle and get the angle
         double theta = Math.toDegrees(Math.atan2(opposite, adjacent));
-        System.out.println(theta);
+        Log.d("Degree Sensor Angle", theta);
         return theta;
     }
 

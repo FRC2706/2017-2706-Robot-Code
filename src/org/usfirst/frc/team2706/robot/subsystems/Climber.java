@@ -1,5 +1,6 @@
 package org.usfirst.frc.team2706.robot.subsystems;
 
+import org.usfirst.frc.team2706.robot.Log;
 import org.usfirst.frc.team2706.robot.Robot;
 import org.usfirst.frc.team2706.robot.RobotMap;
 
@@ -127,7 +128,7 @@ public class Climber extends Subsystem {
     }
     
     public void debugOutput() {
-        System.out.println("Climber: vc=" + verifyingClimb + " speed=" + motor.get() + " pCurr=" + 
+        Log.d("Climber", "vc=" + verifyingClimb + " speed=" + motor.get() + " pCurr=" + 
                         pastCurrent + " cCurr=" + motor.getOutputCurrent() + " pLAZ=" + pastLinearAccelZ +
                         " cLAZ=" + Robot.driveTrain.getGyro().getWorldLinearAccelZ() + " pitch=" +
                         Robot.driveTrain.getGyro().getPitch() + " enc=" + encoder.getDistance());

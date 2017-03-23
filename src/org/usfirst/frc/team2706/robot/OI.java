@@ -109,7 +109,7 @@ public class OI {
             f.set(Scheduler.getInstance(), null);
             f.setAccessible(false);
         } catch (IllegalAccessException | NoSuchFieldException | SecurityException e) {
-            e.printStackTrace();
+            Log.e("Oi", "Error occured destroying m_buttons", e);
         }
     }
 }

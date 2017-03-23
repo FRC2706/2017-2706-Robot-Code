@@ -2,6 +2,7 @@ package org.usfirst.frc.team2706.robot.subsystems;
 
 import java.util.ArrayList;
 
+import org.usfirst.frc.team2706.robot.Log;
 import org.usfirst.frc.team2706.robot.RobotMap;
 import org.usfirst.frc.team2706.robot.subsystems.TrackerBox2.TargetObject;
 
@@ -43,9 +44,9 @@ public class Camera extends Subsystem {
 
         if (targets != null) {
             if (PRINT_STUFF) {
-                System.out.println("I found " + targets.size() + " targets.");
+                Log.d("Camera", "I found " + targets.size() + " targets.");
                 for (TrackerBox2.TargetObject target : targets)
-                    System.out.println("\tI found: " + target.toString());
+                    Log.d("Camera", "\tI found: " + target.toString());
                 System.out.println();
             }
             if (!targets.isEmpty()) {

@@ -11,6 +11,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
+import org.usfirst.frc.team2706.robot.Log;
+
 import com.google.gson.Gson;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -91,7 +93,7 @@ public class RecordableJoystick extends Joystick {
             }
             return line;
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("Record and Replay", "Error loading file", e);
         }
         return null;
     }
@@ -142,7 +144,7 @@ public class RecordableJoystick extends Joystick {
                 states = Arrays.asList(new Gson().fromJson(loadFile(new File(loc + "-states.json")),
                                 JoystickState[].class));
             } else {
-                System.out.println(loc + "-config.json and/or " + loc
+                Log.e("Record and Replay", loc + "-config.json and/or " + loc
                                 + "-states.json do not exist...");
                 config = new Gson().fromJson(loadFile(new File(EMPTY_LOC + "-config.json")),
                                 JoystickConfig.class);

@@ -1,5 +1,6 @@
 package org.usfirst.frc.team2706.robot.commands;
 
+import org.usfirst.frc.team2706.robot.Log;
 import org.usfirst.frc.team2706.robot.Robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -26,7 +27,7 @@ public class BatteryReader extends Command {
         
         double batteryPercent = (batteryOutputVoltage - 10) / (FULL_BATTERY_CAPACITY - 10);
         
-        System.out.println("Battery Percentage: " + batteryPercent * 100);
+        Log.i("Battery Percentage", batteryPercent * 100);
         
         Robot.blingSystem.batteryInd(batteryPercent, false);
     }

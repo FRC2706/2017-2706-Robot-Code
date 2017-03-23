@@ -1,5 +1,6 @@
 package org.usfirst.frc.team2706.robot.commands.autonomous.movements;
 
+import org.usfirst.frc.team2706.robot.Log;
 import org.usfirst.frc.team2706.robot.Robot;
 
 import edu.wpi.first.wpilibj.PIDController;
@@ -42,7 +43,7 @@ public class StraightDriveWithEncoders extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-        System.out.println("straighting");
+        Log.d("StraightDrive", "Initialize");
         Robot.driveTrain.resetEncoders();
         
         Robot.driveTrain.brakeMode(true);
