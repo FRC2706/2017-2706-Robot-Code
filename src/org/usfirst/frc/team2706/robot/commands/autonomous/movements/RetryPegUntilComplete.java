@@ -22,7 +22,6 @@ public class RetryPegUntilComplete extends Command {
     Realign r = new Realign(0.6, 3);
     protected void execute() {
         if (!r.isRunning() && !Robot.gearHandler.pegDetected()) {
-            System.out.println("STARTING");
             r.start();
         } else {
         }
@@ -33,7 +32,6 @@ public class RetryPegUntilComplete extends Command {
     }
 
     protected void end() {
-        System.out.println("DEAD JIFOJAWIO");
     }
     @Override
     protected boolean isFinished() {
