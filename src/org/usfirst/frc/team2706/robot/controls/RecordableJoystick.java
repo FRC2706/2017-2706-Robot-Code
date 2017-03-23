@@ -105,7 +105,7 @@ public class RecordableJoystick extends Joystick {
         try (BufferedWriter br = new BufferedWriter(new FileWriter(file))) {
             br.write(line);
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("Record and Replay", "Error saving file", e);
         }
     }
 
