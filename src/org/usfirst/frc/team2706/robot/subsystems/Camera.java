@@ -12,14 +12,14 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  * Does everything java related to the rPI camera, servo controllers have been deleted.
  */
 public class Camera extends Subsystem {
-    
+
 
     TrackerBox2 trackerbox = new TrackerBox2(RobotMap.RPI_IPS);
-    public boolean PRINT_STUFF = false;
+    public boolean PRINT_STUFF = true;
     public final int visionDataPort = 1182;
 
     private TargetObject target = null;
-    
+
     private DigitalOutput ringLightRelay = new DigitalOutput(RobotMap.RING_LIGHT);
 
     @Override
@@ -29,15 +29,6 @@ public class Camera extends Subsystem {
         super();
     }
 
-    /**
-     * Enable the camera ring light.
-     * 
-     * @param enable the desired ring light state
-     */
-    public void enableRingLight(boolean enable) {
-        ringLightRelay.set(enable);
-    }
-    
     public void GetTargets() {
         ArrayList<TrackerBox2.TargetObject> targets = trackerbox.getVisionData();
 
@@ -50,7 +41,11 @@ public class Camera extends Subsystem {
             }
             if (!targets.isEmpty()) {
                 target = targets.get(0);
+            } else {
+                target = null;
             }
+        } else {
+            target = null;
         }
     }
 

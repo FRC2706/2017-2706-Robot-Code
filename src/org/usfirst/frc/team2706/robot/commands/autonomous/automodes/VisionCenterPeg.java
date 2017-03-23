@@ -1,6 +1,8 @@
-package org.usfirst.frc.team2706.robot.commands.autonomous.plays;
+package org.usfirst.frc.team2706.robot.commands.autonomous.automodes;
 
 import org.usfirst.frc.team2706.robot.Robot;
+import org.usfirst.frc.team2706.robot.commands.autonomous.movements.RetryPegUntilComplete;
+import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithCamera;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithEncoders;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithTime;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.WaitForSensor;
@@ -9,7 +11,7 @@ import org.usfirst.frc.team2706.robot.commands.mechanismcontrol.OpenGearMechanis
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
-public class DrivePlaceGear extends CommandGroup {
+public class VisionCenterPeg extends CommandGroup {
 
     /**
      * Place the gear and then back up after
@@ -18,16 +20,15 @@ public class DrivePlaceGear extends CommandGroup {
      * @param distance How far away is the gear?
      * @param reverseDistance How far in reverse do we want to go after placing the gear?
      */
-    public DrivePlaceGear(double speed, double distance, double reverseDistance) {
-        requires(Robot.driveTrain);
-        if (distance != 0) {
-            // Adds a movement one after another instead of at the same time
-            this.addSequential(new StraightDriveWithEncoders(speed, distance, 0.1),6);
-        }
-        
+    public VisionCenterPeg(double speed, double distance, double reverseDistance) {
+        this.addSequential(new StraightDriveWithEncoders(0.7, 2, 1));
+        this.addSequential(new StraightDriveWithCamera(0.6, 25, 3));
+        this.addSequential(new StraightDriveWithTime(0.6, 1200));
+        // this.addSequential(new RetryPegUntilComplete());
+        // this.addSequential(new StraightDriveWithTime(0.65, 500));
         this.addSequential(new WaitForSensor(10));
         this.addSequential(new OpenGearMechanism());
-        this.addSequential(new StraightDriveWithTime(0.7, 1000));
+        this.addSequential(new StraightDriveWithTime(0.65, 500));
         this.addSequential(new StraightDriveWithEncoders(-speed, -reverseDistance, 5));
         this.addSequential(new CloseGearMechanism());
     }

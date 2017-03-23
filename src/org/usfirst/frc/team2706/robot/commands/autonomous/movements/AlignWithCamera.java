@@ -1,25 +1,23 @@
 package org.usfirst.frc.team2706.robot.commands.autonomous.movements;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import org.usfirst.frc.team2706.robot.Robot;
 
-import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  * Drives the robot in a straight line towards the target found by the camera. Used for lining up
  * the peg at short distances
  */
-public class StraightDriveWithCamera extends Command {
+public class AlignWithCamera extends Command {
 
     private double speed;
 
-    private final double distance;
+    private final long time;
 
     private final double error;
-
-    private final PIDController PID;
-
-    private final double P = 0.5, I = 0.06, D = 0.25;
 
     /**
      * Drive at a specific speed based on camera
@@ -28,53 +26,45 @@ public class StraightDriveWithCamera extends Command {
      * @param distance The encoder distance to travel
      * @param error The range that the robot is happy ending the command in inches
      */
-    public StraightDriveWithCamera(double speed, double distance, double error) {
+    public AlignWithCamera(double speed, long time, double error) {
         requires(Robot.driveTrain);
 
         this.speed = speed;
 
-        this.distance = distance;
+        this.time = time;
 
         this.error = error / 12.0;
 
-        PID = new PIDController(P, I, D, Robot.driveTrain.getDistanceSensorPIDSource(),
-                        Robot.driveTrain.getDrivePIDOutput(true, true, true));
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-        Robot.driveTrain.resetEncoders();
 
-        Robot.driveTrain.brakeMode(true);
+        CommandTimerTask interrupt = new CommandTimerTask();
+        new Timer().schedule(interrupt, time);
 
-        // Make input infinite
-        PID.setContinuous();
-
-        // Set output speed range
-        if (speed > 0) {
-            PID.setOutputRange(-speed, speed);
-        } else {
-            PID.setOutputRange(speed, -speed);
-        }
-
-        Robot.driveTrain.initGyro = Robot.driveTrain.getHeading();
-
-        PID.setSetpoint(distance);
-
-        // Will accept within 5 inch of target
-        PID.setAbsoluteTolerance(error);
-        System.out.println("init");
-        // Start going to location
-        PID.enable();
+        done = false;
     }
 
     protected void execute() {
         Robot.camera.GetTargets();
+        double rotateVal;
+        if (Robot.camera.getTarget() != null) {
+            if (Robot.camera.getTarget().ctrX > -0.8 && Robot.camera.getTarget().ctrX < 0.8) {
+                rotateVal = Robot.camera.getTarget() != null ? Robot.camera.getTarget().ctrY * 0.8
+                                : 0;
+            } else {
+                rotateVal = 0;
+            }
+        } else {
+            rotateVal = 0;
+        }
+        Robot.driveTrain.arcadeDrive(0.0, rotateVal);
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return Robot.driveTrain.getDistanceToObstacle() < distance;
+        return done;
     }
 
     // Called once after isFinished returns true
@@ -83,7 +73,6 @@ public class StraightDriveWithCamera extends Command {
         Robot.driveTrain.brakeMode(false);
 
         // Disable PID output and stop robot to be safe
-        PID.disable();
         Robot.driveTrain.drive(0, 0);
     }
 
@@ -91,5 +80,15 @@ public class StraightDriveWithCamera extends Command {
     // subsystems is scheduled to run
     protected void interrupted() {
         end();
+    }
+
+
+    public boolean done;
+
+    class CommandTimerTask extends TimerTask {
+
+        public void run() {
+            done = true;
+        }
     }
 }
