@@ -12,20 +12,16 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class RetryPegUntilComplete extends Command {
 
-    public final double distance;
+    public RetryPegUntilComplete() {}
 
-    public RetryPegUntilComplete(double distance) {
-        requires(Robot.driveTrain);
-        this.distance = distance;
+    protected void initialize() {
+        r = new Realign(0.6, 1.5);
     }
 
-    protected void initialize() {}
-
-    Realign r = new Realign(0.5, 1.5);
+    Realign r = new Realign(0.6, 3);
 
     protected void execute() {
-        if (!r.isRunning() && (!Robot.gearHandler.pegDetected()
-                        || Robot.driveTrain.getDistanceToObstacle() > distance)) {
+        if (!r.isRunning() && !Robot.gearHandler.pegDetected()) {
             r.start();
         } else {
         }
@@ -35,11 +31,12 @@ public class RetryPegUntilComplete extends Command {
         end();
     }
 
+    protected void end() {}
+
     @Override
     protected boolean isFinished() {
         // TODO Auto-generated method stub
-        return Robot.gearHandler.pegDetected()
-                        && Robot.driveTrain.getDistanceToObstacle() < distance && !r.isRunning();
+        return Robot.gearHandler.pegDetected();
     }
 
 }

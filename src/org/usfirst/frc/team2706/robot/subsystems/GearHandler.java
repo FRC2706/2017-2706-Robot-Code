@@ -145,10 +145,10 @@ public class GearHandler extends Subsystem {
         return false;
     }    
 
-        
+        // TODO 
     // Uses limit switch to help see if arm is open
     public boolean checkArmOpen() {
-        if (limitSwitchLeft.get() || limitSwitchRight.get()) {
+        if (!limitSwitchRight.get()) {
             return true;
         }
         return false;
@@ -157,5 +157,7 @@ public class GearHandler extends Subsystem {
     public void log() {
         SmartDashboard.putNumber("Peg Sensor", irPegSensor.getVoltage());
         SmartDashboard.putNumber("Gear Sensor", irGearSensor.getVoltage());
-}
+        SmartDashboard.putBoolean("Limit Switch left", limitSwitchLeft.get());
+        SmartDashboard.putBoolean("Limit Switch Right", limitSwitchRight.get());
+    }
 }

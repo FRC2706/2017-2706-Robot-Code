@@ -1,7 +1,6 @@
 package org.usfirst.frc.team2706.robot.commands;
 
 import org.usfirst.frc.team2706.robot.Log;
-import org.usfirst.frc.team2706.robot.Robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
@@ -28,8 +27,6 @@ public class BatteryReader extends Command {
         double batteryPercent = (batteryOutputVoltage - 10) / (FULL_BATTERY_CAPACITY - 10);
         
         Log.i("Battery Percentage", batteryPercent * 100);
-        
-        Robot.blingSystem.batteryInd(batteryPercent, false);
     }
 
     /**
@@ -48,7 +45,6 @@ public class BatteryReader extends Command {
             DriverStation.reportWarning("Battery low. " + (batteryPercent * 100) + "% remaining.",
                             false);
             batCritical = true;
-            Robot.blingSystem.batteryInd(batteryPercent, batCritical);
         }
         if (batteryPercent > 0.2 && batCritical)
             batCritical = false;

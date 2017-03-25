@@ -127,6 +127,10 @@ public class Climber extends Subsystem {
         debugOutput();
     }
     
+    public double getSpeed() {
+        return (motor.get());
+    }
+    
     public void debugOutput() {
         Log.d("Climber", "vc=" + verifyingClimb + " speed=" + motor.get() + " pCurr=" + 
                         pastCurrent + " cCurr=" + motor.getOutputCurrent() + " pLAZ=" + pastLinearAccelZ +
