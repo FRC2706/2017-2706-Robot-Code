@@ -35,6 +35,8 @@ public class StickRumble extends Command {
 
     public static int repeatCountCopy;
     
+    protected final int selectionOfController;
+    
     // True when we are going to have an infinite loop.
     public static boolean infiniteCount = false;
     /*
@@ -53,9 +55,11 @@ public class StickRumble extends Command {
      * Set this to -1 to keep going indefinitely until you call "StickRumble.end".
      * PLEASE CALL STICKRUMBLE.END! DO NOT LEAVE THE CONTROLLER VIBRATING ETERNALLY!
      * @param intensity How much the controllers will vibrate.
+     * @param whichController Select which controller will vibrate. <p>
+     * 0 = both, 1 = driver, 2 = operator.
      */
     public StickRumble(double timeOn, double timeOff, int repeatCount, double intervalTime,
-                    int intervalCount, double intensity) {
+                    int intervalCount, double intensity, int whichController) {
         joystick = Robot.oi.getDriverJoystick();
         operatorJoy = Robot.oi.getOperatorJoystick();
         finished = false;
@@ -70,6 +74,7 @@ public class StickRumble extends Command {
         if (StickRumble.intervalCount == -1)
             infiniteCount = true;
         vibrationIntensity = intensity;
+        selectionOfController = whichController;
         finished = false;
         startTime = Timer.getFPGATimestamp();
     }
@@ -81,10 +86,16 @@ public class StickRumble extends Command {
      */
     public void rumbleAll(boolean on) {
         if (on) {
-            joystick.setRumble(RumbleType.kRightRumble, vibrationIntensity);
-            joystick.setRumble(RumbleType.kLeftRumble, vibrationIntensity);
-            operatorJoy.setRumble(RumbleType.kLeftRumble, vibrationIntensity);
-            operatorJoy.setRumble(RumbleType.kRightRumble, vibrationIntensity);
+            if (selectionOfController < 2) {
+                joystick.setRumble(RumbleType.kRightRumble, vibrationIntensity);
+                joystick.setRumble(RumbleType.kLeftRumble, vibrationIntensity);
+            }
+            
+            if (selectionOfController == 0 || selectionOfController == 2) {
+                operatorJoy.setRumble(RumbleType.kLeftRumble, vibrationIntensity);
+                operatorJoy.setRumble(RumbleType.kRightRumble, vibrationIntensity);
+            }
+            
         } else {
             joystick.setRumble(RumbleType.kRightRumble, 0.0);
             joystick.setRumble(RumbleType.kLeftRumble, 0.0);
@@ -146,7 +157,9 @@ public class StickRumble extends Command {
     
 
     @Override
-    public void interrupted() {}
+    public void interrupted() {
+        end();
+    }
 
     @Override
     public void end() {
