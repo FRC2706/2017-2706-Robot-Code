@@ -186,7 +186,6 @@ public class Log {
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
-
             Logger.getLogger(name.toString()).logp(level, cm[0], cm[1], message.toString());
         }
     }

@@ -180,7 +180,7 @@ public class DriveTrain extends Subsystem {
     public void headlessDrive(GenericHID joy, GenericHID rotate) {
         double angle = normalize(Math.toDegrees(Math.tanh(joy.getRawAxis(5) / joy.getRawAxis(4))));
         double speed = (joy.getRawAxis(5) + joy.getRawAxis(4)) / 2; // hyp
-        System.out.println("Angle: " + angle + ", Speed: " + speed);
+        Log.d("HeadlessDrive", "Angle: " + angle + ", Speed: " + speed);
         double gyroAngle;
         if (Math.abs(Robot.driveTrain.getHeading()) <= Math
                         .abs(180 - Robot.driveTrain.getHeading()))
