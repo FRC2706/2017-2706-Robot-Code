@@ -177,9 +177,22 @@ public class DriveTrain extends Subsystem {
      * @param joy The main drive joystick
      * @param rotate Joystick to rotate the robot with
      */
-    public void headlessDrive(GenericHID joy, GenericHID rotate) {
-        double angle = normalize(Math.toDegrees(Math.tanh(joy.getRawAxis(5) / joy.getRawAxis(4))));
-        double speed = (joy.getRawAxis(5) + joy.getRawAxis(4)) / 2; // hyp
+    public void headlessDrive(GenericHID joy) {
+        System.out.println(joy.getRawAxis(5) + "," + joy.getRawAxis(4));
+        double raw5 = joy.getRawAxis(5);
+        if(Math.abs(joy.getRawAxis(5)) < 0.05) {
+            raw5 = 0;
+        }
+       double raw4 = joy.getRawAxis(4);
+        if(Math.abs(joy.getRawAxis(4)) < 0.05) {
+            raw4 = 0;
+        }
+        double angle = normalize(Math.toDegrees(Math.atan(raw5 / raw4)));
+        
+        double speed = (raw5 + raw4) / 2; // hyp
+        if(Math.abs(speed) < 0.1) {
+            speed = 0;
+        }
         System.out.println("Angle: " + angle + ", Speed: " + speed);
         double gyroAngle;
         if (Math.abs(Robot.driveTrain.getHeading()) <= Math
@@ -187,6 +200,7 @@ public class DriveTrain extends Subsystem {
             gyroAngle = normalize(Robot.driveTrain.getHeading());
         else
             gyroAngle = normalize(Robot.driveTrain.getHeading() - 180);
+        System.out.println(raw5 / raw4 + "," + gyroAngle);
         drive.arcadeDrive(-speed, (angle - gyroAngle * 0.1));
     }
 
