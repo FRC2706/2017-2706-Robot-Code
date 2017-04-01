@@ -19,7 +19,7 @@ public class StraightDriveWithDistanceSensor extends Command {
     private final PIDController PID;
 
     private int doneCount;
-    private final double P = 1.0, I = 0.03, D = 0.5;
+    private final double P = 7.5, I = 2.5, D = 20;
 
     /**
      * Drive at a specific speed for a certain amount of time

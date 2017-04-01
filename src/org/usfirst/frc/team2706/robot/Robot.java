@@ -89,9 +89,9 @@ public class Robot extends IterativeRobot {
         hardwareChooser = new AutonomousSelector(
                          /* no switch: do nothing */ new ArcadeDriveWithJoystick(),
                         /* position 1: do nothing */ new ArcadeDriveWithJoystick(),
-                 /* position 2: Drive to baseline */ new StraightDriveWithEncoders(0.5, 10, 1),
-     /* position 3: Drive to opposing launch line */ new StraightDriveWithEncoders(0.65, 20, 0),
-        /* position 4: Center Position place gear */ new StraightDriveWithEncoders(0.6, 6.0, 0.05),
+                 /* position 2: Drive to baseline */ new StraightDriveWithEncoders(0.5, 10, 1, 1),
+     /* position 3: Drive to opposing launch line */ new StraightDriveWithEncoders(0.65, 20, 0, 1),
+        /* position 4: Center Position place gear */ new StraightDriveWithEncoders(0.6, 6.0, 0.05, 20),
  /* position 5: Left position place gear > launch */ new SideCameraPeg(0.7, 3.0, 7.5, 60, 4, 5, false),
 /* position 6: Right position place gear > launch */ new SideCameraPeg(0.7, 3.0, 7.5, 60, 4, 5, true),
  /* position 7: Left position place gear > launch */ new SideStartSideGear(false, 0.6, 5.85, 60, 6, 3.5, 20),

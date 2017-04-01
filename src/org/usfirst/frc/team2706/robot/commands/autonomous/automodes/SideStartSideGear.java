@@ -24,7 +24,7 @@ public class SideStartSideGear extends CommandGroup {
     public SideStartSideGear(boolean rightSide, double speed, double fromWallDistance,
                     double turnDegrees, double toGearDistance, double reverseDistance,
                     double toLaunchPadDistance) {
-        this.addSequential(new StraightDriveWithEncoders(speed, fromWallDistance, 0.05),4);
+        this.addSequential(new StraightDriveWithEncoders(speed, fromWallDistance, 0.05, 1),4);
         this.addSequential(new StraightDriveWithTime(0.0,300));
         this.addSequential(new QuickRotate(rightSide ? -turnDegrees : turnDegrees),3);
         this.addSequential(new StraightDriveWithCamera(0.55, 25, 3),4);
@@ -32,6 +32,6 @@ public class SideStartSideGear extends CommandGroup {
         this.addSequential(new DrivePlaceGear(0, toGearDistance, reverseDistance));
         this.addSequential(new StraightDriveWithTime(0.0,500));
         this.addSequential(new QuickRotate(rightSide ? turnDegrees : -turnDegrees));
-        this.addSequential(new StraightDriveWithEncoders(speed, toLaunchPadDistance, 2));
+        this.addSequential(new StraightDriveWithEncoders(speed, toLaunchPadDistance, 2, 1));
     }
 }

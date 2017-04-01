@@ -33,7 +33,7 @@ public class DriveTrain extends Subsystem {
 
     // TODO: maybe we don't need this
     private GyroPIDSource gyroPIDSource;
-
+    private AverageEncoderPIDSource encoderPIDSource;
     private UltrasonicPIDSource ultrasonicPIDSource;
 
     public double initGyro;
@@ -79,6 +79,7 @@ public class DriveTrain extends Subsystem {
 
         leftDistanceSensor.setAutomaticMode(true);
 
+        encoderPIDSource = new AverageEncoderPIDSource(left_encoder, right_encoder);
         ultrasonicPIDSource = new UltrasonicPIDSource(leftDistanceSensor, rightDistanceSensor);
 
         // Set up navX gyro
@@ -325,6 +326,10 @@ public class DriveTrain extends Subsystem {
        
     }
 
+    public PIDSource getAverageEncoderPIDSource() {
+        return encoderPIDSource;
+    }
+    
     /**
      * @return The distance to the obstacle detected by the distance sensor.
      */
@@ -363,6 +368,34 @@ public class DriveTrain extends Subsystem {
 
     }
 
+    class AverageEncoderPIDSource implements PIDSource {
+
+        private final Encoder left, right;
+
+        public AverageEncoderPIDSource(Encoder left, Encoder right) {
+            this.left = left;
+            this.right = right;
+        }
+
+        @Override
+        public void setPIDSourceType(PIDSourceType pidSource) {
+            left.setPIDSourceType(pidSource);
+            right.setPIDSourceType(pidSource);
+        }
+
+        @Override
+        public PIDSourceType getPIDSourceType() {
+            return left.getPIDSourceType();
+        }
+
+        @Override
+        public double pidGet() {
+            return (left.getDistance() + right.getDistance()) / 2;
+        }
+
+    }
+
+    
     class GyroPIDSource implements PIDSource {
 
         private final DriveTrain driveTrain;

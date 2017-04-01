@@ -90,10 +90,6 @@ public class OI {
         // Closes gear holder mechanism so holder can hold gears
         EJoystickButton operatorBButton = new EJoystickButton(controlStick, 2);
         operatorBButton.whenPressed(new CloseGearMechanism());
-
-        // Run RotateDriveWithGyro using custom PID values from SmartDashboard
-        EJoystickButton operatorXButton = new EJoystickButton(controlStick, 3);
-        operatorXButton.runWhileHeld(new RotateDriveWithGyro(0.5, 90, 10));
         
         // Opens gear holder mechanism for when peg is in
         EJoystickButton operatorYButton = new EJoystickButton(controlStick, 4);
