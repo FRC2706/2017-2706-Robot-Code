@@ -199,5 +199,7 @@ public class Robot extends IterativeRobot {
         driveTrain.log();
         gearHandler.log();
         hardwareChooser.log();
+        
+        Log.updateTableLog();
     }
 }

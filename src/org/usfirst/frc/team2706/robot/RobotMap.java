@@ -163,7 +163,7 @@ public class RobotMap {
      * Prints which RobotMap is being used
      */
     public static void log() {
-        Log.i("RobotMap", "RobotMap ID is " + ROBOT_ID_LOC);
+        Log.d("RobotMap", "RobotMap ID is " + ROBOT_ID_LOC);
     }
     
     private static final String ROBOT_ID_LOC = "/home/lvuser/robot-type.conf";
