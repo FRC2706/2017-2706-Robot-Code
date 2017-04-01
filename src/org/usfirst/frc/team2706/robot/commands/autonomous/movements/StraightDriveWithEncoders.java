@@ -18,8 +18,11 @@ public class StraightDriveWithEncoders extends Command {
 
     private final PIDController PID;
 
-    private final double P = 1.0, I = 0.06, D = 0.25;
+    private final double P = 1.0, I = 0.1, D = 1;
 
+    
+    
+    
     /**
      * Drive at a specific speed for a certain amount of time
      * 
@@ -36,7 +39,7 @@ public class StraightDriveWithEncoders extends Command {
 
         this.error = error / 12.0;
 
-        PID = new PIDController(P, I, D, Robot.driveTrain.getEncoderPIDSource(true),
+        PID = new PIDController(P, I, D, Robot.driveTrain.getEncoderPIDSource(false),
                         Robot.driveTrain.getDrivePIDOutput(true, false, false));
     }
 

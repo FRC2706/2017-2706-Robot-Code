@@ -25,12 +25,13 @@ public class SideCameraPeg extends CommandGroup {
     public SideCameraPeg(double speed, double xCurve, double yCurve, double endAngle,
                     double reverseDistance, double toLaunchPadDistance, boolean isRight) {
         this.addSequential(new CurveDrive(xCurve, yCurve, endAngle, speed, isRight));
+        this.addSequential(new StraightDriveWithTime(0.0,500));
         this.addSequential(new StraightDriveWithCamera(0.6, 25, 2));
      //   this.addSequential(new RotateDriveWithGyroDistanceSensorHybrid(0.4));
-        this.addSequential(new StraightDriveWithTime(0.55, 2000));
+        this.addSequential(new StraightDriveWithTime(0.55, 1500));
         // this.addSequential(new RetryPegUntilComplete(10));
         this.addSequential(new DrivePlaceGear(0.55, 0, 4));
-        this.addSequential(new RotateDriveWithGyro(0.6, -60));
+        this.addSequential(new RotateDriveWithGyro(0.6, -55));
         this.addSequential(new StraightDriveWithTime(0.0, 300));
         this.addSequential(new StraightDriveWithEncoders(0.65, toLaunchPadDistance, 0.2));
     }

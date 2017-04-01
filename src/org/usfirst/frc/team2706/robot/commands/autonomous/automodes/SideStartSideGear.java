@@ -1,7 +1,9 @@
 package org.usfirst.frc.team2706.robot.commands.autonomous.automodes;
 
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.QuickRotate;
+import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithCamera;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithEncoders;
+import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithTime;
 import org.usfirst.frc.team2706.robot.commands.autonomous.plays.DrivePlaceGear;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -22,10 +24,14 @@ public class SideStartSideGear extends CommandGroup {
     public SideStartSideGear(boolean rightSide, double speed, double fromWallDistance,
                     double turnDegrees, double toGearDistance, double reverseDistance,
                     double toLaunchPadDistance) {
-        this.addSequential(new StraightDriveWithEncoders(speed, fromWallDistance, 25));
-        this.addSequential(new QuickRotate(rightSide ? -turnDegrees : turnDegrees));
-        this.addSequential(new DrivePlaceGear(speed, toGearDistance, reverseDistance));
+        this.addSequential(new StraightDriveWithEncoders(speed, fromWallDistance, 0.05),4);
+        this.addSequential(new StraightDriveWithTime(0.0,300));
+        this.addSequential(new QuickRotate(rightSide ? -turnDegrees : turnDegrees),3);
+        this.addSequential(new StraightDriveWithCamera(0.55, 25, 3),4);
+        this.addSequential(new StraightDriveWithTime(0.55,1200));
+        this.addSequential(new DrivePlaceGear(0, toGearDistance, reverseDistance));
+        this.addSequential(new StraightDriveWithTime(0.0,500));
         this.addSequential(new QuickRotate(rightSide ? turnDegrees : -turnDegrees));
-        this.addSequential(new StraightDriveWithEncoders(speed, toLaunchPadDistance, 25));
+        this.addSequential(new StraightDriveWithEncoders(speed, toLaunchPadDistance, 2));
     }
 }

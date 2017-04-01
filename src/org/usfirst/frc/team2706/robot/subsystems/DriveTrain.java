@@ -322,6 +322,7 @@ public class DriveTrain extends Subsystem {
         } else {
             return right_encoder;
         }
+       
     }
 
     /**
@@ -425,7 +426,7 @@ public class DriveTrain extends Subsystem {
                                     && Robot.camera.getTarget().ctrY > -0.8
                                     && Robot.camera.getTarget().ctrY < 0.8) {
                         rotateVal = Robot.camera.getTarget() != null
-                                        ? (Robot.camera.getTarget().ctrY) * 1.7 : 0;
+                                        ? (Robot.camera.getTarget().ctrY + 0.05) * 1.7 : 0;
                         if (rotateVal > 0.6) {
                             rotateVal = 0.6;
                         }
