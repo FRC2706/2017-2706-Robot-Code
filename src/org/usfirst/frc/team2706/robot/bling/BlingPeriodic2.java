@@ -1,10 +1,13 @@
 package org.usfirst.frc.team2706.robot.bling;
 
 import org.usfirst.frc.team2706.robot.Robot;
+import org.usfirst.frc.team2706.robot.controls.StickRumble;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /***
  * 
@@ -33,6 +36,8 @@ public class BlingPeriodic2 extends Command {
         requires (Robot.blingSystem);
     }
     
+    protected static StickRumble rumbler = null; 
+    
     protected void initialize () {
         if (DriverStation.getInstance().isAutonomous() && Robot.blingSystem.getSpecialState() == "autoTrue") {
             Robot.blingSystem.auto();
@@ -57,15 +62,47 @@ public class BlingPeriodic2 extends Command {
             Robot.blingSystem.auto();
         }
         
+        // Teleop display modes
         else if (DriverStation.getInstance().isOperatorControl() && Robot.blingSystem.getSpecialState() == "") {
             
+            
             // Required measurements. 
-            double distance = Robot.driveTrain.getDistanceToObstacle();   
+            double distance = Robot.driveTrain.getDistanceToObstacle(); 
+            
+            /**
+             * Description of gearHandler states (from GearHandler subsystem)<p>
+             * 0 = Arms closed with no gear.<p>
+             * 1 = arms closed with a gear.<p>
+             * 2 = arms closed with gear and peg in.<p>
+             * 3 = Arms open with a gear and peg in. <p>
+             * 4 = Arms open with no gear.<p>
+             * 5 = Arms open with a gear.<p>
+             * 6 = Arms open with no gear and peg in.<p>
+             * 7 = Arms closed with no gear and peg in.
+             */
             int gearState = Robot.gearHandler.gearHandlerState();
+            
+            // TODO remove debug print
+            System.out.println("Distance : " + distance + " GearState : " + gearState);
+            
+            /* Turn off the rumbler at an appropriate time 
+             * (when the peg is no longer in or arms are open).
+             */
+            if (rumbler != null && gearState < 1 && gearState > 2) {
+                rumbler.end();
+                rumbler = null;
+            }
             
             // Displaying peg line up
             if (distance < outsideDistanceThreshold && ((1 <= gearState && gearState <= 3) || gearState == 5)) {
                 busy = true;
+                
+                // Get some vibration going, but only if there is already none.
+                if (1 <= gearState && gearState <= 2 && rumbler == null) {
+                    rumbler = new StickRumble(0.7, 0.3, 2, 0.2, -1, 1.0, 0);
+                    Scheduler.getInstance().add(rumbler); 
+                }
+                
                 Robot.blingSystem.showDistance(100 - (int) Math.round((distance / outsideDistanceThreshold) * 100), 2 <= gearState && gearState <= 3);
             }
             
@@ -103,7 +140,7 @@ public class BlingPeriodic2 extends Command {
             }
         }
     }
-
+    
     @Override
     protected boolean isFinished() {
         return false;

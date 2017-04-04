@@ -427,6 +427,9 @@ public class Bling extends Subsystem {
             blingPort.writeString("I" + command);     
         }
         
+        // TODO remove debug print
+        System.out.println(command);
+        
         // Making sure we do not send the same command twice.
         previousCommand = command;
     }

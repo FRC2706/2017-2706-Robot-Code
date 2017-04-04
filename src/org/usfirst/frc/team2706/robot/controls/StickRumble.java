@@ -8,29 +8,30 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class StickRumble extends Command {
-
+    // Joysticks
     protected Joystick joystick;
-
     protected Joystick operatorJoy;
 
+    // Time variables counted
     protected double startTime;
-
     protected double timePassed;
 
+    // Time variables inputted/selected.
     public double timeOn;
-
     public double timeOff;
 
+    // Number of repeats.
     public int repeatCount;
 
+    // Used to determine if we're done.
     public boolean finished;
 
+    // Used to determine if we're on.
     public static boolean on = false;
 
+    // More selected things
     public static double vibrationIntensity;
-
     public static double intervalTime;
-
     public static int intervalCount;
 
     public static int repeatCountCopy;
@@ -76,6 +77,9 @@ public class StickRumble extends Command {
         vibrationIntensity = intensity;
         selectionOfController = whichController;
         finished = false;
+    }
+    
+    public void initialize() {
         startTime = Timer.getFPGATimestamp();
     }
 
@@ -164,5 +168,6 @@ public class StickRumble extends Command {
     @Override
     public void end() {
         rumbleAll(false);
+        finished = true;
     }
 }
