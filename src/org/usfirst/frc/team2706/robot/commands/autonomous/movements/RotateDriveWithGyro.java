@@ -20,7 +20,7 @@ public class RotateDriveWithGyro extends Command {
 
     private final PIDController PID;
 
-    private final double P = 1, I = 0, D = 0, F = 0;
+    private final double P = 0.05, I = 0.001, D = 0, F = 0;
 
     /**
      * Drive at a specific speed for a certain amount of time
@@ -56,7 +56,7 @@ public class RotateDriveWithGyro extends Command {
             PID.setOutputRange(speed, -speed);
         }
         // Will accept within 1 degrees of target
-        PID.setAbsoluteTolerance(4);
+        PID.setAbsoluteTolerance(3);
 
         PID.setSetpoint(angle);
 
