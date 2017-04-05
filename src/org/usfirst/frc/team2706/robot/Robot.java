@@ -134,6 +134,7 @@ public class Robot extends IterativeRobot {
      */
     public void autonomousInit() {
         driveTrain.reset();
+        blingSystem.toggleAutoState(true);
 
         // Great for safety just in case you set the wrong one in practice ;)
         System.out.println("Running " + hardwareChooser.getSelected() + "...");

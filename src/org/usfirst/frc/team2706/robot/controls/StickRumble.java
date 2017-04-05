@@ -167,6 +167,7 @@ public class StickRumble extends Command {
 
     @Override
     public void end() {
+        System.out.println("END\n\n");
         rumbleAll(false);
         finished = true;
     }

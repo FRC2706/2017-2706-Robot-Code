@@ -48,7 +48,7 @@ public class BlingPeriodic2 extends Command {
         
         double timePassed = Timer.getFPGATimestamp() - timePoint;
         
-        if (timePassed < 0.4)
+        if (timePassed < 0.2)
             return;
         
         timePoint = Timer.getFPGATimestamp();
@@ -56,11 +56,9 @@ public class BlingPeriodic2 extends Command {
         // Used to make sure we do not interrupt patterns with other patterns.
         boolean busy = false;
         
-        if (DriverStation.getInstance().isAutonomous() && 
-            Robot.blingSystem.getSpecialState() == "autoTrue") {
-            busy = true;
-            Robot.blingSystem.auto();
-        }
+        // Autonomous display modes
+        if (DriverStation.getInstance().isAutonomous())
+            return;
         
         // Teleop display modes
         else if (DriverStation.getInstance().isOperatorControl() && Robot.blingSystem.getSpecialState() == "") {
@@ -82,13 +80,11 @@ public class BlingPeriodic2 extends Command {
              */
             int gearState = Robot.gearHandler.gearHandlerState();
             
-            // TODO remove debug print
-            System.out.println("Distance : " + distance + " GearState : " + gearState);
             
             /* Turn off the rumbler at an appropriate time 
              * (when the peg is no longer in or arms are open).
              */
-            if (rumbler != null && gearState < 1 && gearState > 2) {
+            if ((rumbler != null) && (gearState < 2 || gearState > 3)) {
                 rumbler.end();
                 rumbler = null;
             }
@@ -98,12 +94,12 @@ public class BlingPeriodic2 extends Command {
                 busy = true;
                 
                 // Get some vibration going, but only if there is already none.
-                if (1 <= gearState && gearState <= 2 && rumbler == null) {
+                if (2 <= gearState && gearState <= 3 && rumbler == null) {
                     rumbler = new StickRumble(0.7, 0.3, 2, 0.2, -1, 1.0, 0);
-                    Scheduler.getInstance().add(rumbler); 
+                    rumbler.start();
                 }
                 
-                Robot.blingSystem.showDistance(100 - (int) Math.round((distance / outsideDistanceThreshold) * 100), 2 <= gearState && gearState <= 3);
+                Robot.blingSystem.showDistance(2 <= gearState && gearState <= 3);
             }
             
             // Displaying pickup line up
@@ -114,8 +110,8 @@ public class BlingPeriodic2 extends Command {
                 if ((lowerDistanceThreshold <= distance) && (distance <= upperDistanceThreshold) && gearState == 0)
                     Robot.blingSystem.showReadyToReceiveGear(1);
                 
-                // Too close (arms closed and too close)
-                else if (distance < lowerDistanceThreshold && gearState == 0)
+                // Arms open)
+                else if (gearState == 4)
                     Robot.blingSystem.showReadyToReceiveGear(0);
                 
                 // Too far or arms open
