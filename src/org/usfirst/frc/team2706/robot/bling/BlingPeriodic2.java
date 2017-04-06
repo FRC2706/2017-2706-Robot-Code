@@ -30,6 +30,13 @@ public class BlingPeriodic2 extends Command {
     // Don't bother displaying the pattern if we're outside of this.
     protected final int outsideDistanceThreshold = 40;
     
+    /* True if we were just lining up for gear.
+     * To avoid showing the peg line-up pattern right after gear pickup.
+     */
+    protected static boolean gearPickupPattern = false;
+    protected static double timePointGearPickup = 0;
+    protected static double timePassedGearPickup = 0;
+    
     protected static double timePoint = Timer.getFPGATimestamp();
     
     public BlingPeriodic2() {
@@ -67,7 +74,7 @@ public class BlingPeriodic2 extends Command {
             // Required measurements. 
             double distance = Robot.driveTrain.getDistanceToObstacle(); 
             
-            /**
+            /*
              * Description of gearHandler states (from GearHandler subsystem)<p>
              * 0 = Arms closed with no gear.<p>
              * 1 = arms closed with a gear.<p>
@@ -79,6 +86,7 @@ public class BlingPeriodic2 extends Command {
              * 7 = Arms closed with no gear and peg in.
              */
             int gearState = Robot.gearHandler.gearHandlerState();
+            boolean climbing = Robot.climber.isClimbing();
             
             
             /* Turn off the rumbler at an appropriate time 
@@ -90,7 +98,7 @@ public class BlingPeriodic2 extends Command {
             }
             
             // Displaying peg line up
-            if (distance < outsideDistanceThreshold && ((1 <= gearState && gearState <= 3) || gearState == 5)) {
+            if (!gearPickupPattern && distance < outsideDistanceThreshold && ((1 <= gearState && gearState <= 3) || gearState == 5)) {
                 busy = true;
                 
                 // Get some vibration going, but only if there is already none.
@@ -105,6 +113,7 @@ public class BlingPeriodic2 extends Command {
             // Displaying pickup line up
             else if ((distance < outsideDistanceThreshold) && (gearState == 0 || gearState == 4) && !busy) {
                 busy = true;
+                gearPickupPattern = true;
                 
                 // Just right (arms closed and in nice distance)
                 if ((lowerDistanceThreshold <= distance) && (distance <= upperDistanceThreshold) && gearState == 0)
@@ -119,14 +128,22 @@ public class BlingPeriodic2 extends Command {
                     Robot.blingSystem.showReadyToReceiveGear(2);
             }
             
+            // We are climbing!
+            else if (climbing && !busy) {
+                busy = true;
+                Robot.blingSystem.climbingDisplay();
+            }
+            
             // Time to climb
             else if (timeSinceInitialized() > 120 && !busy) {
+                gearPickupHandler(gearState);
                 busy = true;
                 Robot.blingSystem.showReadyToClimb(true);
             }
             
             // 
             else if (gearState == 1 && !busy) {
+                gearPickupHandler(gearState);
                 busy = true;
                 Robot.blingSystem.funDisplay();                
             }
@@ -134,6 +151,26 @@ public class BlingPeriodic2 extends Command {
             else if (!busy) {
                 Robot.blingSystem.clear();
             }
+        }
+    }
+    
+    /**
+     * Used to make sure that when we back up from picking up a gear,
+     * there is a delay before the peg line up pattern can be displayed.
+     */
+    protected void gearPickupHandler(int gearState) {
+        if (!gearPickupPattern || gearState != 1)
+            return;
+        
+        else if (timePointGearPickup == 0) {
+            timePointGearPickup = Timer.getFPGATimestamp();
+        }
+        timePassedGearPickup = Timer.getFPGATimestamp() - timePointGearPickup;
+        
+        if (timePassedGearPickup > 1.5) {
+            timePassedGearPickup = 0;
+            timePointGearPickup = 0;
+            gearPickupPattern = false;
         }
     }
     
