@@ -213,7 +213,7 @@ public class Bling extends Subsystem {
      * This function should be run at the beginning of autonomous to get the proper light pattern.
      */
     public void auto() {
-        customDisplay("green", 1, 50, 100, 0, 1);
+        customDisplay("green", 6, 50, 100, 0, 1);
     }
 
     /**
