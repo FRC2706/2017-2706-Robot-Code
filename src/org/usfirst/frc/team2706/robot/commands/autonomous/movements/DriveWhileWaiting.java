@@ -16,10 +16,12 @@ public class DriveWhileWaiting extends Command {
     public DriveWhileWaiting(double speed) {
         this.speed = speed;
     }
-
+    protected void initialize() {
+        Robot.driveTrain.reset();
+    }
     protected void execute() {
         if (!Robot.gearHandler.pegDetected()) {
-            Robot.driveTrain.drive(-speed,-speed);
+            Robot.driveTrain.arcadeDrive(-speed, Robot.driveTrain.normalize(-Robot.driveTrain.getHeading()) / 10);
         }
     }
 

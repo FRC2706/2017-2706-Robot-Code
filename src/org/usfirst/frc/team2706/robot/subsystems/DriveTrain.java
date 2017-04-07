@@ -180,28 +180,19 @@ public class DriveTrain extends Subsystem {
     public void headlessDrive(GenericHID joy) {
         System.out.println(joy.getRawAxis(5) + "," + joy.getRawAxis(4));
         double raw5 = joy.getRawAxis(5);
-        if(Math.abs(joy.getRawAxis(5)) < 0.05) {
-            raw5 = 0;
-        }
        double raw4 = joy.getRawAxis(4);
-        if(Math.abs(joy.getRawAxis(4)) < 0.05) {
-            raw4 = 0;
-        }
         double angle = normalize(Math.toDegrees(Math.atan(raw5 / raw4)));
         
         double speed = (raw5 + raw4) / 2; // hyp
         if(Math.abs(speed) < 0.1) {
             speed = 0;
+            angle = Robot.driveTrain.getHeading();
         }
         System.out.println("Angle: " + angle + ", Speed: " + speed);
         double gyroAngle;
-        if (Math.abs(Robot.driveTrain.getHeading()) <= Math
-                        .abs(180 - Robot.driveTrain.getHeading()))
             gyroAngle = normalize(Robot.driveTrain.getHeading());
-        else
-            gyroAngle = normalize(Robot.driveTrain.getHeading() - 180);
-        System.out.println(raw5 / raw4 + "," + gyroAngle);
-        drive.arcadeDrive(-speed, (angle - gyroAngle * 0.1));
+        System.out.println((angle - gyroAngle * 0.1) * speed);
+        drive.arcadeDrive(-speed,- (angle - gyroAngle * 0.1) * speed,true);
     }
 
     /**
@@ -309,7 +300,6 @@ public class DriveTrain extends Subsystem {
         double adjacent = RobotMap.DISTANCE_SENSOR_SEPARATION_CM / 2.54;
         // Inverse tangent to take two sides of the triangle and get the angle
         double theta = Math.toDegrees(Math.atan2(opposite, adjacent));
-        System.out.println(theta);
         return theta;
     }
 
@@ -487,7 +477,7 @@ public class DriveTrain extends Subsystem {
                     rotateVal = 0;
                 }
             } else {
-                rotateVal = normalize(getHeading() - initGyro) * 0.1;
+                rotateVal = normalize(getHeading() - initGyro) * 0.15;
             }
 
 

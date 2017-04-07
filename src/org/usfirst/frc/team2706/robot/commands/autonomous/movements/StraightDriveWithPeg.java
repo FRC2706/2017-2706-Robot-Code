@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  * Have the robot drive certain distance
  */
-public class StraightDriveWithEncoders extends Command {
+public class StraightDriveWithPeg extends Command {
 
     private final double speed;
 
@@ -29,7 +29,7 @@ public class StraightDriveWithEncoders extends Command {
      * @param distance The encoder distance to travel
      * @param error The range that the robot is happy ending the command in
      */
-    public StraightDriveWithEncoders(double speed, double distance, double error,
+    public StraightDriveWithPeg(double speed, double distance, double error,
                     int minDoneCycles) {
         requires(Robot.driveTrain);
 
@@ -77,12 +77,7 @@ public class StraightDriveWithEncoders extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        if (PID.onTarget())
-            doneTicks++;
-        else
-            doneTicks = 0;
-
-        return doneTicks >= minDoneCycles;
+       return Robot.gearHandler.pegDetected();
     }
 
     // Called once after isFinished returns true
