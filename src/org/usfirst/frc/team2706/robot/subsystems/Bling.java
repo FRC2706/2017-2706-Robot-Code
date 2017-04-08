@@ -225,8 +225,15 @@ public class Bling extends Subsystem {
     /**
      * Just displays a fun rainbow of colours during teleop when we're not doing anything.
      */
-    public void funDisplay () {
+    public void funDisplay() {
         customDisplay("Blue", 4, 50, 100, 0, 1);
+    }
+    
+    /**
+     * Just a fun pattern to show while climbing
+     */
+    public void climbingDisplay() {
+        customDisplay("merge", 7, 75, 100, 0, 1);
     }
     
     
@@ -314,6 +321,13 @@ public class Bling extends Subsystem {
         }
         
         customDisplay(colour, 3, 100, 100, 0, 1);
+    }
+    
+    /**
+     * Basic command that shows a green signal when we get a gear.
+     */
+    public void showGotGear() {
+        customDisplay("Green", 6, 100, 100, 0, 1);
     }
     
     /**

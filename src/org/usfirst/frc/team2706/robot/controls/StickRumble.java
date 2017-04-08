@@ -7,6 +7,10 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 
+/**
+ * @author eAUE (Kyle Anderson)
+ *
+ */
 public class StickRumble extends Command {
     // Joysticks
     protected Joystick joystick;
@@ -46,7 +50,8 @@ public class StickRumble extends Command {
     public static boolean intervalOn = false;
 
     /**
-     * Function for setting vibration on the controller.
+     * Function for setting vibration on the controller. Note that a maximum of 8 seconds
+     * is given for it to run.
      * 
      * @param timeOn The time for which the controller will vibrate in seconds
      * @param timeOff The delay time between when the controller is vibrating
@@ -110,12 +115,17 @@ public class StickRumble extends Command {
 
     @Override
     public void execute() {
+        // Stop no matter what after 8 seconds.
+        if (timeSinceInitialized() > 8) {
+            end();
+        }
         timePassed = Timer.getFPGATimestamp() - startTime; // Get the time passes since the start.
 
         if (repeatCount < 0 && !intervalOn) {
             intervalOn = true;
             rumbleAll(false);
         }
+        
         if (intervalOn && timePassed >= intervalTime) {
             intervalCount -= 1;
             repeatCount = repeatCountCopy; // Reset the repeat count.
@@ -124,7 +134,7 @@ public class StickRumble extends Command {
         }
 
         // Turn on the rumble when it needs to be turned on.
-        if (((timePassed / (timeOn + timeOff)) >= 1) | (timePassed < timeOn) && !on
+        if (((timePassed / (timeOn + timeOff)) >= 1) || (timePassed < timeOn) && !on
                         && !intervalOn) {
             on = true;
             
@@ -152,7 +162,7 @@ public class StickRumble extends Command {
      * the schedule.
      */
     public boolean isFinished() {
-        if (intervalCount <= 0 && !infiniteCount) {
+        if (intervalCount < 0 && !infiniteCount) {
             finished = true;
         }
         return finished;
