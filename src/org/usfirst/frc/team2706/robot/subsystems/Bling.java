@@ -117,6 +117,8 @@ public class Bling extends Subsystem {
     public void toggleAutoState(boolean good) {
         if (good) 
             specialState = "autoTrue";
+        
+        auto();
     }
     
     /**
@@ -211,7 +213,7 @@ public class Bling extends Subsystem {
      * This function should be run at the beginning of autonomous to get the proper light pattern.
      */
     public void auto() {
-        customDisplay("green", 1, 150, 100, 0, 1);
+        customDisplay("green", 6, 50, 100, 0, 1);
     }
 
     /**
@@ -223,8 +225,15 @@ public class Bling extends Subsystem {
     /**
      * Just displays a fun rainbow of colours during teleop when we're not doing anything.
      */
-    public void funDisplay () {
+    public void funDisplay() {
         customDisplay("Blue", 4, 50, 100, 0, 1);
+    }
+    
+    /**
+     * Just a fun pattern to show while climbing
+     */
+    public void climbingDisplay() {
+        customDisplay("merge", 7, 75, 100, 0, 1);
     }
     
     
@@ -265,13 +274,13 @@ public class Bling extends Subsystem {
     }
 
     /**
-     * Show a distance indication on the LED strip out of 3 metres.
+     * Show a distance indication on the LED strip.
      * 
      * @param distance The current distance
      * @param pegIn Will be true if the peg is in 
      * the hole, false otherwise.
      */
-    public void showDistance(int percentDistance, boolean pegIn) {
+    public void showDistance(boolean pegIn) {
 
         String dColour;
 
@@ -283,7 +292,7 @@ public class Bling extends Subsystem {
             dColour = "red";
         }
         // Multi-colour wipe
-        customDisplay(dColour, 12, percentDistance, 100, 0, 1);
+        customDisplay(dColour, 7, 100, 100, 0, 1);
 
     }
 
@@ -304,7 +313,7 @@ public class Bling extends Subsystem {
         }
         // Too close
         else if (stateOfReadiness == 0) {
-            colour = "red";
+            colour = "white";
         }
         // Too far
         else {
@@ -312,6 +321,13 @@ public class Bling extends Subsystem {
         }
         
         customDisplay(colour, 3, 100, 100, 0, 1);
+    }
+    
+    /**
+     * Basic command that shows a green signal when we get a gear.
+     */
+    public void showGotGear() {
+        customDisplay("Green", 6, 100, 100, 0, 1);
     }
     
     /**
@@ -416,15 +432,15 @@ public class Bling extends Subsystem {
                                    + LEDStripRange + "E" + pattern + "Z");
         }
         else {
-            command = ("F" + pattern + "C" + gColour + "D" + delay + "B" + brightness + "R500E" + 
+            command = ("F" + pattern + "C" + gColour + "D" + delay + "B" + brightness + "R10000E" + 
                                    pattern + "Z");
         }
         send();
     }
     public void send() {
         // IF THE BLINGPORT FAILED, DON'T CAUSE ERRORS
-        if (previousCommand != command && connected) {
-            blingPort.writeString("I" + command);     
+        if (!(previousCommand.equalsIgnoreCase(command)) && connected) {
+            blingPort.writeString("I" + command);
         }
         
         // Making sure we do not send the same command twice.
