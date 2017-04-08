@@ -1,7 +1,5 @@
 package org.usfirst.frc.team2706.robot.commands.autonomous.movements;
 
-import java.util.TimerTask;
-
 import org.usfirst.frc.team2706.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -29,7 +27,7 @@ public class TeleopStraightDriveWithCamera extends Command {
     }
 
     protected void execute() {
-        Robot.camera.GetTargets();
+        Robot.camera.GetTargets(false);
         double rotateVal;
         if (Robot.camera.getTarget() != null) {
             if (Robot.camera.getTarget().ctrX > -0.8 && Robot.camera.getTarget().ctrX < 0.8) {
@@ -51,7 +49,7 @@ public class TeleopStraightDriveWithCamera extends Command {
             rotateVal = 0;
         }
         System.out.println(rotateVal);
-        Robot.driveTrain.arcadeDrive(-getTriggerValue(), rotateVal);
+        Robot.driveTrain.arcadeDrive(-getTriggerValue() / 2, rotateVal);
     }
 
     private double getTriggerValue() {
@@ -76,15 +74,5 @@ public class TeleopStraightDriveWithCamera extends Command {
     // subsystems is scheduled to run
     protected void interrupted() {
         end();
-    }
-
-
-    public boolean done;
-
-    class CommandTimerTask extends TimerTask {
-
-        public void run() {
-            done = true;
-        }
     }
 }

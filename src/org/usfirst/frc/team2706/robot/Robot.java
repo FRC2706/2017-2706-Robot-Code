@@ -1,7 +1,6 @@
 
 package org.usfirst.frc.team2706.robot;
 
-import org.usfirst.frc.team2706.robot.commands.autonomous.automodes.CenterToLaunch;
 import org.usfirst.frc.team2706.robot.commands.autonomous.automodes.SideCameraPeg;
 import org.usfirst.frc.team2706.robot.commands.autonomous.automodes.SideGearCurve;
 import org.usfirst.frc.team2706.robot.commands.autonomous.automodes.SideStartSideGear;
@@ -96,7 +95,7 @@ public class Robot extends IterativeRobot {
 /* position 6: Right position place gear > launch */ new SideCameraPeg(0.7, 3.0, 7.5, 60, 4, 5, true),
  /* position 7: Left position place gear > launch */ new SideStartSideGear(false, 0.65, 6, 60, 6, 3.5, 10),
 /* position 8: Right position place gear > launch */ new SideStartSideGear(true, 0.65, 6, 60, 6, 3.5, 10),
- /* position 9: Left/ gear double side hopper pop */ new VisionCenterPeg(0.5,0,4),
+           /* position 9: Center gear with vision */ new VisionCenterPeg(0.5,0,4),
                   /* position 10: Record n replay */ new SideCameraPeg(0.7, 3.0, 7.2, 66, 4, 5, false),
           /* position 11: Curve from left to gear */ new SideGearCurve(0.6, 5.0, 9.2, 60, 4, 5, false),
      /* position 12: Right gear middle hopper pop */ new SideGearCurve(0.6, 5.0, 9.2, 60, 4, 5, true)
