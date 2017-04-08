@@ -121,21 +121,24 @@ public class StickRumble extends Command {
         }
         timePassed = Timer.getFPGATimestamp() - startTime; // Get the time passes since the start.
 
-        if (repeatCount < 0 && !intervalOn) {
+        if (repeatCount < 0 && intervalTime > 0 && !intervalOn) {
             intervalOn = true;
             rumbleAll(false);
+            startTime += timePassed;
         }
         
-        if (intervalOn && timePassed >= intervalTime) {
+        if (intervalOn && intervalTime > 0 && timePassed >= intervalTime) {
             intervalCount -= 1;
             repeatCount = repeatCountCopy; // Reset the repeat count.
             intervalOn = false;
             on = false;
+            startTime += timePassed;
         }
 
         // Turn on the rumble when it needs to be turned on.
-        if (((timePassed / (timeOn + timeOff)) >= 1) || (timePassed < timeOn) && !on
-                        && !intervalOn) {
+        if ((timePassed < timeOn || timePassed / (timeOn + timeOff) >= 1) && !on && !intervalOn && repeatCount >= 0) {
+            // Need to add to startTime so timePassed is 0 again.
+            startTime += timePassed;
             on = true;
             
             // Subtract from this to eventually get to 0.
@@ -144,14 +147,12 @@ public class StickRumble extends Command {
             if (repeatCount >= 0)
                 rumbleAll(true);
             
-            // Need to add to startTime so timePassed is 0 again.
-            startTime += timePassed;
         }
 
         /*
          * In other words, if we have surpassed rumble On time, turn off the rumble
          */
-        else if (((timePassed / timeOn) >= 1) && on && !intervalOn) {
+        else if ((timePassed >= timeOn) && on && !intervalOn) {
             rumbleAll(false);
             on = false;
         }
@@ -177,7 +178,6 @@ public class StickRumble extends Command {
 
     @Override
     public void end() {
-        System.out.println("END\n\n");
         rumbleAll(false);
         finished = true;
     }
