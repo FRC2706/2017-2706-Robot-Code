@@ -17,6 +17,9 @@ import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.tables.ITable;
 import edu.wpi.first.wpilibj.tables.ITableListener;
 
+/**
+ * Logs to DriverStation at levels debug, info, warning, error
+ */
 public class Log {
 
     public static final String LOGGER_TABLE = "logging-level";
@@ -125,34 +128,86 @@ public class Log {
         NetworkTable.getTable(LOGGER_TABLE).putRaw("Value", results);
     }
     
+    /**
+     * Debug log
+     * 
+     * @param name The object (or String) name to log
+     * @param message The object (or String) message to log
+     */
     public static void d(Object name, Object message) {
         LogLevels.DEBUG.log(name, message);
     }
 
+    /**
+     * Debug log with exception
+     * 
+     * @param name The object (or String) name to log
+     * @param message The object (or String) message to log
+     * @param t The Throwable to log
+     */
     public static void d(Object name, Object message, Throwable t) {
         LogLevels.DEBUG.log(name, message, t);
     }
 
+    /**
+     * Info log
+     * 
+     * @param name The object (or String) name to log
+     * @param message The object (or String) message to log
+     */
     public static void i(Object name, Object message) {
         LogLevels.INFO.log(name, message);
     }
 
+    /**
+     * Info log with exception
+     * 
+     * @param name The object (or String) name to log
+     * @param message The object (or String) message to log
+     * @param t The Throwable to log
+     */
     public static void i(Object name, Object message, Throwable t) {
         LogLevels.INFO.log(name, message, t);
     }
 
+    /**
+     * Warning log
+     * 
+     * @param name The object (or String) name to log
+     * @param message The object (or String) message to log
+     */
     public static void w(Object name, Object message) {
         LogLevels.WARNING.log(name, message);
     }
 
+    /**
+     * Warning log with exception
+     * 
+     * @param name The object (or String) name to log
+     * @param message The object (or String) message to log
+     * @param t The Throwable to log
+     */
     public static void w(Object name, Object message, Throwable t) {
         LogLevels.WARNING.log(name, message, t);
     }
 
+    /**
+     * Error log
+     * 
+     * @param name The object (or String) name to log
+     * @param message The object (or String) message to log
+     */
     public static void e(Object name, Object message) {
         LogLevels.ERROR.log(name, message);
     }
 
+    /**
+     * Error log with exception
+     * 
+     * @param name The object (or String) name to log
+     * @param message The object (or String) message to log
+     * @param t The Throwable to log
+     */
     public static void e(Object name, Object message, Throwable t) {
         LogLevels.ERROR.log(name, message, t);
     }
