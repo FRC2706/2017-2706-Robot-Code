@@ -7,30 +7,35 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 
+/**
+ * @author eAUE (Kyle Anderson)
+ *
+ */
 public class StickRumble extends Command {
-
+    // Joysticks
     protected Joystick joystick;
-
     protected Joystick operatorJoy;
 
+    // Time variables counted
     protected double startTime;
-
     protected double timePassed;
 
+    // Time variables inputted/selected.
     public double timeOn;
-
     public double timeOff;
 
+    // Number of repeats.
     public int repeatCount;
 
+    // Used to determine if we're done.
     public boolean finished;
 
+    // Used to determine if we're on.
     public static boolean on = false;
 
+    // More selected things
     public static double vibrationIntensity;
-
     public static double intervalTime;
-
     public static int intervalCount;
 
     public static int repeatCountCopy;
@@ -45,7 +50,8 @@ public class StickRumble extends Command {
     public static boolean intervalOn = false;
 
     /**
-     * Function for setting vibration on the controller.
+     * Function for setting vibration on the controller. Note that a maximum of 4 seconds
+     * is given for it to run.
      * 
      * @param timeOn The time for which the controller will vibrate in seconds
      * @param timeOff The delay time between when the controller is vibrating
@@ -76,6 +82,9 @@ public class StickRumble extends Command {
         vibrationIntensity = intensity;
         selectionOfController = whichController;
         finished = false;
+    }
+    
+    public void initialize() {
         startTime = Timer.getFPGATimestamp();
     }
 
@@ -106,22 +115,30 @@ public class StickRumble extends Command {
 
     @Override
     public void execute() {
+        // Stop no matter what after 4 seconds.
+        if (timeSinceInitialized() > 4) {
+            end();
+        }
         timePassed = Timer.getFPGATimestamp() - startTime; // Get the time passes since the start.
 
-        if (repeatCount < 0 && !intervalOn) {
+        if (repeatCount < 0 && intervalTime > 0 && !intervalOn) {
             intervalOn = true;
             rumbleAll(false);
+            startTime += timePassed;
         }
-        if (intervalOn && timePassed >= intervalTime) {
+        
+        if (intervalOn && intervalTime > 0 && timePassed >= intervalTime) {
             intervalCount -= 1;
             repeatCount = repeatCountCopy; // Reset the repeat count.
             intervalOn = false;
             on = false;
+            startTime += timePassed;
         }
 
         // Turn on the rumble when it needs to be turned on.
-        if (((timePassed / (timeOn + timeOff)) >= 1) | (timePassed < timeOn) && !on
-                        && !intervalOn) {
+        if ((timePassed < timeOn || timePassed / (timeOn + timeOff) >= 1) && !on && !intervalOn && repeatCount >= 0) {
+            // Need to add to startTime so timePassed is 0 again.
+            startTime += timePassed;
             on = true;
             
             // Subtract from this to eventually get to 0.
@@ -130,14 +147,12 @@ public class StickRumble extends Command {
             if (repeatCount >= 0)
                 rumbleAll(true);
             
-            // Need to add to startTime so timePassed is 0 again.
-            startTime += timePassed;
         }
 
         /*
          * In other words, if we have surpassed rumble On time, turn off the rumble
          */
-        else if (((timePassed / timeOn) >= 1) && on && !intervalOn) {
+        else if ((timePassed >= timeOn) && on && !intervalOn) {
             rumbleAll(false);
             on = false;
         }
@@ -148,7 +163,7 @@ public class StickRumble extends Command {
      * the schedule.
      */
     public boolean isFinished() {
-        if (intervalCount <= 0 && !infiniteCount) {
+        if (intervalCount < 0 && !infiniteCount) {
             finished = true;
         }
         return finished;
@@ -164,5 +179,6 @@ public class StickRumble extends Command {
     @Override
     public void end() {
         rumbleAll(false);
+        finished = true;
     }
 }

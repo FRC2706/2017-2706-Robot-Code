@@ -4,6 +4,7 @@ import org.usfirst.frc.team2706.robot.Log;
 import org.usfirst.frc.team2706.robot.RobotMap;
 
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -18,6 +19,7 @@ public class GearHandler extends Subsystem {
     
 
     private DoubleSolenoid solenoid = new DoubleSolenoid(RobotMap.SOLENOID_FORWARD_CHANNEL, RobotMap.SOLENOID_REVERSE_CHANNEL);
+    protected Compressor compressor = new Compressor();
     
     public static final int ARMS_CLOSED_NO_GEAR = 0;
     public static final int ARMS_CLOSED_WITH_GEAR = 1;
@@ -152,6 +154,10 @@ public class GearHandler extends Subsystem {
             return true;
         }
         return false;
+    }
+    
+    public void setCompressor(boolean compressorState) {
+        compressor.setClosedLoopControl(compressorState);
     }
 
     public void log() {

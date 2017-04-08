@@ -10,6 +10,11 @@ import edu.wpi.first.wpilibj.command.Command;
  * @author wakandacat, FilledWithDetermination, Crazycat200
  */
 public class ClimbVariableManually extends Command {
+    
+    protected void initialize() {
+        // Turn compressor off
+        Robot.gearHandler.setCompressor(false);
+    }
 
     protected void execute() {
         Robot.climber.setClimberSpeed(getTriggerValue());
@@ -26,6 +31,8 @@ public class ClimbVariableManually extends Command {
 
     protected void end() {
         Robot.climber.stop();
+        // Turn compressor back on.
+        Robot.gearHandler.setCompressor(true);
     }
     
     private double getTriggerValue() {

@@ -4,7 +4,6 @@ import java.lang.reflect.Field;
 
 import org.usfirst.frc.team2706.robot.bling.DistanceShowerToggle;
 import org.usfirst.frc.team2706.robot.bling.ToggleFlashiness;
-import org.usfirst.frc.team2706.robot.commands.autonomous.movements.RotateDriveWithGyro;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.TeleopStraightDriveWithCamera;
 import org.usfirst.frc.team2706.robot.commands.mechanismcontrol.CloseGearMechanism;
 import org.usfirst.frc.team2706.robot.commands.mechanismcontrol.OpenGearMechanism;
@@ -89,7 +88,7 @@ public class OI {
         // Closes gear holder mechanism so holder can hold gears
         EJoystickButton operatorBButton = new EJoystickButton(controlStick, 2);
         operatorBButton.whenPressed(new CloseGearMechanism());
-
+        
         // Opens gear holder mechanism for when peg is in
         EJoystickButton operatorYButton = new EJoystickButton(controlStick, 4);
         operatorYButton.whenPressed(new OpenGearMechanism());
@@ -98,9 +97,6 @@ public class OI {
         // This will toggle whether or not we have flashy patterns on the LED strips
         EJoystickButton displayButton = new EJoystickButton(controlStick, 7);
         displayButton.whenPressed(new ToggleFlashiness());
-        
-        EJoystickButton rotateButton = new EJoystickButton(controlStick, 3);
-        rotateButton.runWhileHeld(new RotateDriveWithGyro(0.5, 90));
     }
 
     /**

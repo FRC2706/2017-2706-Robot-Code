@@ -22,13 +22,13 @@ public class DrivePlaceGear extends CommandGroup {
         requires(Robot.driveTrain);
         if (distance != 0) {
             // Adds a movement one after another instead of at the same time
-            this.addSequential(new StraightDriveWithEncoders(speed, distance, 0.1),6);
+            this.addSequential(new StraightDriveWithEncoders(speed, distance, 0.1,1),3);
         }
-        
+        this.addSequential(new StraightDriveWithTime(0.54, 750));
         this.addSequential(new WaitForSensor(10));
         this.addSequential(new OpenGearMechanism());
-        this.addSequential(new StraightDriveWithTime(0.7, 1000));
-        this.addSequential(new StraightDriveWithEncoders(-speed, -reverseDistance, 5));
+        this.addSequential(new StraightDriveWithTime(0.7, 500));
+        this.addSequential(new StraightDriveWithEncoders(-0.7, -reverseDistance, 5,1));
         this.addSequential(new CloseGearMechanism());
     }
 }

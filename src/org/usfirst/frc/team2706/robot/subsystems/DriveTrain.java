@@ -34,7 +34,7 @@ public class DriveTrain extends Subsystem {
 
     // TODO: maybe we don't need this
     private GyroPIDSource gyroPIDSource;
-
+    private AverageEncoderPIDSource encoderPIDSource;
     private UltrasonicPIDSource ultrasonicPIDSource;
 
     public double initGyro;
@@ -80,6 +80,7 @@ public class DriveTrain extends Subsystem {
 
         leftDistanceSensor.setAutomaticMode(true);
 
+        encoderPIDSource = new AverageEncoderPIDSource(left_encoder, right_encoder);
         ultrasonicPIDSource = new UltrasonicPIDSource(leftDistanceSensor, rightDistanceSensor);
 
         // Set up navX gyro
@@ -166,8 +167,13 @@ public class DriveTrain extends Subsystem {
      * @param joy The Xbox style joystick to use to drive arcade style.
      */
     public void drive(GenericHID joy) {
-        drive.arcadeDrive(RobotMap.INVERT_JOYSTICK_Y ? -joy.getRawAxis(5) : joy.getRawAxis(5),
-                        RobotMap.INVERT_JOYSTICK_X ? -joy.getRawAxis(4) : joy.getRawAxis(4), true);
+        double YAxis = RobotMap.INVERT_JOYSTICK_Y ? -joy.getRawAxis(5) : joy.getRawAxis(5);
+        double XAxis = RobotMap.INVERT_JOYSTICK_X ? -joy.getRawAxis(4) : joy.getRawAxis(4);
+        if (joy.getRawButton(9)) {
+            XAxis *= 0.7;
+        }
+        drive.arcadeDrive(YAxis, XAxis, true);
+        
     }
 
     /**
@@ -177,17 +183,22 @@ public class DriveTrain extends Subsystem {
      * @param joy The main drive joystick
      * @param rotate Joystick to rotate the robot with
      */
-    public void headlessDrive(GenericHID joy, GenericHID rotate) {
-        double angle = normalize(Math.toDegrees(Math.tanh(joy.getRawAxis(5) / joy.getRawAxis(4))));
-        double speed = (joy.getRawAxis(5) + joy.getRawAxis(4)) / 2; // hyp
+    public void headlessDrive(GenericHID joy) {
+        Log.d("HeadlessDrive", joy.getRawAxis(5) + "," + joy.getRawAxis(4));
+        double raw5 = joy.getRawAxis(5);
+       double raw4 = joy.getRawAxis(4);
+        double angle = normalize(Math.toDegrees(Math.atan(raw5 / raw4)));
+        
+        double speed = (raw5 + raw4) / 2; // hyp
+        if(Math.abs(speed) < 0.1) {
+            speed = 0;
+            angle = Robot.driveTrain.getHeading();
+        }
         Log.d("HeadlessDrive", "Angle: " + angle + ", Speed: " + speed);
         double gyroAngle;
-        if (Math.abs(Robot.driveTrain.getHeading()) <= Math
-                        .abs(180 - Robot.driveTrain.getHeading()))
             gyroAngle = normalize(Robot.driveTrain.getHeading());
-        else
-            gyroAngle = normalize(Robot.driveTrain.getHeading() - 180);
-        drive.arcadeDrive(-speed, (angle - gyroAngle * 0.1));
+        Log.d("HeadlessDrive", (angle - gyroAngle * 0.1) * speed);
+        drive.arcadeDrive(-speed,- (angle - gyroAngle * 0.1) * speed,true);
     }
 
     /**
@@ -296,6 +307,7 @@ public class DriveTrain extends Subsystem {
         // Inverse tangent to take two sides of the triangle and get the angle
         double theta = Math.toDegrees(Math.atan2(opposite, adjacent));
         Log.d("Degree Sensor Angle", theta);
+        
         return theta;
     }
 
@@ -323,8 +335,13 @@ public class DriveTrain extends Subsystem {
         } else {
             return right_encoder;
         }
+       
     }
 
+    public PIDSource getAverageEncoderPIDSource() {
+        return encoderPIDSource;
+    }
+    
     /**
      * @return The distance to the obstacle detected by the distance sensor.
      */
@@ -363,6 +380,34 @@ public class DriveTrain extends Subsystem {
 
     }
 
+    class AverageEncoderPIDSource implements PIDSource {
+
+        private final Encoder left, right;
+
+        public AverageEncoderPIDSource(Encoder left, Encoder right) {
+            this.left = left;
+            this.right = right;
+        }
+
+        @Override
+        public void setPIDSourceType(PIDSourceType pidSource) {
+            left.setPIDSourceType(pidSource);
+            right.setPIDSourceType(pidSource);
+        }
+
+        @Override
+        public PIDSourceType getPIDSourceType() {
+            return left.getPIDSourceType();
+        }
+
+        @Override
+        public double pidGet() {
+            return (left.getDistance() + right.getDistance()) / 2;
+        }
+
+    }
+
+    
     class GyroPIDSource implements PIDSource {
 
         private final DriveTrain driveTrain;
@@ -426,7 +471,7 @@ public class DriveTrain extends Subsystem {
                                     && Robot.camera.getTarget().ctrY > -0.8
                                     && Robot.camera.getTarget().ctrY < 0.8) {
                         rotateVal = Robot.camera.getTarget() != null
-                                        ? (Robot.camera.getTarget().ctrY) * 1.7 : 0;
+                                        ? (Robot.camera.getTarget().ctrY + 0.05) * 1.7 : 0;
                         if (rotateVal > 0.6) {
                             rotateVal = 0.6;
                         }
@@ -440,7 +485,7 @@ public class DriveTrain extends Subsystem {
                     rotateVal = 0;
                 }
             } else {
-                rotateVal = normalize(getHeading() - initGyro) * 0.1;
+                rotateVal = normalize(getHeading() - initGyro) * 0.15;
             }
 
 

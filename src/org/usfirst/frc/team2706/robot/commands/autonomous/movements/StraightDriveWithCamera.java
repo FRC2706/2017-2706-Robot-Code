@@ -70,7 +70,7 @@ public class StraightDriveWithCamera extends Command {
     }
 
     protected void execute() {
-        Robot.camera.GetTargets();
+        Robot.camera.GetTargets(true);
     }
 
     // Make this return true when this Command no longer needs to run execute()
