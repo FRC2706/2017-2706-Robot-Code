@@ -2,6 +2,7 @@ package org.usfirst.frc.team2706.robot.subsystems;
 
 import java.util.ArrayList;
 
+import org.usfirst.frc.team2706.robot.Robot;
 import org.usfirst.frc.team2706.robot.RobotMap;
 import org.usfirst.frc.team2706.robot.subsystems.TrackerBox2.TargetObject;
 
@@ -29,7 +30,7 @@ public class Camera extends Subsystem {
         super();
     }
 
-    public void GetTargets() {
+    public void GetTargets(boolean auto) {
         ArrayList<TrackerBox2.TargetObject> targets = trackerbox.getVisionData();
 
         if (targets != null) {
@@ -47,6 +48,9 @@ public class Camera extends Subsystem {
         } else {
             target = null;
         }
+        
+        if(auto)
+            Robot.blingSystem.toggleAutoState(target != null);
     }
 
     public TargetObject getTarget() {

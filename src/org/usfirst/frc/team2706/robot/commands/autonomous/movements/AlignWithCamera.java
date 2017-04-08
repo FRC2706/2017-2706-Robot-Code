@@ -47,7 +47,7 @@ public class AlignWithCamera extends Command {
     }
 
     protected void execute() {
-        Robot.camera.GetTargets();
+        Robot.camera.GetTargets(true);
         double rotateVal;
         if (Robot.camera.getTarget() != null) {
             if (Robot.camera.getTarget().ctrX > -0.8 && Robot.camera.getTarget().ctrX < 0.8) {
