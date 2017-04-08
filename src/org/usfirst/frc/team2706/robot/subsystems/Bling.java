@@ -233,7 +233,7 @@ public class Bling extends Subsystem {
      * Just a fun pattern to show while climbing
      */
     public void climbingDisplay() {
-        customDisplay("merge", 8, 75, 100, 0, 1);
+        customDisplay("merge", 7, 75, 100, 0, 1);
     }
     
     
@@ -321,6 +321,13 @@ public class Bling extends Subsystem {
         }
         
         customDisplay(colour, 3, 100, 100, 0, 1);
+    }
+    
+    /**
+     * Basic command that shows a green signal when we get a gear.
+     */
+    public void showGotGear() {
+        customDisplay("Green", 6, 100, 100, 0, 1);
     }
     
     /**

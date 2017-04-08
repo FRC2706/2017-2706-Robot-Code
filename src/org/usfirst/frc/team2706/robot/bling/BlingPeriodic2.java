@@ -45,6 +45,8 @@ public class BlingPeriodic2 extends Command {
     
     protected static StickRumble rumbler = null; 
     
+    protected static double previousGearState = 0;
+    
     protected void initialize () {
         if (DriverStation.getInstance().isAutonomous() && Robot.blingSystem.getSpecialState() == "autoTrue") {
             Robot.blingSystem.auto();
@@ -89,16 +91,30 @@ public class BlingPeriodic2 extends Command {
             boolean climbing = Robot.climber.isClimbing();
             
             
+            // This means we got a gear, and it's time to tell the drivers.
+            if (gearState == 1 && previousGearState == 0 && timeSinceInitialized() > 3) {
+                gearPickupPattern = true;
+                rumbler = new StickRumble(0.5, 0.2, 3, 0, 0, 1, 0);
+                rumbler.start();
+            }
+            
+            
             /* Turn off the rumbler at an appropriate time 
              * (when the peg is no longer in or arms are open).
              */
-            if ((rumbler != null) && (gearState < 2 || gearState > 3)) {
+            if ((rumbler != null) && !gearPickupPattern && (gearState < 2 || gearState > 3)) {
                 rumbler.end();
                 rumbler = null;
             }
             
+            // We are climbing!
+            if (climbing) {
+                busy = true;
+                Robot.blingSystem.climbingDisplay();
+            }
+            
             // Displaying peg line up
-            if (!gearPickupPattern && distance < outsideDistanceThreshold && ((1 <= gearState && gearState <= 3) || gearState == 5)) {
+            else  if (!gearPickupPattern && distance < outsideDistanceThreshold && ((1 <= gearState && gearState <= 3) || gearState == 5)) {
                 busy = true;
                 
                 // Get some vibration going, but only if there is already none.
@@ -113,7 +129,6 @@ public class BlingPeriodic2 extends Command {
             // Displaying pickup line up
             else if ((distance < outsideDistanceThreshold) && (gearState == 0 || gearState == 4) && !busy) {
                 busy = true;
-                gearPickupPattern = true;
                 
                 // Just right (arms closed and in nice distance)
                 if ((lowerDistanceThreshold <= distance) && (distance <= upperDistanceThreshold) && gearState == 0)
@@ -128,29 +143,31 @@ public class BlingPeriodic2 extends Command {
                     Robot.blingSystem.showReadyToReceiveGear(2);
             }
             
-            // We are climbing!
-            else if (climbing && !busy) {
+            // Show that we just got a gear.
+            else if (gearPickupPattern && !busy) {
                 busy = true;
-                Robot.blingSystem.climbingDisplay();
+                Robot.blingSystem.showGotGear();
+                gearPickupHandler(gearState);
             }
+            
             
             // Time to climb
             else if (timeSinceInitialized() > 120 && !busy) {
-                gearPickupHandler(gearState);
                 busy = true;
                 Robot.blingSystem.showReadyToClimb(true);
             }
             
-            // 
+            // Show that we have a gear.
             else if (gearState == 1 && !busy) {
-                gearPickupHandler(gearState);
                 busy = true;
                 Robot.blingSystem.funDisplay();                
             }
             
+            // Show nothing.
             else if (!busy) {
                 Robot.blingSystem.clear();
             }
+            previousGearState = gearState;
         }
     }
     
@@ -167,7 +184,7 @@ public class BlingPeriodic2 extends Command {
         }
         timePassedGearPickup = Timer.getFPGATimestamp() - timePointGearPickup;
         
-        if (timePassedGearPickup > 1.5) {
+        if (timePassedGearPickup > 3) {
             timePassedGearPickup = 0;
             timePointGearPickup = 0;
             gearPickupPattern = false;
