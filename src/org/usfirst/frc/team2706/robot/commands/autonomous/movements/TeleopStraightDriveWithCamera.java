@@ -1,5 +1,6 @@
 package org.usfirst.frc.team2706.robot.commands.autonomous.movements;
 
+import org.usfirst.frc.team2706.robot.Log;
 import org.usfirst.frc.team2706.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -48,7 +49,7 @@ public class TeleopStraightDriveWithCamera extends Command {
         if (Robot.driveTrain.getDistanceToObstacle() < 25 || Robot.camera.getTarget() == null) {
             rotateVal = 0;
         }
-        System.out.println(rotateVal);
+        Log.d("TeleopStraightDriveWithCamera", "Rotattion Value: " + rotateVal);
         Robot.driveTrain.arcadeDrive(-getTriggerValue() / 2, rotateVal);
     }
 

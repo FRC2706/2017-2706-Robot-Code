@@ -123,7 +123,6 @@ public class Bling extends Subsystem {
         else {
             clear();
         }
-        
     }
     
     /**
