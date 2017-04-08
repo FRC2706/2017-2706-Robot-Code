@@ -1,5 +1,6 @@
 package org.usfirst.frc.team2706.robot.commands.autonomous.movements;
 
+import org.usfirst.frc.team2706.robot.Log;
 import org.usfirst.frc.team2706.robot.Robot;
 
 import edu.wpi.first.wpilibj.PIDController;
@@ -85,7 +86,7 @@ public class RotateDriveWithGyro extends Command {
         // Disable PID output and stop robot to be safe
         PID.disable();
 
-        System.out.println("Ended");
+        Log.d("RotateDriveWithGyro", "Ended");
 
         Robot.driveTrain.drive(0, 0);
     }

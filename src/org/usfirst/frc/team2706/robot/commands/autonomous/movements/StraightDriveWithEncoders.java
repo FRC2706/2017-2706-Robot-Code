@@ -1,5 +1,6 @@
 package org.usfirst.frc.team2706.robot.commands.autonomous.movements;
 
+import org.usfirst.frc.team2706.robot.Log;
 import org.usfirst.frc.team2706.robot.Robot;
 
 import edu.wpi.first.wpilibj.PIDController;
@@ -47,6 +48,7 @@ public class StraightDriveWithEncoders extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
+        Log.d("StraightDrive", "Initialize");
         Robot.driveTrain.reset();
 
         Robot.driveTrain.brakeMode(true);
@@ -87,12 +89,15 @@ public class StraightDriveWithEncoders extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
+        Log.d("StraightDrive", "ending");
+        Robot.driveTrain.brakeMode(false);
         // Robot.driveTrain.brakeMode(false);
+        
         // Disable PID output and stop robot to be safe
         PID.disable();
         Robot.driveTrain.drive(0, 0);
 
-        System.out.println("Ended");
+        Log.d("StraightDriveWithEncoders", "Ended");
     }
 
     // Called when another command which requires one or more of the same

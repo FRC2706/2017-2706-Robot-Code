@@ -13,10 +13,12 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class AlignWithCamera extends Command {
 
+    @SuppressWarnings("unused")
     private double speed;
 
     private final long time;
 
+    @SuppressWarnings("unused")
     private final double error;
 
     /**

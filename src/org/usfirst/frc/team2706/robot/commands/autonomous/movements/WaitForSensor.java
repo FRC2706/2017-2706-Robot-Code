@@ -1,5 +1,6 @@
 package org.usfirst.frc.team2706.robot.commands.autonomous.movements;
 
+import org.usfirst.frc.team2706.robot.Log;
 import org.usfirst.frc.team2706.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -27,8 +28,9 @@ public class WaitForSensor extends Command {
     @Override
     protected boolean isFinished() {
         if (Robot.gearHandler.pegDetected()) {
+            Log.d("Waiting for Peg", "Detected Peg");
         }
-        // TODO Auto-generated method stub
+
         return Robot.gearHandler.pegDetected();
     }
 

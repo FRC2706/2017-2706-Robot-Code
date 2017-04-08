@@ -1,5 +1,6 @@
 package org.usfirst.frc.team2706.robot.commands.autonomous.movements;
 
+import org.usfirst.frc.team2706.robot.Log;
 import org.usfirst.frc.team2706.robot.Robot;
 
 import edu.wpi.first.wpilibj.PIDController;
@@ -63,7 +64,7 @@ public class StraightDriveWithCamera extends Command {
 
         // Will accept within 5 inch of target
         PID.setAbsoluteTolerance(error);
-        System.out.println("init");
+        Log.d("StraightDriveWithCamera", "init");
         // Start going to location
         PID.enable();
     }

@@ -1,5 +1,6 @@
 package org.usfirst.frc.team2706.robot.subsystems;
 
+import org.usfirst.frc.team2706.robot.Log;
 import org.usfirst.frc.team2706.robot.Robot;
 import org.usfirst.frc.team2706.robot.RobotMap;
 import org.usfirst.frc.team2706.robot.commands.teleop.ArcadeDriveWithJoystick;
@@ -183,7 +184,7 @@ public class DriveTrain extends Subsystem {
      * @param rotate Joystick to rotate the robot with
      */
     public void headlessDrive(GenericHID joy) {
-        System.out.println(joy.getRawAxis(5) + "," + joy.getRawAxis(4));
+        Log.d("HeadlessDrive", joy.getRawAxis(5) + "," + joy.getRawAxis(4));
         double raw5 = joy.getRawAxis(5);
        double raw4 = joy.getRawAxis(4);
         double angle = normalize(Math.toDegrees(Math.atan(raw5 / raw4)));
@@ -193,10 +194,10 @@ public class DriveTrain extends Subsystem {
             speed = 0;
             angle = Robot.driveTrain.getHeading();
         }
-        System.out.println("Angle: " + angle + ", Speed: " + speed);
+        Log.d("HeadlessDrive", "Angle: " + angle + ", Speed: " + speed);
         double gyroAngle;
             gyroAngle = normalize(Robot.driveTrain.getHeading());
-        System.out.println((angle - gyroAngle * 0.1) * speed);
+        Log.d("HeadlessDrive", (angle - gyroAngle * 0.1) * speed);
         drive.arcadeDrive(-speed,- (angle - gyroAngle * 0.1) * speed,true);
     }
 
@@ -305,6 +306,8 @@ public class DriveTrain extends Subsystem {
         double adjacent = RobotMap.DISTANCE_SENSOR_SEPARATION_CM / 2.54;
         // Inverse tangent to take two sides of the triangle and get the angle
         double theta = Math.toDegrees(Math.atan2(opposite, adjacent));
+        Log.d("Degree Sensor Angle", theta);
+        
         return theta;
     }
 

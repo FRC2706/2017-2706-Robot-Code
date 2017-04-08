@@ -1,5 +1,6 @@
 package org.usfirst.frc.team2706.robot.commands.autonomous.movements;
 
+import org.usfirst.frc.team2706.robot.Log;
 import org.usfirst.frc.team2706.robot.Robot;
 
 import edu.wpi.first.wpilibj.PIDController;
@@ -87,7 +88,7 @@ public class StraightDriveWithPeg extends Command {
         PID.disable();
         Robot.driveTrain.drive(0, 0);
 
-        System.out.println("Ended");
+        Log.d("StraightDriveWithPeg", "Ended");
     }
 
     // Called when another command which requires one or more of the same

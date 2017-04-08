@@ -3,6 +3,8 @@ package org.usfirst.frc.team2706.diagnostics;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
+
+import org.usfirst.frc.team2706.robot.Log;
 import org.usfirst.frc.team2706.robot.Robot;
 /**
  * Goal of this class is to test the hardware of the robot automatically
@@ -20,7 +22,7 @@ public class AutoDiagnoser extends Command{
     protected static StraightDriveWithTime drive;
     
     public AutoDiagnoser() {
-        System.out.println("\nDiagnostics beginning...");
+        Log.i("AutoDiagnoser", "\nDiagnostics beginning...");
     }
     
     
@@ -34,10 +36,10 @@ public class AutoDiagnoser extends Command{
                 int gearState = Robot.gearHandler.gearHandlerState();
                 if ((0 <= gearState && gearState <= 2 || gearState == 7) && originalGearState >=3
                                 && originalGearState <= 6)
-                    System.out.println("Arms can be moved");
+                    Log.i("AutoDiagnoser", "Arms can be moved");
                 else if (!(0 <= gearState && gearState <= 2 || gearState == 7) && !(originalGearState >=3
                                 && originalGearState <= 6)) {
-                    System.out.println("Arms can be moved");
+                    Log.i("AutoDiagnoser", "Arms can be moved");
                 }
                 else {
                     DriverStation.reportWarning("Arms cannot be moved!", false);
@@ -57,10 +59,11 @@ public class AutoDiagnoser extends Command{
                     motorSpeed = Robot.climber.getSpeed();
                     timeSpot = 0;
                     if (motorSpeed < 0.1) {
-                        System.out.println("Climber functioning properly");
+                        Log.i("AutoDiagnoser", "Climber functioning properly");
                     }
                     else {
                         DriverStation.reportWarning("Climber malfunctioning!", false);
+                        Log.e("AutoDiagnoser", "Climber malfunctioning!");
                         error = true;
                     }
                 }
@@ -80,7 +83,7 @@ public class AutoDiagnoser extends Command{
                         error = true;
                     }
                     else
-                        System.out.println("Driving appears to be working unless encoders " +
+                        Log.i("AutoDiagnoser", "Driving appears to be working unless encoders " +
                                         "also don't work");
                 }
                 

@@ -70,6 +70,10 @@ public class Robot extends IterativeRobot {
      */
     @SuppressWarnings("unused")
     public void robotInit() {
+        Log.setUpLogging();
+        
+        RobotMap.log();
+        
         // Instantiate the robot subsystems
         driveTrain = new DriveTrain();
 
@@ -134,8 +138,8 @@ public class Robot extends IterativeRobot {
         driveTrain.reset();
 
         // Great for safety just in case you set the wrong one in practice ;)
-        System.out.println("Running " + hardwareChooser.getSelected() + "...");
-
+        Log.i("Autonomous Selector", "Running " + hardwareChooser.getSelected() + "...");
+        
         autonomousCommand = hardwareChooser.getSelected();
         Robot.driveTrain.brakeMode(true);
         // Schedule the autonomous command that was selected
@@ -193,5 +197,7 @@ public class Robot extends IterativeRobot {
         driveTrain.log();
         gearHandler.log();
         hardwareChooser.log();
+        
+        Log.updateTableLog();
     }
 }

@@ -1,5 +1,6 @@
 package org.usfirst.frc.team2706.robot.commands.autonomous.movements;
 
+import org.usfirst.frc.team2706.robot.Log;
 import org.usfirst.frc.team2706.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -56,7 +57,7 @@ public class QuickRotate extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-        System.out.println(Robot.driveTrain.getHeading());
+        Log.d("Quick Rotate", "Current Heading: " + Robot.driveTrain.getHeading());
         currentHeading = normalize(Robot.driveTrain.getHeading());
         double error = normalize(targetHeading - currentHeading);
 
