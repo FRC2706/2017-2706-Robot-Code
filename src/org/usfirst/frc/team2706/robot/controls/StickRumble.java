@@ -50,7 +50,7 @@ public class StickRumble extends Command {
     public static boolean intervalOn = false;
 
     /**
-     * Function for setting vibration on the controller. Note that a maximum of 8 seconds
+     * Function for setting vibration on the controller. Note that a maximum of 4 seconds
      * is given for it to run.
      * 
      * @param timeOn The time for which the controller will vibrate in seconds
@@ -115,8 +115,8 @@ public class StickRumble extends Command {
 
     @Override
     public void execute() {
-        // Stop no matter what after 8 seconds.
-        if (timeSinceInitialized() > 8) {
+        // Stop no matter what after 4 seconds.
+        if (timeSinceInitialized() > 4) {
             end();
         }
         timePassed = Timer.getFPGATimestamp() - startTime; // Get the time passes since the start.
