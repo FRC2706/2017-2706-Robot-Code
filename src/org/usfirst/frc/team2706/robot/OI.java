@@ -4,7 +4,6 @@ import java.lang.reflect.Field;
 
 import org.usfirst.frc.team2706.robot.bling.DistanceShowerToggle;
 import org.usfirst.frc.team2706.robot.bling.ToggleFlashiness;
-import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithCamera;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.TeleopStraightDriveWithCamera;
 import org.usfirst.frc.team2706.robot.commands.mechanismcontrol.CloseGearMechanism;
 import org.usfirst.frc.team2706.robot.commands.mechanismcontrol.OpenGearMechanism;

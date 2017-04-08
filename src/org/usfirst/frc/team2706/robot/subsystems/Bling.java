@@ -115,10 +115,15 @@ public class Bling extends Subsystem {
      * @param good Send a true to display green, false to display nothing.
      */
     public void toggleAutoState(boolean good) {
-        if (good) 
+        if (good) { 
             specialState = "autoTrue";
+            auto();
+        }
         
-        auto();
+        else {
+            clear();
+        }
+        
     }
     
     /**

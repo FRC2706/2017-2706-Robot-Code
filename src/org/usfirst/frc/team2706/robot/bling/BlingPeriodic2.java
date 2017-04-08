@@ -6,8 +6,6 @@ import org.usfirst.frc.team2706.robot.controls.StickRumble;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /***
  * 
@@ -46,13 +44,7 @@ public class BlingPeriodic2 extends Command {
     protected static StickRumble rumbler = null; 
     
     protected static double previousGearState = 0;
-    
-    protected void initialize () {
-        if (DriverStation.getInstance().isAutonomous() && Robot.blingSystem.getSpecialState() == "autoTrue") {
-            Robot.blingSystem.auto();
-        }
-    }
-    
+       
     protected void execute () {
         
         double timePassed = Timer.getFPGATimestamp() - timePoint;
