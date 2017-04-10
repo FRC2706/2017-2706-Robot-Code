@@ -88,7 +88,7 @@ public class OI {
         // Closes gear holder mechanism so holder can hold gears
         EJoystickButton operatorBButton = new EJoystickButton(controlStick, 2);
         operatorBButton.whenPressed(new CloseGearMechanism());
-
+        
         // Opens gear holder mechanism for when peg is in
         EJoystickButton operatorYButton = new EJoystickButton(controlStick, 4);
         operatorYButton.whenPressed(new OpenGearMechanism());
@@ -109,7 +109,7 @@ public class OI {
             f.set(Scheduler.getInstance(), null);
             f.setAccessible(false);
         } catch (IllegalAccessException | NoSuchFieldException | SecurityException e) {
-            e.printStackTrace();
+            Log.e("Oi", "Error occured destroying m_buttons", e);
         }
     }
 }

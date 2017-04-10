@@ -1,5 +1,6 @@
 package org.usfirst.frc.team2706.robot.commands.autonomous.movements;
 
+import org.usfirst.frc.team2706.robot.Log;
 import org.usfirst.frc.team2706.robot.Robot;
 
 import edu.wpi.first.wpilibj.PIDController;
@@ -18,9 +19,11 @@ public class RotateDriveWithGyro extends Command {
 
     private final double angle;
 
-    private final PIDController PID;
+    private PIDController PID;
 
-    private final double P = 0.05, I = 0.001, D = 0, F = 0;
+    private final int minDoneCycles;
+
+    private final double P = 0.0575, I = 0.02, D = 0.15, F = 0;
 
     /**
      * Drive at a specific speed for a certain amount of time
@@ -28,12 +31,14 @@ public class RotateDriveWithGyro extends Command {
      * @param speed Speed in range [-1,1]
      * @param angle The angle to rotate to
      */
-    public RotateDriveWithGyro(double speed, double angle) {
+    public RotateDriveWithGyro(double speed, double angle, int minDonecycles) {
         requires(Robot.driveTrain);
 
         this.speed = speed;
 
         this.angle = angle;
+
+        this.minDoneCycles = minDonecycles;
 
         PID = new PIDController(P, I, D, F, Robot.driveTrain.getGyroPIDSource(false),
                         Robot.driveTrain.getDrivePIDOutput(false, false, true));
@@ -55,8 +60,8 @@ public class RotateDriveWithGyro extends Command {
         } else {
             PID.setOutputRange(speed, -speed);
         }
-        // Will accept within 1 degrees of target
-        PID.setAbsoluteTolerance(3);
+        // Will accept within 2 degrees of target
+        PID.setAbsoluteTolerance(2);
 
         PID.setSetpoint(angle);
 
@@ -64,15 +69,24 @@ public class RotateDriveWithGyro extends Command {
         PID.enable();
     }
 
+    private int doneTicks;
+
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-       return PID.onTarget();
+        if (PID.onTarget())
+            doneTicks++;
+        else
+            doneTicks = 0;
+
+        return doneTicks >= minDoneCycles;
     }
 
     // Called once after isFinished returns true
     protected void end() {
         // Disable PID output and stop robot to be safe
         PID.disable();
+
+        Log.d("RotateDriveWithGyro", "Ended");
 
         Robot.driveTrain.drive(0, 0);
     }

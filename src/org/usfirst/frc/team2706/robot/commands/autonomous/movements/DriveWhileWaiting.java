@@ -1,6 +1,5 @@
 package org.usfirst.frc.team2706.robot.commands.autonomous.movements;
 
-import org.usfirst.frc.team2706.robot.Log;
 import org.usfirst.frc.team2706.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -11,26 +10,24 @@ import edu.wpi.first.wpilibj.command.Command;
  * @author cnnr2
  *
  */
-public class WaitForSensor extends Command {
-    public final double distance;
+public class DriveWhileWaiting extends Command {
+    public final double speed;
 
-    public WaitForSensor(double distance) {
-        this.distance = distance;
+    public DriveWhileWaiting(double speed) {
+        this.speed = speed;
     }
-
+    protected void initialize() {
+        Robot.driveTrain.reset();
+    }
     protected void execute() {
-
-        if (Robot.gearHandler.pegDetected()) {
-            // Robot.blingSystem.showReadyToReceiveGear(true);
+        if (!Robot.gearHandler.pegDetected()) {
+            Robot.driveTrain.arcadeDrive(-speed, Robot.driveTrain.normalize(-Robot.driveTrain.getHeading()) / 10);
         }
     }
 
     @Override
     protected boolean isFinished() {
-        if (Robot.gearHandler.pegDetected()) {
-            Log.d("Waiting for Peg", "Detected Peg");
-        }
-
+        // TODO Auto-generated method stub
         return Robot.gearHandler.pegDetected();
     }
 

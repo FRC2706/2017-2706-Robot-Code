@@ -1,11 +1,10 @@
 
 package org.usfirst.frc.team2706.robot;
 
-import org.usfirst.frc.team2706.robot.commands.autonomous.automodes.CenterToLaunch;
 import org.usfirst.frc.team2706.robot.commands.autonomous.automodes.SideCameraPeg;
 import org.usfirst.frc.team2706.robot.commands.autonomous.automodes.SideGearCurve;
+import org.usfirst.frc.team2706.robot.commands.autonomous.automodes.SideStartSideGear;
 import org.usfirst.frc.team2706.robot.commands.autonomous.automodes.VisionCenterPeg;
-import org.usfirst.frc.team2706.robot.commands.autonomous.movements.ReplayRecordedJoystick;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithEncoders;
 import org.usfirst.frc.team2706.robot.commands.autonomous.plays.DrivePlaceGear;
 import org.usfirst.frc.team2706.robot.commands.teleop.ArcadeDriveWithJoystick;
@@ -71,6 +70,10 @@ public class Robot extends IterativeRobot {
      */
     @SuppressWarnings("unused")
     public void robotInit() {
+        Log.setUpLogging();
+        
+        RobotMap.log();
+        
         // Instantiate the robot subsystems
         driveTrain = new DriveTrain();
 
@@ -89,16 +92,15 @@ public class Robot extends IterativeRobot {
         hardwareChooser = new AutonomousSelector(
                          /* no switch: do nothing */ new ArcadeDriveWithJoystick(),
                         /* position 1: do nothing */ new ArcadeDriveWithJoystick(),
-                 /* position 2: Drive to baseline */ new StraightDriveWithEncoders(0.376, 10, 1),
-     /* position 3: Drive to opposing launch line */ new StraightDriveWithEncoders(0.65, 20, 0),
+                 /* position 2: Drive to baseline */ new StraightDriveWithEncoders(0.5, 10, 1, 1),
+     /* position 3: Drive to opposing launch line */ new StraightDriveWithEncoders(0.65, 20, 0, 1),
         /* position 4: Center Position place gear */ new DrivePlaceGear(0.5, 7+2.35/3, 3),
-/* position 5: Left position place gear > launch */ new SideCameraPeg(0.7, 3.0, 7.2, 60, 4, 5, false),
- /* position 6: Right position place gear > launch */ new SideCameraPeg(0.7, 3.0, 7.2, 60, 4, 5, true),
-         /* position 7: Center and left to launch */ new CenterToLaunch(false, 0.55, 7+2.35/3, 3, 90, 8, 8),
-        /* position 8: Center and right to launch */ new CenterToLaunch(true, 0.5, 7+2.35/3, 3, 90, 8, 8),
-        // TODO build a hopper popper
- /* position 9: Left/ gear double side hopper pop */ new VisionCenterPeg(0.5,0,4),
-                  /* position 10: Record n replay */ new ReplayRecordedJoystick(oi.getDriverJoystick(), oi.getOperatorJoystick(),() -> SmartDashboard.getString("record-joystick-name", "default"),false),
+ /* position 5: Left position place gear > launch */ new SideCameraPeg(0.7, 3.0, 7.5, 60, 4, 5, false),
+/* position 6: Right position place gear > launch */ new SideCameraPeg(0.7, 3.0, 7.5, 60, 4, 5, true),
+ /* position 7: Left position place gear > launch */ new SideStartSideGear(false, 0.65, 6, 60, 6, 3.5, 10),
+/* position 8: Right position place gear > launch */ new SideStartSideGear(true, 0.65, 6, 60, 6, 3.5, 10),
+           /* position 9: Center gear with vision */ new VisionCenterPeg(0.5,0,4),
+                  /* position 10: Record n replay */ new SideCameraPeg(0.7, 3.0, 7.2, 66, 4, 5, false),
           /* position 11: Curve from left to gear */ new SideGearCurve(0.6, 5.0, 9.2, 60, 4, 5, false),
      /* position 12: Right gear middle hopper pop */ new SideGearCurve(0.6, 5.0, 9.2, 60, 4, 5, true)
         );
@@ -136,8 +138,8 @@ public class Robot extends IterativeRobot {
         driveTrain.reset();
 
         // Great for safety just in case you set the wrong one in practice ;)
-        System.out.println("Running " + hardwareChooser.getSelected() + "...");
-
+        Log.i("Autonomous Selector", "Running " + hardwareChooser.getSelected() + "...");
+        
         autonomousCommand = hardwareChooser.getSelected();
         Robot.driveTrain.brakeMode(true);
         // Schedule the autonomous command that was selected
@@ -195,5 +197,7 @@ public class Robot extends IterativeRobot {
         driveTrain.log();
         gearHandler.log();
         hardwareChooser.log();
+        
+        Log.updateTableLog();
     }
 }

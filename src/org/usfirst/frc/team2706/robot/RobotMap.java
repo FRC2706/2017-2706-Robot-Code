@@ -69,7 +69,7 @@ public class RobotMap {
     private static final int[] ENCODER_LEFT_B_VALS = {1, 0, 0};
     public static final int ENCODER_LEFT_B = getConstant("ENCODER_LEFT_B");
 
-    private static final double[] ENCODER_LEFT_DPP_VALS = {1.0 / 344.2, 1.0 / 344.2, 1.0 / 264};
+    private static final double[] ENCODER_LEFT_DPP_VALS = {5.0 / 314, 6.0 / 2052.25, 1.0 / 264};
     public static final double ENCODER_LEFT_DPP = getConstant("ENCODER_LEFT_DPP");
 
 
@@ -79,7 +79,7 @@ public class RobotMap {
     private static final int[] ENCODER_RIGHT_B_VALS = {2, 3, 3};
     public static final int ENCODER_RIGHT_B = getConstant("ENCODER_RIGHT_B");
 
-    private static final double[] ENCODER_RIGHT_DPP_VALS = {1.0 / 344.2, 1.0 / 344.2, 1.0 / 264};
+    private static final double[] ENCODER_RIGHT_DPP_VALS = {5.0 / 1732, 6.0 / 2052.25, 1.0 / 264};
     public static final double ENCODER_RIGHT_DPP = getConstant("ENCODER_RIGHT_DPP");
 
 
@@ -155,12 +155,19 @@ public class RobotMap {
     private static final int[] CLIMBER_ENCODER_B_VALS = {11, 11, 11};
     public static final int CLIMBER_ENCODER_B = getConstant("CLIMBER_ENCODER_B");
 
-    private static final String ROBOT_ID_LOC = "/home/lvuser/robot-type.conf";
-
     // Raspberry Pi IP for vision *NOTE: Mikes laptop is 10.27.6.10, rPI is 10.27.6.240
     private static final String[] RPI_IPS_VALS = {"10.27.6.240", "10.27.6.240", "10.27.6.10"};
     public static final String RPI_IPS = getConstant("RPI_IPS");
-
+    
+    /**
+     * Prints which RobotMap is being used
+     */
+    public static void log() {
+        Log.d("RobotMap", "RobotMap ID is " + ROBOT_ID_LOC);
+    }
+    
+    private static final String ROBOT_ID_LOC = "/home/lvuser/robot-type.conf";
+    
     private static int getRobotID() {
         int temp = 0;
 

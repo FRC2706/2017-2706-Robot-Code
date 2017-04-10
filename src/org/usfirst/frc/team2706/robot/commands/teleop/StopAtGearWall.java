@@ -1,12 +1,14 @@
 package org.usfirst.frc.team2706.robot.commands.teleop;
 
+import org.usfirst.frc.team2706.robot.Log;
 import org.usfirst.frc.team2706.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
 
 // TODO: Don't use EncodersNoReturn
 /**
- * Lets the driver control the robot, until the robot is close enough to the wall, and stops it with PIDs
+ * Lets the driver control the robot, until the robot is close enough to the wall, and stops it with
+ * PIDs
  */
 public class StopAtGearWall extends Command {
 
@@ -20,6 +22,7 @@ public class StopAtGearWall extends Command {
 
     /**
      * Stops at the wall to pick up a gear
+     * 
      * @param stopRange the range at which you should stop
      * @param encoderTakeOverRange the range at which the encoders take over the distance sensors.
      */
@@ -49,7 +52,7 @@ public class StopAtGearWall extends Command {
      */
     public boolean PartOne() {
         distance = Robot.driveTrain.getDistanceToObstacle();
-        System.out.println(distance);
+        Log.d("StopAtGearWall", "Distance from the wall is " + distance);
         if (distance <= encoderTakeOverRange) {
             doneOne = true;
             distance = Robot.driveTrain.getDistanceToObstacle() - stopRange;
@@ -61,7 +64,7 @@ public class StopAtGearWall extends Command {
 
     protected void end() {
         part = true;
-        System.out.println("m");
+        Log.d("StopAtGearWall", "Ended command");
         q = false;
         doneOne = false;
         t.cancel();
@@ -76,7 +79,8 @@ public class StopAtGearWall extends Command {
 
     @Override
     protected boolean isFinished() {
-        System.out.println(Robot.driveTrain.getDistance() * 12.0 + "," + distance);
+        Log.d("StopAtGearWall", "CurrentDistance:" + Robot.driveTrain.getDistance() * 12.0 + ", "
+                        + "DesiredDistance:" + distance);
         if (Robot.driveTrain.getDistance() * 12.0 >= distance && !q && doneOne) {
             q = true;
             t.start();

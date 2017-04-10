@@ -2,6 +2,8 @@ package org.usfirst.frc.team2706.robot.subsystems;
 
 import java.util.ArrayList;
 
+import org.usfirst.frc.team2706.robot.Log;
+import org.usfirst.frc.team2706.robot.Robot;
 import org.usfirst.frc.team2706.robot.RobotMap;
 import org.usfirst.frc.team2706.robot.subsystems.TrackerBox2.TargetObject;
 
@@ -20,6 +22,7 @@ public class Camera extends Subsystem {
 
     private TargetObject target = null;
 
+    @SuppressWarnings("unused")
     private DigitalOutput ringLightRelay = new DigitalOutput(RobotMap.RING_LIGHT);
 
     @Override
@@ -29,14 +32,14 @@ public class Camera extends Subsystem {
         super();
     }
 
-    public void GetTargets() {
+    public void GetTargets(boolean auto) {
         ArrayList<TrackerBox2.TargetObject> targets = trackerbox.getVisionData();
 
         if (targets != null) {
             if (PRINT_STUFF) {
-                System.out.println("I found " + targets.size() + " targets.");
+                Log.d("Camera", "I found " + targets.size() + " targets.");
                 for (TrackerBox2.TargetObject target : targets)
-                    System.out.println("\tI found: " + target.toString());
+                    Log.d("Camera", "\tI found: " + target.toString());
                 System.out.println();
             }
             if (!targets.isEmpty()) {
@@ -47,6 +50,9 @@ public class Camera extends Subsystem {
         } else {
             target = null;
         }
+        
+        if(auto)
+            Robot.blingSystem.toggleAutoState(target != null);
     }
 
     public TargetObject getTarget() {
