@@ -290,7 +290,7 @@ public class Bling extends Subsystem {
 
         // Peg in is true if the peg is going through the gear hole
         if (pegIn) {
-            dColour = "green";
+            dColour = "purple";
         }
         else {
             dColour = "red";
