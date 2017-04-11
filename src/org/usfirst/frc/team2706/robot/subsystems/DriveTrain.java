@@ -169,8 +169,9 @@ public class DriveTrain extends Subsystem {
     public void drive(GenericHID joy) {
         double YAxis = RobotMap.INVERT_JOYSTICK_Y ? -joy.getRawAxis(5) : joy.getRawAxis(5);
         double XAxis = RobotMap.INVERT_JOYSTICK_X ? -joy.getRawAxis(4) : joy.getRawAxis(4);
-        if (joy.getRawButton(9)) {
+        if (joy.getRawButton(9) || joy.getRawButton(10)) {
             XAxis *= 0.7;
+            YAxis *= 0.7;
         }
         drive.arcadeDrive(YAxis, XAxis, true);
         

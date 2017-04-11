@@ -18,7 +18,7 @@ public class Climber extends Subsystem {
     // Touchpad is 4ft 10in (1.4732 m) above the ground
 
     // Determines if the robot is climbing (to be verified)
-    private static final float I_KNOW_I_AM_CLIMBING_PITCH = 1.4f;
+    private static final float I_KNOW_I_AM_CLIMBING_PITCH = 45.0f;
 
     // Determines if the robot is not climbing (to be verified)
     private static final float I_KNOW_I_AM_FINISHED_CLIMBING_PITCH = 30.0f;

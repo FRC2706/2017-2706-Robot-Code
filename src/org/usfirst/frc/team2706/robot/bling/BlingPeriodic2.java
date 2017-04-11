@@ -77,7 +77,7 @@ public class BlingPeriodic2 extends Command {
              * 7 = Arms closed with no gear and peg in.
              */
             int gearState = Robot.gearHandler.gearHandlerState();
-            boolean climbing = Robot.climber.isClimbing();
+            boolean climbing = false;
             
             
             // This means we got a gear, and it's time to tell the drivers.
@@ -98,7 +98,7 @@ public class BlingPeriodic2 extends Command {
             
             // We are climbing!
             if (climbing) {
-                Robot.blingSystem.climbingDisplay();
+               Robot.blingSystem.climbingDisplay();
             }
             
             // Displaying peg line up
@@ -135,11 +135,6 @@ public class BlingPeriodic2 extends Command {
                 gearPickupHandler(gearState);
             }
             
-            
-            // Time to climb
-            else if (timeSinceInitialized() > 120) {
-                Robot.blingSystem.showReadyToClimb(true);
-            }
             
             // Show that we have a gear.
             else if (gearState == 1) {

@@ -50,7 +50,7 @@ public class TeleopStraightDriveWithCamera extends Command {
             rotateVal = 0;
         }
         Log.d("TeleopStraightDriveWithCamera", "Rotattion Value: " + rotateVal);
-        Robot.driveTrain.arcadeDrive(-getTriggerValue() / 2, rotateVal);
+        Robot.driveTrain.arcadeDrive(-getTriggerValue() * 0.7, rotateVal);
     }
 
     private double getTriggerValue() {
