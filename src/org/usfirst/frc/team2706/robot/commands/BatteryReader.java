@@ -6,20 +6,33 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.command.Command;
 
+/**
+ * Reads battery and sends alerts if battery gets too low
+ */
 public class BatteryReader extends Command {
 
     public static double batteryOutputVoltage;
 
-    // Used to tell us if the battery level is critical
+    /**
+     * Used to tell us if the battery level is critical
+     */
     public static boolean batCritical;
 
     protected static double timePassed;
 
+    /**
+     * Volts that the battery is considered full at
+     */
     public static final double FULL_BATTERY_CAPACITY = 12.0;
 
-    // Get a new battery object.
+    /**
+     * Get a new battery object.
+     */
     public static PowerDistributionPanel pdp;
 
+    /**
+     * Reads battery and sends alerts if battery gets too low
+     */
     public BatteryReader() {
         pdp = new PowerDistributionPanel();
         batteryOutputVoltage = pdp.getVoltage();

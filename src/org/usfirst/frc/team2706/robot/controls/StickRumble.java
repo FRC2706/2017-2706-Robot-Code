@@ -20,31 +20,58 @@ public class StickRumble extends Command {
     protected double startTime;
     protected double timePassed;
 
-    // Time variables inputted/selected.
+    /**
+     * Time rumbling.
+     */
     public double timeOn;
+    
+    /**
+     * Time not rumbling.
+     */
     public double timeOff;
 
-    // Number of repeats.
+    /**w`
+     * Number of repeats.
+     */
     public int repeatCount;
 
-    // Used to determine if we're done.
+    /**
+     * Used to determine if we're done.
+     */
     public boolean finished;
 
-    // Used to determine if we're on.
+    /**
+     * Used to determine if we're on.
+     */
     public static boolean on = false;
 
-    // More selected things
+    /**
+     * How intense vibrations will be from 0 to 1.0
+     */
     public static double vibrationIntensity;
+    
+    /**
+     * Time between vibrations
+     */
     public static double intervalTime;
+    
+    /**
+     * How many vibrations
+     */
     public static int intervalCount;
 
+    /**
+     * Copy of repeatCount
+     */
     public static int repeatCountCopy;
 
     protected final int selectionOfController;
 
-    // True when we are going to have an infinite loop.
+    /**
+     * True when we are going to have an infinite loop.
+     */
     public static boolean infiniteCount = false;
-    /*
+    /**
      * Used to determine if we are in the interval time period
      */
     public static boolean intervalOn = false;

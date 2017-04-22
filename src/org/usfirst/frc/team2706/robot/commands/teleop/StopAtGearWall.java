@@ -37,7 +37,7 @@ public class StopAtGearWall extends Command {
         Robot.driveTrain.resetEncoders();
     }
 
-    EncodersNoReturn t;
+    private EncodersNoReturn t;
 
     protected void execute() {
         if (part) {
@@ -45,7 +45,7 @@ public class StopAtGearWall extends Command {
         }
     }
 
-    boolean doneOne = false;
+    private boolean doneOne = false;
 
     /**
      * Gets the distance sensor distance and sees if the encoders should take over
