@@ -22,8 +22,14 @@ import edu.wpi.first.wpilibj.tables.ITableListener;
  */
 public class Log {
 
+    /**
+     * The String used to access the NetworkTables logger
+     */
     public static final String LOGGER_TABLE = "logging-level";
 
+    /**
+     * The name of the root logger that all other loggers inherit from
+     */
     public static final String ROOT_LOGGER_NAME = "";
 
     private static final Logger logger = Logger.getLogger(ROOT_LOGGER_NAME);
@@ -45,7 +51,7 @@ public class Log {
         }
     };
 
-    public static String getCallerClassName() throws ClassNotFoundException {
+    private static String getCallerClassAndMethodName() throws ClassNotFoundException {
         StackTraceElement[] stElements = Thread.currentThread().getStackTrace();
         return Class.forName(stElements[4].getClassName()).getSimpleName() + "."
                         + stElements[4].getMethodName();
@@ -106,6 +112,9 @@ public class Log {
         NetworkTable.getTable(LOGGER_TABLE).addTableListener(updateListener);
     }
 
+    /**
+     * Push all the logged data to NetworkTables to be received by the driver station
+     */
     public static void updateTableLog() {
         byte[] a = NetworkTable.getTable(LOGGER_TABLE).getRaw("Value", new byte[0]);
         byte[] b = out.toByteArray();
@@ -224,7 +233,7 @@ public class Log {
             String[] cm = new String[] {"Unknown", "Unknown"};
 
             try {
-                cm = getCallerClassName().split("\\.");
+                cm = getCallerClassAndMethodName().split("\\.");
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
@@ -236,7 +245,7 @@ public class Log {
             String[] cm = new String[] {"Unknown", "Unknown"};
 
             try {
-                cm = getCallerClassName().split("\\.");
+                cm = getCallerClassAndMethodName().split("\\.");
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }

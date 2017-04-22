@@ -28,10 +28,11 @@ public class Camera extends Subsystem {
     @Override
     protected void initDefaultCommand() {}
 
-    public Camera() {
-        super();
-    }
-
+    /**
+     * Pulls targets from camera and saves target
+     * 
+     * @param auto Whether to have bling become green if a target is found
+     */
     public void GetTargets(boolean auto) {
         ArrayList<TrackerBox2.TargetObject> targets = trackerbox.getVisionData();
 
@@ -55,6 +56,11 @@ public class Camera extends Subsystem {
             Robot.blingSystem.toggleAutoState(target != null);
     }
 
+    /**
+     * Gets the target found by the camera
+     * 
+     * @return The target object, null if no targets found
+     */
     public TargetObject getTarget() {
         return target;
     }

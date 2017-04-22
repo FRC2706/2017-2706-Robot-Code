@@ -24,6 +24,11 @@ public class AutonomousSelector extends Subsystem {
     private final List<Command> commands;
     private final AnalogInput selector;
 
+    /**
+     * Creates AutoSelector with a list of commands to bind to each input
+     * 
+     * @param commands The commands to bind. The zeroth is default, one is the first notch
+     */
     public AutonomousSelector(Command... commands) {
         List<Command> commandList = Arrays.asList(commands);
 
@@ -34,6 +39,11 @@ public class AutonomousSelector extends Subsystem {
     @Override
     protected void initDefaultCommand() {}
 
+    /**
+     * Gets the currently selected command
+     * 
+     * @return The selected command
+     */
     public Command getSelected() {
         int idx = getVoltageAsIndex();
         if (idx >= commands.size())
@@ -53,6 +63,9 @@ public class AutonomousSelector extends Subsystem {
         return 0;
     }
 
+    /**
+     * Logs selected number to SmartDashboard
+     */
     public void log() {
         SmartDashboard.putNumber("Autonomous Selector", getVoltageAsIndex());
     }

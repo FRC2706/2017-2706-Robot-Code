@@ -12,16 +12,29 @@ public class ArcadeDriveWithJoystick extends Command {
 
     protected Joystick joystick;
 
+    /**
+     * Drives with driver joystick
+     */
     public ArcadeDriveWithJoystick() {
         this(Robot.oi.getDriverJoystick());
     }
 
+    /**
+     * Drives with specified joystick
+     * 
+     * @param joystick The joystick to drive with
+     */
     public ArcadeDriveWithJoystick(Joystick joystick) {
         requires(Robot.driveTrain);
 
         this.joystick = joystick;
     }
 
+    /**
+     * Sets the joystick to drive with
+     * 
+     * @param joystick The joystick to use
+     */
     public void setJoystick(Joystick joystick) {
         this.joystick = joystick;
     }

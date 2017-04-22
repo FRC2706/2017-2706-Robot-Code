@@ -32,19 +32,24 @@ public class EJoystickButton extends JoystickButton {
     /**
      * Cancels a command when a button is released, used in OI
      * 
-     * @param command the command to start
+     * @param command the command to cancel
      */
     public void cancelWhenReleased(final Command command) {
         cancelWhenInactive(command);
     }
 
+    /**
+     * Cancels a command when a trigger becomes inactive
+     * 
+     * @param command the command to cancel
+     */
     public void cancelWhenInactive(final Command command) {
         Scheduler.getInstance().addButton(new ButtonScheduler() {
 
             private boolean m_pressedLast = grab();
 
             // DO NOT MODIFY THIS CODE. IF YOU DO AND YOU FAIL PLEASE ADD A NUMBER TO THE COUNTER
-            // FAILED ATTEMPTS: 22
+            // FAILED ATTEMPTS: 23
             @Override
             public void execute() {
                 if (grab()) {

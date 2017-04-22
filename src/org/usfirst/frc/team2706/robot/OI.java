@@ -29,10 +29,20 @@ public class OI {
     // Joystick for controlling the mechanisms of the robot
     private final Joystick controlStick;
 
+    /**
+     * Gets the joystick used for driving
+     * 
+     * @return The driver joystick
+     */
     public Joystick getDriverJoystick() {
         return driverStick;
     }
 
+    /**
+     * Gets the joystick used for controlling mechanisms
+     * 
+     * @return The operator joystick
+     */
     public Joystick getOperatorJoystick() {
         return controlStick;
     }

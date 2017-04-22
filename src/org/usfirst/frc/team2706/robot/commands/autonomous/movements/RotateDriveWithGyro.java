@@ -96,16 +96,4 @@ public class RotateDriveWithGyro extends Command {
     protected void interrupted() {
         end();
     }
-
-    public void Turn() {
-        float slowSpeed = 0.2f;
-        float medSpeed = 0.4f;
-        if (Robot.driveTrain.getGyroPIDSource(false).pidGet() - angle < 20
-                        && Robot.driveTrain.getGyroPIDSource(false).pidGet() - angle >= 0) {
-            Robot.driveTrain.drive(-slowSpeed, slowSpeed);
-        } else if (Robot.driveTrain.getGyroPIDSource(false).pidGet() - angle < 80
-                        && Robot.driveTrain.getGyroPIDSource(false).pidGet() - angle >= 21) {
-            Robot.driveTrain.drive(-medSpeed, medSpeed);
-        }
-    }
 }

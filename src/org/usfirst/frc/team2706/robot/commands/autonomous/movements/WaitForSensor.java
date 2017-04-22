@@ -12,8 +12,17 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class WaitForSensor extends Command {
+    
+    /**
+     * Desired distance for distance sensor to be
+     */
     public final double distance;
 
+    /**
+     * Sets up command with specified distance
+     * 
+     * @param distance Desired distance for distance sensor to be
+     */
     public WaitForSensor(double distance) {
         this.distance = distance;
     }

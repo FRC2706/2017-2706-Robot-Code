@@ -25,7 +25,7 @@ public class RotateDriveWithGyroDistanceSensorHybrid extends Command {
         requires(Robot.driveTrain);
     }
 
-    QuickRotate q;
+    private QuickRotate q;
 
     // Called just before this Command runs the first time
     protected void initialize() {

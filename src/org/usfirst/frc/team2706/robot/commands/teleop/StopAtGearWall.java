@@ -18,7 +18,7 @@ public class StopAtGearWall extends Command {
 
     private double distance;
 
-    boolean part = true;
+    private boolean part = true;
 
     /**
      * Stops at the wall to pick up a gear
@@ -74,8 +74,7 @@ public class StopAtGearWall extends Command {
         end();
     }
 
-    int i = 0;
-    boolean q = false;
+    private boolean q = false;
 
     @Override
     protected boolean isFinished() {

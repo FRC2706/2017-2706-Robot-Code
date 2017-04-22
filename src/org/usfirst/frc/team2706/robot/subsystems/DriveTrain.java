@@ -37,10 +37,16 @@ public class DriveTrain extends Subsystem {
     private AverageEncoderPIDSource encoderPIDSource;
     private UltrasonicPIDSource ultrasonicPIDSource;
 
+    /**
+     * Used to determine what angle is desired when using straight drive
+     */
     public double initGyro;
 
     private Command defaultCommand;
 
+    /**
+     * Sets up all of the sensors and motors used in driving
+     */
     public DriveTrain() {
         super();
         front_left_motor = new CANTalon(RobotMap.MOTOR_FRONT_LEFT);
@@ -117,6 +123,9 @@ public class DriveTrain extends Subsystem {
         setDefaultCommand(defaultCommand);
     }
 
+    /**
+     * Gets the default command that should run when no other commands are scheduled
+     */
     public Command getDefaultCommand() {
         if (defaultCommand == null) {
             defaultCommand = new ArcadeDriveWithJoystick();
@@ -319,10 +328,20 @@ public class DriveTrain extends Subsystem {
         return (left_encoder.getDistance() + right_encoder.getDistance()) / 2;
     }
 
+    /**
+     * Gets the distance on the left distance sensor in inches
+     * 
+     * @return Distance in inches
+     */
     public double getLeftDistanceToObstacle() {
         return leftDistanceSensor.getRangeInches();
     }
 
+    /**
+     * Gets the distance on the left distance sensor in inches
+     * 
+     * @return Distance in inches
+     */
     public double getRightDistanceToObstacle() {
         return rightDistanceSensor.getRangeInches();
     }
@@ -339,6 +358,11 @@ public class DriveTrain extends Subsystem {
 
     }
 
+    /**
+     * Gets a PIDSource that combines both encoders as one input
+     * 
+     * @return The PIDSource
+     */
     public PIDSource getAverageEncoderPIDSource() {
         return encoderPIDSource;
     }
@@ -350,6 +374,11 @@ public class DriveTrain extends Subsystem {
         return (leftDistanceSensor.getRangeInches() + rightDistanceSensor.getRangeInches()) / 2;
     }
 
+    /**
+     * Gets a PIDSource for the distance sensor using distance in inches for input
+     * 
+     * @return The PIDSource
+     */
     public PIDSource getDistanceSensorPIDSource() {
         return ultrasonicPIDSource;
     }
@@ -443,6 +472,9 @@ public class DriveTrain extends Subsystem {
         }
     }
 
+    /**
+     * PIDOutput that drives the robot using its four motors
+     */
     public class DrivePIDOutput implements PIDOutput {
 
         private final RobotDrive drive;
@@ -453,6 +485,15 @@ public class DriveTrain extends Subsystem {
 
         private final boolean useCamera;
 
+        /**
+         * Sets up the PIDOutput
+         * 
+         * @param drive The RobotDrive to pass the outputs to
+         * @param useGyroStraightening When true makes sure robot stays at same rotation throughout
+         *        driving
+         * @param useCamera Whether to align using vision data
+         * @param invert Invert driving
+         */
         public DrivePIDOutput(RobotDrive drive, boolean useGyroStraightening, boolean useCamera,
                         boolean invert) {
             this.drive = drive;
@@ -503,11 +544,22 @@ public class DriveTrain extends Subsystem {
             }
         }
 
+        /**
+         * When true inverts driving
+         * 
+         * @param invert Whether to invert or not
+         */
         public void setInvert(boolean invert) {
             this.invert = invert;
         }
     }
 
+    /**
+     * Normalizes an angle to between -180 and 180
+     * 
+     * @param input The angle to normalize
+     * @return The normalized angle
+     */
     public double normalize(double input) {
         double normalizedValue = input;
         while (normalizedValue > 180)

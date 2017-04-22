@@ -1,19 +1,19 @@
 package org.usfirst.frc.team2706.diagnostics;
 
+import org.usfirst.frc.team2706.robot.Log;
+import org.usfirst.frc.team2706.robot.Robot;
+import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithTime;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 
-import org.usfirst.frc.team2706.robot.Log;
-import org.usfirst.frc.team2706.robot.Robot;
 /**
  * Goal of this class is to test the hardware of the robot automatically to make sure that
  * everything is working right.
  * 
  * @author eAUE (Kyle Anderson)
- *
  */
-import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithTime;
 
 public class AutoDiagnoser extends Command {
 
@@ -23,6 +23,9 @@ public class AutoDiagnoser extends Command {
     protected static double motorSpeed;
     protected static StraightDriveWithTime drive;
 
+    /**
+     * Constructor for AutoDiagnoser
+     */
     public AutoDiagnoser() {
         Log.i("AutoDiagnoser", "\nDiagnostics beginning...");
     }

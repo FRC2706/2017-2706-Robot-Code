@@ -9,6 +9,9 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class OpenGearMechanism extends Command {
 
+    /**
+     * Constructs Command
+     */
     public OpenGearMechanism() {
         requires(Robot.gearHandler);
     }
