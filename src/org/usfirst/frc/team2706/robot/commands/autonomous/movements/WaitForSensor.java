@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.command.Command;
  * Waits for the IR sensor and the distance sensors to both be good for the gear handler.
  * 
  * @author cnnr2
- *
  */
 public class WaitForSensor extends Command {
     

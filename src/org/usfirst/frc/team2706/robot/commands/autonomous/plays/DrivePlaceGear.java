@@ -9,6 +9,9 @@ import org.usfirst.frc.team2706.robot.commands.mechanismcontrol.OpenGearMechanis
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
+/**
+ * Place the gear and then back up after
+ */
 public class DrivePlaceGear extends CommandGroup {
 
     /**
