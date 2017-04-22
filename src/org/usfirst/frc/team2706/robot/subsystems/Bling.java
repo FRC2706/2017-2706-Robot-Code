@@ -21,9 +21,12 @@ public class Bling extends Subsystem {
      */
     public static boolean connected = false;
 
+    /**
+     * The port the rioDuino is on
+     */
     public static SerialPort blingPort;
 
-    Map<String, String> lastCommand = new HashMap<String, String>() {
+    private Map<String, String> lastCommand = new HashMap<String, String>() {
         private static final long serialVersionUID = 1L;
 
         {
@@ -37,13 +40,15 @@ public class Bling extends Subsystem {
         }
     };
 
-    /*
+    /**
      * In case we get complaints of bling subsystem being distracting We will have the ability to
      * turn off flashy stuff
      */
     public static boolean flashyOff = false;
 
-    // We only want to show distances if this is true.
+    /**
+     * We only want to show distances if this is true.
+     */
     public static boolean showDistance = true;
 
     /*
@@ -57,7 +62,7 @@ public class Bling extends Subsystem {
     protected static String previousCommand = "E0Z";
 
     // The number of pixels on one LED strip
-    int pixels = 120;
+    private int pixels = 120;
 
     /**
      * Will be true if the battery level is critical, in which case it will override all other
@@ -66,7 +71,7 @@ public class Bling extends Subsystem {
     public static boolean batCritical = false;
 
     // Let's make the colour and command codes
-    Map<String, String> colours = new HashMap<String, String>() {
+    private Map<String, String> colours = new HashMap<String, String>() {
         private static final long serialVersionUID = 1L;
         {
             put("RED", "16711680");
@@ -89,6 +94,9 @@ public class Bling extends Subsystem {
 
     private Command defaultCommand;
 
+    /**
+     * Sets up connection with Bling
+     */
     public Bling() {
         try {
             blingPort = new SerialPort(9600, SerialPort.Port.kMXP);
@@ -446,6 +454,9 @@ public class Bling extends Subsystem {
         send();
     }
 
+    /**
+     * Send data to rioDuino
+     */
     public void send() {
         // IF THE BLINGPORT FAILED, DON'T CAUSE ERRORS
         if (!(previousCommand.equalsIgnoreCase(command)) && connected) {

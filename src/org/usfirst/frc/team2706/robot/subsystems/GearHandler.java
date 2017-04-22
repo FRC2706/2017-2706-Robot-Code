@@ -108,6 +108,9 @@ public class GearHandler extends Subsystem {
 
     public void initDefaultCommand() {}
 
+    /**
+     * Opens the gear handler arm
+     */
     public void openArm() {
         Log.d("Gear Handler", "Opening Gear Handler");
 
@@ -117,6 +120,9 @@ public class GearHandler extends Subsystem {
         closed = checkArmOpen();
     }
 
+    /**
+     * Closes the gear handler arm
+     */
     public void closeArm() {
         Log.d("Gear Handler", "Opening Gear Handler");
 
@@ -126,6 +132,9 @@ public class GearHandler extends Subsystem {
         closed = checkArmOpen();
     }
 
+    /**
+     * Toggles whether the gear handler arm is open or not
+     */
     public void toggleArm() {
         if (closed) {
             openArm();
@@ -134,6 +143,11 @@ public class GearHandler extends Subsystem {
         }
     }
 
+    /**
+     * Uses the IR sensor to detect whether the robot has a gear
+     * 
+     * @return Whether the robot has a gear or not
+     */
     public boolean gearCaptured() {
         if (irGearSensor.getVoltage() >= GEAR_CAPTURED) {
             return true;
@@ -142,6 +156,11 @@ public class GearHandler extends Subsystem {
     }
 
 
+    /**
+     * Uses the IR sensor to detect whether the peg is in the robot
+     * 
+     * @return Whether the peg is in the robot or not
+     */
     public boolean pegDetected() {
         if (irPegSensor.getVoltage() >= PEG_DETECTED) {
             return true;
@@ -149,8 +168,11 @@ public class GearHandler extends Subsystem {
         return false;
     }
 
-    // TODO
-    // Uses limit switch to help see if arm is open
+    /**
+     * Uses limit switch to help see if arm is open (Currently a TODO)
+     * 
+     * @return Whether the arm is working or not
+     */
     public boolean checkArmOpen() {
         if (!limitSwitchRight.get()) {
             return true;
@@ -158,10 +180,18 @@ public class GearHandler extends Subsystem {
         return false;
     }
 
+    /**
+     * Turn compressor on and off
+     * 
+     * @param compressorState Whether compressor is on or not
+     */
     public void setCompressor(boolean compressorState) {
         compressor.setClosedLoopControl(compressorState);
     }
 
+    /**
+     * Logs gear handler information to SmartDashboard
+     */
     public void log() {
         SmartDashboard.putNumber("Peg Sensor", irPegSensor.getVoltage());
         SmartDashboard.putNumber("Gear Sensor", irGearSensor.getVoltage());
