@@ -5,7 +5,7 @@ import org.usfirst.frc.team2706.robot.Robot;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class DistanceShowerToggle extends Command {
-    
+
     public void initialize() {
         Robot.blingSystem.toggleDistanceShower();
     }

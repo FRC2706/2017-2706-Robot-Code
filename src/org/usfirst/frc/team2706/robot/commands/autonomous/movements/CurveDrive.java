@@ -30,6 +30,7 @@ public class CurveDrive extends Command {
     private double initHeading;
 
     private final boolean isRight;
+
     /**
      * Drives to a specified point and ends at a specified angle.
      * 
@@ -120,13 +121,14 @@ public class CurveDrive extends Command {
         // Figures out the angle that you are currently on
         double tangent = (3 * eq.a * Math.pow(yPos, 2)) + (2 * eq.b * yPos);
         tangent = Math.toDegrees(Math.atan(tangent));
-        
+
         // Figures out how far you should rotate based on offset and gyro pos
         double rotateVal = tangent - (Robot.driveTrain.getHeading() - initHeading);
         rotateVal /= 10;
         // Tank Drives according to the above factors
         Robot.driveTrain.arcadeDrive(speed, rotateVal);
     }
+
     private double xPos = 0;
 
     private double yPos = 0;

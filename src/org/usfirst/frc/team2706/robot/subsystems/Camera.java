@@ -50,8 +50,8 @@ public class Camera extends Subsystem {
         } else {
             target = null;
         }
-        
-        if(auto)
+
+        if (auto)
             Robot.blingSystem.toggleAutoState(target != null);
     }
 

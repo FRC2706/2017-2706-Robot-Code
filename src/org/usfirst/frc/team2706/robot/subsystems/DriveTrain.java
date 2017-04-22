@@ -174,7 +174,7 @@ public class DriveTrain extends Subsystem {
             YAxis *= 0.7;
         }
         drive.arcadeDrive(YAxis, XAxis, true);
-        
+
     }
 
     /**
@@ -187,19 +187,19 @@ public class DriveTrain extends Subsystem {
     public void headlessDrive(GenericHID joy) {
         Log.d("HeadlessDrive", joy.getRawAxis(5) + "," + joy.getRawAxis(4));
         double raw5 = joy.getRawAxis(5);
-       double raw4 = joy.getRawAxis(4);
+        double raw4 = joy.getRawAxis(4);
         double angle = normalize(Math.toDegrees(Math.atan(raw5 / raw4)));
-        
+
         double speed = (raw5 + raw4) / 2; // hyp
-        if(Math.abs(speed) < 0.1) {
+        if (Math.abs(speed) < 0.1) {
             speed = 0;
             angle = Robot.driveTrain.getHeading();
         }
         Log.d("HeadlessDrive", "Angle: " + angle + ", Speed: " + speed);
         double gyroAngle;
-            gyroAngle = normalize(Robot.driveTrain.getHeading());
+        gyroAngle = normalize(Robot.driveTrain.getHeading());
         Log.d("HeadlessDrive", (angle - gyroAngle * 0.1) * speed);
-        drive.arcadeDrive(-speed,- (angle - gyroAngle * 0.1) * speed,true);
+        drive.arcadeDrive(-speed, -(angle - gyroAngle * 0.1) * speed, true);
     }
 
     /**
@@ -308,7 +308,7 @@ public class DriveTrain extends Subsystem {
         // Inverse tangent to take two sides of the triangle and get the angle
         double theta = Math.toDegrees(Math.atan2(opposite, adjacent));
         Log.d("Degree Sensor Angle", theta);
-        
+
         return theta;
     }
 
@@ -336,13 +336,13 @@ public class DriveTrain extends Subsystem {
         } else {
             return right_encoder;
         }
-       
+
     }
 
     public PIDSource getAverageEncoderPIDSource() {
         return encoderPIDSource;
     }
-    
+
     /**
      * @return The distance to the obstacle detected by the distance sensor.
      */
@@ -408,7 +408,7 @@ public class DriveTrain extends Subsystem {
 
     }
 
-    
+
     class GyroPIDSource implements PIDSource {
 
         private final DriveTrain driveTrain;

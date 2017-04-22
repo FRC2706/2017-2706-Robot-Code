@@ -59,14 +59,14 @@ public class OI {
         TriggerButtonJoystick driverBackLeftTrigger = new TriggerButtonJoystick(driverStick, 2);
         driverBackLeftTrigger.runWhileHeld(new HandBrake(true));
 
-     //   // Stop the robot by going into brake mode
-       // TriggerButtonJoystick driverBackRightTrigger = new TriggerButtonJoystick(driverStick, 3);
-      //  driverBackRightTrigger.runWhileHeld(new HandBrake(false));
+        // Stop the robot by going into brake mode
+        // TriggerButtonJoystick driverBackRightTrigger = new TriggerButtonJoystick(driverStick, 3);
+        // driverBackRightTrigger.runWhileHeld(new HandBrake(false));
 
         // Will stop the robot as it approaches the gear wall
         EJoystickButton driverBackRightButton = new EJoystickButton(driverStick, 6);
         driverBackRightButton.runWhileHeld(new StopAtGearWall(14, 40));
-        
+
         // Press to toggle showing distance measure when lining up for gear pickup
         EJoystickButton driverAButton = new EJoystickButton(driverStick, 1);
         driverAButton.whenPressed(new DistanceShowerToggle());
@@ -88,12 +88,12 @@ public class OI {
         // Closes gear holder mechanism so holder can hold gears
         EJoystickButton operatorBButton = new EJoystickButton(controlStick, 2);
         operatorBButton.whenPressed(new CloseGearMechanism());
-        
+
         // Opens gear holder mechanism for when peg is in
         EJoystickButton operatorYButton = new EJoystickButton(controlStick, 4);
         operatorYButton.whenPressed(new OpenGearMechanism());
-        
-        
+
+
         // This will toggle whether or not we have flashy patterns on the LED strips
         EJoystickButton displayButton = new EJoystickButton(controlStick, 7);
         displayButton.whenPressed(new ToggleFlashiness());

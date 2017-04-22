@@ -23,9 +23,9 @@ public class BatteryReader extends Command {
     public BatteryReader() {
         pdp = new PowerDistributionPanel();
         batteryOutputVoltage = pdp.getVoltage();
-        
+
         double batteryPercent = (batteryOutputVoltage - 10) / (FULL_BATTERY_CAPACITY - 10);
-        
+
         Log.i("Battery Percentage", batteryPercent * 100);
     }
 

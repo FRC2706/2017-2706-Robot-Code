@@ -158,16 +158,16 @@ public class RobotMap {
     // Raspberry Pi IP for vision *NOTE: Mikes laptop is 10.27.6.10, rPI is 10.27.6.240
     private static final String[] RPI_IPS_VALS = {"10.27.6.240", "10.27.6.240", "10.27.6.10"};
     public static final String RPI_IPS = getConstant("RPI_IPS");
-    
+
     /**
      * Prints which RobotMap is being used
      */
     public static void log() {
         Log.d("RobotMap", "RobotMap ID is " + ROBOT_ID_LOC);
     }
-    
+
     private static final String ROBOT_ID_LOC = "/home/lvuser/robot-type.conf";
-    
+
     private static int getRobotID() {
         int temp = 0;
 

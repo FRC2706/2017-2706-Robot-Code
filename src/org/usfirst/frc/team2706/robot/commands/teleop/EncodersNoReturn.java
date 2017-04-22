@@ -9,9 +9,9 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
  *
  */
 public class EncodersNoReturn extends CommandGroup {
-    
+
     public EncodersNoReturn() {
-        this.addSequential(new StraightDriveWithEncoders(0.5,0.0,0.2,1));
+        this.addSequential(new StraightDriveWithEncoders(0.5, 0.0, 0.2, 1));
         this.addParallel(new HandBrake(true));
     }
 }

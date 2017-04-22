@@ -8,14 +8,14 @@ public class TriggerButtonJoystick extends EJoystickButton {
 
     private Joystick joystick;
     private int axis;
-    
+
     public TriggerButtonJoystick(Joystick joystick, int axis) {
         super(joystick, axis);
-        
+
         this.joystick = joystick;
         this.axis = axis;
     }
-    
+
     public boolean get() {
         if (joystick.getRawAxis(axis) > 0) {
             return true;

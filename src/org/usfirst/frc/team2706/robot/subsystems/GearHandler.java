@@ -10,17 +10,18 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-/** 
- * Coordinates commands for the Gear Handler Arm mechanisms. 
+/**
+ * Coordinates commands for the Gear Handler Arm mechanisms.
  * 
  * @author wakandacat, FilledWithDetermination, Crazycat200
  */
 public class GearHandler extends Subsystem {
-    
 
-    private DoubleSolenoid solenoid = new DoubleSolenoid(RobotMap.SOLENOID_FORWARD_CHANNEL, RobotMap.SOLENOID_REVERSE_CHANNEL);
+
+    private DoubleSolenoid solenoid = new DoubleSolenoid(RobotMap.SOLENOID_FORWARD_CHANNEL,
+                    RobotMap.SOLENOID_REVERSE_CHANNEL);
     protected Compressor compressor = new Compressor();
-    
+
     public static final int ARMS_CLOSED_NO_GEAR = 0;
     public static final int ARMS_CLOSED_WITH_GEAR = 1;
     public static final int ARMS_CLOSED_PEG_IN_WITH_GEAR = 2;
@@ -29,7 +30,7 @@ public class GearHandler extends Subsystem {
     public static final int ARMS_OPEN_WITH_GEAR = 5;
     public static final int ARMS_OPEN_PEG_IN_NO_GEAR = 6;
     public static final int ARMS_CLOSED_PEG_IN_NO_GEAR = 7;
-    
+
     public int gearHandlerState() {
         int state = ARMS_CLOSED_NO_GEAR;
         if (checkArmOpen()) {
@@ -64,7 +65,7 @@ public class GearHandler extends Subsystem {
         }
         return state;
     }
-    
+
     /*
      * some interesting things about the sensor... (measured in flash card lines)
      *  (right on top of sensor = line 1)
@@ -92,38 +93,39 @@ public class GearHandler extends Subsystem {
      */
     private AnalogInput irGearSensor = new AnalogInput(RobotMap.INFRARED_SENSOR_GEAR_ANALOG);
     private static final double GEAR_CAPTURED = 0.5;
-    
+
 
     private AnalogInput irPegSensor = new AnalogInput(RobotMap.INFRARED_SENSOR_PEG_ANALOG);
-    private static final double PEG_DETECTED = 0.25;    
+    private static final double PEG_DETECTED = 0.25;
 
     // Calls limit switches from robot map
     private DigitalInput limitSwitchLeft = new DigitalInput(RobotMap.LIMIT_SWITCH_LEFT_CHANNEL);
     private DigitalInput limitSwitchRight = new DigitalInput(RobotMap.LIMIT_SWITCH_RIGHT_CHANNEL);
 
-   
+
     // Let's use this to keep track of whether the arm is closed :)
     private boolean closed = true;
+
     public void initDefaultCommand() {}
-    
+
     public void openArm() {
         Log.d("Gear Handler", "Opening Gear Handler");
-        
+
         solenoid.set(DoubleSolenoid.Value.kForward);
 
         // Check to see if arm is open (see bottom of code)
         closed = checkArmOpen();
     }
-    
+
     public void closeArm() {
         Log.d("Gear Handler", "Opening Gear Handler");
-        
-        solenoid.set(DoubleSolenoid.Value.kReverse); 
+
+        solenoid.set(DoubleSolenoid.Value.kReverse);
 
         // Check to see if arm is open (see bottom of code)
-        closed = checkArmOpen();   
+        closed = checkArmOpen();
     }
-    
+
     public void toggleArm() {
         if (closed) {
             openArm();
@@ -131,7 +133,7 @@ public class GearHandler extends Subsystem {
             closeArm();
         }
     }
-    
+
     public boolean gearCaptured() {
         if (irGearSensor.getVoltage() >= GEAR_CAPTURED) {
             return true;
@@ -145,9 +147,9 @@ public class GearHandler extends Subsystem {
             return true;
         }
         return false;
-    }    
+    }
 
-        // TODO 
+    // TODO
     // Uses limit switch to help see if arm is open
     public boolean checkArmOpen() {
         if (!limitSwitchRight.get()) {
@@ -155,7 +157,7 @@ public class GearHandler extends Subsystem {
         }
         return false;
     }
-    
+
     public void setCompressor(boolean compressorState) {
         compressor.setClosedLoopControl(compressorState);
     }
