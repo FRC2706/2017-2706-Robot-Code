@@ -120,12 +120,7 @@ public class CurveDrive extends Command {
         // Figures out the angle that you are currently on
         double tangent = (3 * eq.a * Math.pow(yPos, 2)) + (2 * eq.b * yPos);
         tangent = Math.toDegrees(Math.atan(tangent));
-
-        // Finds out what x position you should be at, and compares it with what you are currently at
-        double wantedX = (eq.a * Math.pow(yPos, 3)) + (eq.b * Math.pow(xPos, 2));
-
-        double offset = xPos - wantedX;
-
+        
         // Figures out how far you should rotate based on offset and gyro pos
         double rotateVal = tangent - (Robot.driveTrain.getHeading() - initHeading);
         rotateVal /= 10;
