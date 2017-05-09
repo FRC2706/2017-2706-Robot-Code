@@ -6,6 +6,7 @@ import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriv
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithEncoders;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithTime;
 import org.usfirst.frc.team2706.robot.commands.autonomous.plays.DrivePlaceGear;
+import org.usfirst.frc.team2706.robot.commands.mechanismcontrol.CloseGearMechanism;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -24,6 +25,7 @@ public class SideCameraPeg extends CommandGroup {
      */
     public SideCameraPeg(double speed, double xCurve, double yCurve, double endAngle,
                     double reverseDistance, double toLaunchPadDistance, boolean isRight) {
+        this.addSequential(new CloseGearMechanism());
         this.addSequential(new CurveDrive(xCurve, yCurve, endAngle, speed, isRight));
         this.addSequential(new StraightDriveWithTime(0.0,500));
         this.addSequential(new StraightDriveWithCamera(0.6, 25, 2));

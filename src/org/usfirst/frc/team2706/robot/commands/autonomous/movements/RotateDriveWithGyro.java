@@ -60,8 +60,8 @@ public class RotateDriveWithGyro extends Command {
         } else {
             PID.setOutputRange(speed, -speed);
         }
-        // Will accept within 2 degrees of target
-        PID.setAbsoluteTolerance(2);
+        // Will accept within 1 degrees of target
+        PID.setAbsoluteTolerance(1);
 
         PID.setSetpoint(angle);
 
@@ -85,7 +85,7 @@ public class RotateDriveWithGyro extends Command {
     protected void end() {
         // Disable PID output and stop robot to be safe
         PID.disable();
-
+        System.out.println("Done Rotating");
         Log.d("RotateDriveWithGyro", "Ended");
 
         Robot.driveTrain.drive(0, 0);
