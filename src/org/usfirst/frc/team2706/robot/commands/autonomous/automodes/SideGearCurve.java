@@ -3,6 +3,7 @@ package org.usfirst.frc.team2706.robot.commands.autonomous.automodes;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.CurveDrive;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithTime;
 import org.usfirst.frc.team2706.robot.commands.autonomous.plays.DrivePlaceGear;
+import org.usfirst.frc.team2706.robot.commands.mechanismcontrol.CloseGearMechanism;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 

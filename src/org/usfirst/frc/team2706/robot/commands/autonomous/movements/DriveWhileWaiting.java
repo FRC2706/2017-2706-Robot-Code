@@ -21,7 +21,7 @@ public class DriveWhileWaiting extends Command {
     }
     protected void execute() {
         if (!Robot.gearHandler.pegDetected()) {
-            Robot.driveTrain.arcadeDrive(-speed, Robot.driveTrain.normalize(-Robot.driveTrain.getHeading()) / 10);
+            Robot.driveTrain.arcadeDrive(-speed, 0);
         }
     }
 

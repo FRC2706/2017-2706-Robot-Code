@@ -1,5 +1,6 @@
 package org.usfirst.frc.team2706.robot.commands.autonomous.automodes;
 
+import org.usfirst.frc.team2706.robot.commands.autonomous.movements.DriveWhileWaiting;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithEncoders;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithPeg;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithTime;
@@ -21,20 +22,23 @@ public class VisionCenterPeg extends CommandGroup {
         if(slow) {
             //   this.addSequential(new StraightDriveWithEncoders(0.7, 5, 5, 1));
             //this.addSequential(new StraightDriveWithCamera(0.53, 25, 3), 6);
-            this.addSequential(new StraightDriveWithPeg(0.55/2,20,2,1));
+            this.addSequential(new CloseGearMechanism());
+            this.addSequential(new StraightDriveWithPeg(0.5,20,2,1));
             // this.addSequential(new RetryPegUntilComplete());
-             this.addSequential(new StraightDriveWithTime(0.65/2, 500));
+            this.addSequential(new DriveWhileWaiting(0.5));
+             this.addSequential(new StraightDriveWithTime(0.5, 500));
             this.addSequential(new OpenGearMechanism());
-            this.addSequential(new StraightDriveWithTime(0.65/2, 500));
-            this.addSequential(new StraightDriveWithTime(-0.65/2, 500));
-            //this.addSequential(new StraightDriveWithEncoders(-speed, -reverseDistance, 5, 1));
+            this.addSequential(new StraightDriveWithTime(0.5, 500));
+            this.addSequential(new StraightDriveWithTime(-0.5, 750));
             this.addSequential(new CloseGearMechanism());
         }
         else {
             //   this.addSequential(new StraightDriveWithEncoders(0.7, 5, 5, 1));
             //this.addSequential(new StraightDriveWithCamera(0.53, 25, 3), 6);
+            this.addSequential(new CloseGearMechanism());
             this.addSequential(new StraightDriveWithPeg(0.55,20,2,1));
             // this.addSequential(new RetryPegUntilComplete());
+            this.addSequential(new DriveWhileWaiting(0.55));
              this.addSequential(new StraightDriveWithTime(0.65, 500));
             this.addSequential(new OpenGearMechanism());
             this.addSequential(new StraightDriveWithTime(0.65, 500));
