@@ -2,6 +2,7 @@ package org.usfirst.frc.team2706.robot.commands.autonomous.movements;
 
 import java.util.function.Supplier;
 
+import org.usfirst.frc.team2706.robot.Log;
 import org.usfirst.frc.team2706.robot.OI;
 import org.usfirst.frc.team2706.robot.Robot;
 import org.usfirst.frc.team2706.robot.commands.teleop.ArcadeDriveWithJoystick;
@@ -92,7 +93,7 @@ public class ReplayRecordedJoystick extends Command {
         Robot.oi.destroy();
         Robot.oi = new OI(driverStick, operatorStick);
 
-        System.out.println("Replaying joystick from folder " + folder);
+        Log.i("Record and Replay", "Replaying joystick from folder " + folder);
     }
 
     @Override
@@ -111,10 +112,28 @@ public class ReplayRecordedJoystick extends Command {
     @Override
     public void end() {
         super.end();
+        
         ((RecordableJoystick) driverStick).end();
         ((RecordableJoystick) operatorStick).end();
 
+        if (Robot.driveTrain.getDefaultCommand() instanceof ArcadeDriveWithJoystick) {
+            ((ArcadeDriveWithJoystick) Robot.driveTrain.getDefaultCommand())
+                            .setJoystick(((RecordableJoystick) driverStick).getRealJoystick());
+        }
+
         Robot.oi.destroy();
+        
+        Joystick driverStick = this.driverStick, operatorStick = this.operatorStick;
+        
+        // Make sure that Oi receives a real joystick, not a RecordableJoystick
+        while(driverStick instanceof RecordableJoystick) {
+            driverStick = ((RecordableJoystick) driverStick).getRealJoystick();
+        }
+        
+        while(operatorStick instanceof RecordableJoystick) {
+            operatorStick = ((RecordableJoystick) operatorStick).getRealJoystick();
+        }
+        
         Robot.oi = new OI(driverStick, operatorStick);
     }
 

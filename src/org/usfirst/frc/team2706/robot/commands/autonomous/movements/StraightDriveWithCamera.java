@@ -1,16 +1,18 @@
 package org.usfirst.frc.team2706.robot.commands.autonomous.movements;
 
+import org.usfirst.frc.team2706.robot.Log;
 import org.usfirst.frc.team2706.robot.Robot;
 
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
- * Have the robot drive certain distance using the distance sensor(s) on the robot and PID
+ * Drives the robot in a straight line towards the target found by the camera. Used for lining up
+ * the peg at short distances
  */
-public class StraightDriveWithDistanceSensor extends Command {
+public class StraightDriveWithCamera extends Command {
 
-    private final double speed;
+    private double speed;
 
     private final double distance;
 
@@ -18,32 +20,33 @@ public class StraightDriveWithDistanceSensor extends Command {
 
     private final PIDController PID;
 
-    private int doneCount;
-    private final double P = 7.5, I = 2.5, D = 20;
+    private final double P = 0.5, I = 0.06, D = 0.25;
 
     /**
-     * Drive at a specific speed for a certain amount of time
+     * Drive at a specific speed based on camera
      * 
      * @param speed Speed in range [-1,1]
-     * @param distance The ultrasonic distance to travel in inches
-     * @param error The range that the robot is happy ending the command in
+     * @param distance The encoder distance to travel
+     * @param error The range that the robot is happy ending the command in inches
      */
-    public StraightDriveWithDistanceSensor(double speed, double distance, double error) {
+    public StraightDriveWithCamera(double speed, double distance, double error) {
         requires(Robot.driveTrain);
 
         this.speed = speed;
 
         this.distance = distance;
 
-        this.error = error;
+        this.error = error / 12.0;
 
         PID = new PIDController(P, I, D, Robot.driveTrain.getDistanceSensorPIDSource(),
-                        Robot.driveTrain.getDrivePIDOutput(true, false, true));
+                        Robot.driveTrain.getDrivePIDOutput(true, true, true));
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-        Robot.driveTrain.reset();
+        Robot.driveTrain.resetEncoders();
+
+        Robot.driveTrain.brakeMode(true);
 
         // Make input infinite
         PID.setContinuous();
@@ -59,23 +62,27 @@ public class StraightDriveWithDistanceSensor extends Command {
 
         PID.setSetpoint(distance);
 
-
         // Will accept within 5 inch of target
         PID.setAbsoluteTolerance(error);
-
+        Log.d("StraightDriveWithCamera", "init");
         // Start going to location
         PID.enable();
     }
 
+    protected void execute() {
+        Robot.camera.GetTargets(true);
+    }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return PID.onTarget();
+        return Robot.driveTrain.getDistanceToObstacle() < distance;
     }
 
     // Called once after isFinished returns true
     protected void end() {
-        doneCount = 0;
+        // Robot.camera.enableRingLight(false);
+        Robot.driveTrain.brakeMode(false);
+
         // Disable PID output and stop robot to be safe
         PID.disable();
         Robot.driveTrain.drive(0, 0);
@@ -85,9 +92,5 @@ public class StraightDriveWithDistanceSensor extends Command {
     // subsystems is scheduled to run
     protected void interrupted() {
         end();
-    }
-
-    public int getDoneCount() {
-        return doneCount;
     }
 }

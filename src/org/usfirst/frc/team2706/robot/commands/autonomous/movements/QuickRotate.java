@@ -1,5 +1,6 @@
 package org.usfirst.frc.team2706.robot.commands.autonomous.movements;
 
+import org.usfirst.frc.team2706.robot.Log;
 import org.usfirst.frc.team2706.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -18,13 +19,13 @@ public class QuickRotate extends Command {
     private int direction = 1;
 
     // Rotate faster if far away from target heading
-    private double fastRotateSpeed = 0.7;
+    private double fastRotateSpeed = 0.75;
 
     // Rotate slower when approaching target heading
-    private double slowRotateSpeed = 0.65;
+    private double slowRotateSpeed = 0.6;
 
     // Threshold (degrees) at which to switch from fast to slow
-    private double speedThreshold = 15.0;
+    private double speedThreshold = 25.0;
 
     private int maxCycles = 120;
 
@@ -42,6 +43,7 @@ public class QuickRotate extends Command {
         super("QuickRotate");
 
         requires(Robot.driveTrain);
+
         this.targetHeading = normalize(targetHeading);
     }
 
@@ -49,11 +51,13 @@ public class QuickRotate extends Command {
     protected void initialize() {
         done = 10;
         maxCycles = 120;
+
+        Robot.driveTrain.reset();
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-        System.out.println(Robot.driveTrain.getHeading());
+        Log.d("Quick Rotate", "Current Heading: " + Robot.driveTrain.getHeading());
         currentHeading = normalize(Robot.driveTrain.getHeading());
         double error = normalize(targetHeading - currentHeading);
 

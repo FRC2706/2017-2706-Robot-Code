@@ -2,6 +2,7 @@ package org.usfirst.frc.team2706.robot.commands.teleop;
 
 import java.util.function.Supplier;
 
+import org.usfirst.frc.team2706.robot.Log;
 import org.usfirst.frc.team2706.robot.OI;
 import org.usfirst.frc.team2706.robot.Robot;
 import org.usfirst.frc.team2706.robot.controls.RecordableJoystick;
@@ -73,7 +74,7 @@ public class RecordJoystick extends Command {
         Robot.oi.destroy();
         Robot.oi = new OI(driverStick, operatorStick);
 
-        System.out.println("Recording joystick to folder " + folder);
+        Log.i("Record and Replay", "Recording joystick to folder " + folder);
     }
 
     @Override
@@ -92,12 +93,20 @@ public class RecordJoystick extends Command {
     @Override
     public void end() {
         super.end();
+        
         ((RecordableJoystick) driverStick).end();
         ((RecordableJoystick) operatorStick).end();
 
-        Robot.oi.destroy();
-        Robot.oi = new OI(((RecordableJoystick) driverStick).getRealJoystick(),
-                        ((RecordableJoystick) operatorStick).getRealJoystick());
+        // Make sure that Oi receives a real joystick, not a RecordableJoystick
+        while(driverStick instanceof RecordableJoystick) {
+            driverStick = ((RecordableJoystick) driverStick).getRealJoystick();
+        }
+        
+        while(operatorStick instanceof RecordableJoystick) {
+            operatorStick = ((RecordableJoystick) operatorStick).getRealJoystick();
+        }
+        
+        Robot.oi = new OI(driverStick, operatorStick);
     }
 
     @Override

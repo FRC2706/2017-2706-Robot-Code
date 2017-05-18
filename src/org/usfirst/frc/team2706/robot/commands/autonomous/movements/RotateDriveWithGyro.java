@@ -1,5 +1,6 @@
 package org.usfirst.frc.team2706.robot.commands.autonomous.movements;
 
+import org.usfirst.frc.team2706.robot.Log;
 import org.usfirst.frc.team2706.robot.Robot;
 
 import edu.wpi.first.wpilibj.PIDController;
@@ -18,14 +19,11 @@ public class RotateDriveWithGyro extends Command {
 
     private final double angle;
 
+    private PIDController PID;
+
     private final int minDoneCycles;
 
-    private final PIDController leftPID;
-    private final PIDController rightPID;
-
-    private int doneCount;
-
-    private final double P = 1, I = 0, D = 0, F = 0;
+    private final double P = 0.0575, I = 0.02, D = 0.15, F = 0;
 
     /**
      * Drive at a specific speed for a certain amount of time
@@ -33,19 +31,17 @@ public class RotateDriveWithGyro extends Command {
      * @param speed Speed in range [-1,1]
      * @param angle The angle to rotate to
      */
-    public RotateDriveWithGyro(double speed, double angle, int minDoneCycles) {
+    public RotateDriveWithGyro(double speed, double angle, int minDonecycles) {
         requires(Robot.driveTrain);
 
         this.speed = speed;
 
         this.angle = angle;
 
-        this.minDoneCycles = minDoneCycles;
-        leftPID = new PIDController(P, I, D, F, Robot.driveTrain.getGyroPIDSource(false),
-                        Robot.driveTrain.getDrivePIDOutput(false, true));
+        this.minDoneCycles = minDonecycles;
 
-        rightPID = new PIDController(P, I, D, F, Robot.driveTrain.getGyroPIDSource(false),
-                        Robot.driveTrain.getDrivePIDOutput(true, false));
+        PID = new PIDController(P, I, D, F, Robot.driveTrain.getGyroPIDSource(false),
+                        Robot.driveTrain.getDrivePIDOutput(false, false, true));
     }
 
     // Called just before this Command runs the first time
@@ -54,52 +50,42 @@ public class RotateDriveWithGyro extends Command {
 
 
 
-        leftPID.setInputRange(-360.0, 360.0);
-        rightPID.setInputRange(-360.0, 360.0);
+        PID.setInputRange(-360.0, 360.0);
 
         // Make input infinite
-        leftPID.setContinuous();
-        rightPID.setContinuous();
+        PID.setContinuous();
         if (speed > 0) {
             // Set output speed range
-            leftPID.setOutputRange(-speed, speed);
-            rightPID.setOutputRange(-speed, speed);
+            PID.setOutputRange(-speed, speed);
         } else {
-            leftPID.setOutputRange(speed, -speed);
-            rightPID.setOutputRange(speed, -speed);
+            PID.setOutputRange(speed, -speed);
         }
         // Will accept within 1 degrees of target
-        leftPID.setAbsoluteTolerance(4);
-        rightPID.setAbsoluteTolerance(4);
+        PID.setAbsoluteTolerance(1);
 
-        leftPID.setSetpoint(angle);
-        rightPID.setSetpoint(angle);
+        PID.setSetpoint(angle);
 
         // Start going to location
-        leftPID.enable();
-        rightPID.enable();
+        PID.enable();
     }
 
-    // Called repeatedly when this Command is scheduled to run
-    protected void execute() {
-        // TODO: Use WPI onTarget()
-        onTarget();
-    }
+    private int doneTicks;
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        if (this.doneCount > this.minDoneCycles)
-            return true;
+        if (PID.onTarget())
+            doneTicks++;
         else
-            return false;
+            doneTicks = 0;
 
+        return doneTicks >= minDoneCycles;
     }
 
     // Called once after isFinished returns true
     protected void end() {
         // Disable PID output and stop robot to be safe
-        leftPID.disable();
-        rightPID.disable();
+        PID.disable();
+        Log.d("RotateDriveWithGyro", "Ended");
 
         Robot.driveTrain.drive(0, 0);
     }
@@ -108,21 +94,6 @@ public class RotateDriveWithGyro extends Command {
     // subsystems is scheduled to run
     protected void interrupted() {
         end();
-    }
-
-    private boolean onTarget() {
-        if (leftPID.getError() < 4.0 && rightPID.getError() < 4.0) {
-            doneCount++;
-            return true;
-        } else {
-            doneCount = 0;
-            return false;
-        }
-
-    }
-
-    public int getDoneCount() {
-        return doneCount;
     }
 
     public void Turn() {

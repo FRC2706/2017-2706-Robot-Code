@@ -1,17 +1,25 @@
 
 package org.usfirst.frc.team2706.robot;
 
-import org.usfirst.frc.team2706.robot.commands.autonomous.automodes.CenterToLaunch;
+import org.usfirst.frc.team2706.robot.commands.autonomous.automodes.SideCameraPeg;
+import org.usfirst.frc.team2706.robot.commands.autonomous.automodes.SideGearCurve;
 import org.usfirst.frc.team2706.robot.commands.autonomous.automodes.SideStartSideGear;
-import org.usfirst.frc.team2706.robot.commands.autonomous.movements.QuickRotate;
-import org.usfirst.frc.team2706.robot.commands.autonomous.movements.ReplayRecordedJoystick;
+import org.usfirst.frc.team2706.robot.commands.autonomous.automodes.VisionCenterPeg;
+import org.usfirst.frc.team2706.robot.commands.autonomous.movements.RotateDriveWithGyro;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithEncoders;
 import org.usfirst.frc.team2706.robot.commands.autonomous.plays.DrivePlaceGear;
 import org.usfirst.frc.team2706.robot.commands.teleop.ArcadeDriveWithJoystick;
 import org.usfirst.frc.team2706.robot.commands.teleop.RecordJoystick;
+import org.usfirst.frc.team2706.robot.controls.StickRumble;
+import org.usfirst.frc.team2706.robot.subsystems.AutonomousSelector;
+import org.usfirst.frc.team2706.robot.subsystems.Bling;
 import org.usfirst.frc.team2706.robot.subsystems.Camera;
+import org.usfirst.frc.team2706.robot.subsystems.Climber;
 import org.usfirst.frc.team2706.robot.subsystems.DriveTrain;
+import org.usfirst.frc.team2706.robot.subsystems.GearHandler;
 
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -32,50 +40,80 @@ public class Robot extends IterativeRobot {
     // The robot's main drive train
     public static DriveTrain driveTrain;
 
+    // The spinny dial on the robot that selects what autonomous mode we are going to do
+    public static AutonomousSelector hardwareChooser;
+
+    // The gear handler arm
+    public static GearHandler gearHandler;
+
+    // The climber
+    public static Climber climber;
+    
+    // This will be the bling subsystem controller
+    public static Bling blingSystem;
+
     // Stores all of the joysticks, and returns them as read only.
     public static OI oi;
+
 
     // Which command is going to be ran based on the hardwareChooser
     Command autonomousCommand;
 
     // Records joystick states to file for later replaying
     RecordJoystick recordAJoystick;
+    
+    // Rumbles joystick to tell drive team which mode we're in
+    StickRumble rumbler;
 
     /**
      * This function is run when the robot is first started up and should be used for any
      * initialization code.
      */
+    @SuppressWarnings("unused")
     public void robotInit() {
-
+        Log.setUpLogging();
+        
+        RobotMap.log();
+        
         // Instantiate the robot subsystems
         driveTrain = new DriveTrain();
-        // camera = new Camera(Camera.CAMERA_IP);
 
+        camera = new Camera();
+
+        gearHandler = new GearHandler();
+
+        climber = new Climber();
+
+        // New bling subsystem class.
+        blingSystem = new Bling();
+        
         oi = new OI();
 
+        // WARNING DO NOT AUTOFORMAT THIS OR BAD THINGS WILL HAPPEN TO YOU
         // Set up our autonomous modes with the hardware selector switch
         driveTrain.setAutonomousCommandList(
-                    /*  no switch: do nothing      */    new ArcadeDriveWithJoystick(), 
-                    /* position 1: do nothing      */    new ArcadeDriveWithJoystick(),
-                 /* position 2: Drive to baseline  */    new StraightDriveWithEncoders(0.65,5,25,5),
-     /* position 3: Drive to opposing launch line  */    new StraightDriveWithEncoders(0.65,20,0,5),
-        /* position 4: Center Position place gear  */    new DrivePlaceGear(0.5,4,2),
-/* position 5: Right position place gear > launch  */    new SideStartSideGear(true,0.5,7,45,5,2,20),
- /* position 6: Left position place gear > launch  */    new SideStartSideGear(true,0.5,7,45,5,2,20),
-         /* position 7: Center and left to launch  */    new CenterToLaunch(false,0.5,9,2,90,7,20),
-        /* position 8: Center and right to launch  */    new CenterToLaunch(true,0.5,9,2,90,7,20),
- /* position 9: Left/ gear double side hopper pop  */    new QuickRotate(90),
-/* position 10: Right gear double side hopper pop  */    new ReplayRecordedJoystick(oi.getDriverJoystick(), oi.getOperatorJoystick(),
-                                                             () -> SmartDashboard.getString("record-joystick-name", "default"), false)
-      /* position 11: Left gear middle hopper pop  */
-     /* position 12: Right gear middle hopper pop  */
-                                                );
+                         /* no switch: do nothing */ new ArcadeDriveWithJoystick(),
+                        /* position 1: do nothing */ new ArcadeDriveWithJoystick(),
+                 /* position 2: Drive to baseline */ new StraightDriveWithEncoders(0.5, 10, 1, 1),
+     /* position 3: Drive to opposing launch line */ new StraightDriveWithEncoders(0.5, 20, 1, 1),
+        /* position 4: Center Position place gear */ new DrivePlaceGear(0.5, 7+2.35/3, 3),
+ /* position 5: Left position place gear > launch */ new SideCameraPeg(0.7, 3.0, 7.5, 60, 4, 5, false),
+/* position 6: Right position place gear > launch */ new SideCameraPeg(0.7, 3.0, 7.5, 60, 4, 5, true),
+ /* position 7: Left position place gear > launch */ new SideStartSideGear(false, 0.65, 5.85, 60, 6, 3.5, 10),
+/* position 8: Right position place gear > launch */ new SideStartSideGear(true, 0.65, 5.85, 60, 6, 3.5, 10),
+           /* position 9: Center gear with vision */ new VisionCenterPeg(0.5,0,4,true),
+                  /* position 10: Record n replay */ new RotateDriveWithGyro(0.6,60,25),
+          /* position 11: Curve from left to gear */ new SideGearCurve(0.6, 5.0, 9.2, 60, 4, 5, false),
+     /* position 12: Right gear middle hopper pop */ new SideGearCurve(0.6, 5.0, 9.2, 60, 4, 5, true)
+        );
 
         // Set up the Microsoft LifeCam and start streaming it to the Driver Station
-        // CameraServer.getInstance().startAutomaticCapture();
-
+        // TODO Do switching with cam switching or just get rid of the variable because unused
+        UsbCamera forwardCamera = CameraServer.getInstance().startAutomaticCapture(0);
+        UsbCamera rearCamera = CameraServer.getInstance().startAutomaticCapture(1);
+        
         recordAJoystick = new RecordJoystick(oi.getDriverJoystick(), oi.getOperatorJoystick(),
-                        () -> SmartDashboard.getString("record-joystick-name", "default"));
+                        () -> SmartDashboard.getString("record-joystick-name", "default"));        
     }
 
     /**
@@ -101,14 +139,18 @@ public class Robot extends IterativeRobot {
     public void autonomousInit() {
         driveTrain.reset();
 
-        // Great for safety just incase you set the wrong one in practice ;)
-        System.out.println("Running " + driveTrain.getAutonomousCommand().getName() + "...");
-
+        // Great for safety just in case you set the wrong one in practice ;)
+        Log.i("Autonomous Selector", "Running " + hardwareChooser.getSelected() + "...");
+        
         autonomousCommand = driveTrain.getAutonomousCommand();
+        Robot.driveTrain.brakeMode(true);
 
         // Schedule the autonomous command that was selected
         if (autonomousCommand != null)
             autonomousCommand.start();
+        if (!blingSystem.getDefaultCommand().isRunning())
+            blingSystem.getDefaultCommand().start();
+        
     }
 
     /**
@@ -127,9 +169,16 @@ public class Robot extends IterativeRobot {
          */
         if (autonomousCommand != null)
             autonomousCommand.cancel();
-
+        Robot.driveTrain.brakeMode(false);
         if (SmartDashboard.getBoolean("record-joystick", false))
             recordAJoystick.start();
+
+        // Tell drive team to drive
+        rumbler = new StickRumble(0.4, 0.15, 1, 0, 1, 1.0, 1);
+        rumbler.start();
+        
+        // Deactivate the camera ring light
+       // camera.enableRingLight(false);
     }
 
     /**
@@ -149,5 +198,8 @@ public class Robot extends IterativeRobot {
 
     private void log() {
         driveTrain.log();
+        gearHandler.log();
+        
+        Log.updateTableLog();
     }
 }
