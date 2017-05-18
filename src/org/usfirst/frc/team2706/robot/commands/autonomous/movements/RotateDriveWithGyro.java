@@ -85,7 +85,6 @@ public class RotateDriveWithGyro extends Command {
     protected void end() {
         // Disable PID output and stop robot to be safe
         PID.disable();
-        System.out.println("Done Rotating");
         Log.d("RotateDriveWithGyro", "Ended");
 
         Robot.driveTrain.drive(0, 0);
