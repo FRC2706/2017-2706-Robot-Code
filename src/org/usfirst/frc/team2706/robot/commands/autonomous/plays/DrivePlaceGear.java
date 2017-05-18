@@ -20,6 +20,7 @@ public class DrivePlaceGear extends CommandGroup {
      */
     public DrivePlaceGear(double speed, double distance, double reverseDistance) {
         requires(Robot.driveTrain);
+        this.addSequential(new CloseGearMechanism());
         if (distance != 0) {
             // Adds a movement one after another instead of at the same time
             this.addSequential(new StraightDriveWithEncoders(speed, distance, 0.1,1),3);

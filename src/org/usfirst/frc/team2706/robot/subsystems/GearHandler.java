@@ -95,7 +95,7 @@ public class GearHandler extends Subsystem {
     
 
     private AnalogInput irPegSensor = new AnalogInput(RobotMap.INFRARED_SENSOR_PEG_ANALOG);
-    private static final double PEG_DETECTED = 0.25;    
+    private static final double PEG_DETECTED = 0.3;    
 
     // Calls limit switches from robot map
     private DigitalInput limitSwitchLeft = new DigitalInput(RobotMap.LIMIT_SWITCH_LEFT_CHANNEL);
