@@ -10,6 +10,9 @@ import org.usfirst.frc.team2706.robot.commands.mechanismcontrol.CloseGearMechani
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
+/**
+ * Start at the side of the field, grab the side gear and head on out to the launch pad
+ */
 public class SideCameraPeg extends CommandGroup {
 
     /**

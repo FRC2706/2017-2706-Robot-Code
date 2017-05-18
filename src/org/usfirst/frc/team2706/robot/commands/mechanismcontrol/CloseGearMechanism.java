@@ -9,6 +9,9 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class CloseGearMechanism extends Command {
 
+    /**
+     * Constructs Command
+     */
     public CloseGearMechanism() {
         requires(Robot.gearHandler);
     }

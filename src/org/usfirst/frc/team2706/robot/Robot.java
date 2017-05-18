@@ -48,7 +48,7 @@ public class Robot extends IterativeRobot {
 
     // The climber
     public static Climber climber;
-    
+
     // This will be the bling subsystem controller
     public static Bling blingSystem;
 
@@ -61,7 +61,7 @@ public class Robot extends IterativeRobot {
 
     // Records joystick states to file for later replaying
     RecordJoystick recordAJoystick;
-    
+
     // Rumbles joystick to tell drive team which mode we're in
     StickRumble rumbler;
 
@@ -72,9 +72,9 @@ public class Robot extends IterativeRobot {
     @SuppressWarnings("unused")
     public void robotInit() {
         Log.setUpLogging();
-        
+
         RobotMap.log();
-        
+
         // Instantiate the robot subsystems
         driveTrain = new DriveTrain();
 
@@ -86,7 +86,7 @@ public class Robot extends IterativeRobot {
 
         // New bling subsystem class.
         blingSystem = new Bling();
-        
+
         oi = new OI();
 
         // WARNING DO NOT AUTOFORMAT THIS OR BAD THINGS WILL HAPPEN TO YOU
@@ -111,9 +111,9 @@ public class Robot extends IterativeRobot {
         // TODO Do switching with cam switching or just get rid of the variable because unused
         UsbCamera forwardCamera = CameraServer.getInstance().startAutomaticCapture(0);
         UsbCamera rearCamera = CameraServer.getInstance().startAutomaticCapture(1);
-        
+
         recordAJoystick = new RecordJoystick(oi.getDriverJoystick(), oi.getOperatorJoystick(),
-                        () -> SmartDashboard.getString("record-joystick-name", "default"));        
+                        () -> SmartDashboard.getString("record-joystick-name", "default"));
     }
 
     /**
@@ -141,8 +141,9 @@ public class Robot extends IterativeRobot {
 
         // Great for safety just in case you set the wrong one in practice ;)
         Log.i("Autonomous Selector", "Running " + hardwareChooser.getSelected() + "...");
-        
+
         autonomousCommand = driveTrain.getAutonomousCommand();
+
         Robot.driveTrain.brakeMode(true);
 
         // Schedule the autonomous command that was selected
@@ -150,7 +151,6 @@ public class Robot extends IterativeRobot {
             autonomousCommand.start();
         if (!blingSystem.getDefaultCommand().isRunning())
             blingSystem.getDefaultCommand().start();
-        
     }
 
     /**
@@ -176,9 +176,9 @@ public class Robot extends IterativeRobot {
         // Tell drive team to drive
         rumbler = new StickRumble(0.4, 0.15, 1, 0, 1, 1.0, 1);
         rumbler.start();
-        
+
         // Deactivate the camera ring light
-       // camera.enableRingLight(false);
+        // camera.enableRingLight(false);
     }
 
     /**

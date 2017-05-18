@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class ClimbAutomatically extends Command {
 
-    boolean finished = false;
+    private boolean finished = false;
 
     protected void initialize() {
         Robot.climber.resetClimberDistance();

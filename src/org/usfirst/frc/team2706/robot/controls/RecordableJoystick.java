@@ -197,7 +197,7 @@ public class RecordableJoystick extends Joystick {
     private boolean isValidReplayState() {
         return replay && config != null && states != null && index < states.size() && index != -1;
     }
-    
+
     @Override
     public int getAxisCount() {
         if (isValidReplayState())

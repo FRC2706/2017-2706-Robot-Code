@@ -12,13 +12,11 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class RetryPegUntilComplete extends Command {
 
-    public RetryPegUntilComplete() {}
-
     protected void initialize() {
         r = new Realign(0.6, 1.5);
     }
 
-    Realign r = new Realign(0.6, 3);
+    private Realign r = new Realign(0.6, 3);
 
     protected void execute() {
         if (!r.isRunning() && !Robot.gearHandler.pegDetected()) {

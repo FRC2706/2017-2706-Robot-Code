@@ -5,6 +5,9 @@ import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriv
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
+/**
+ * Aligns with the wall, and then drives to a certain distance from the wall
+ */
 public class AlignAndDistance extends CommandGroup {
 
     /**

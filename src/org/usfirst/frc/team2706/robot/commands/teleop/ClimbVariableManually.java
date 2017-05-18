@@ -5,12 +5,13 @@ import org.usfirst.frc.team2706.robot.Robot;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
- * This command is activated when the driver holds the corresponding trigger, turning the motor faster when more pressure is applied
+ * This command is activated when the driver holds the corresponding trigger, turning the motor
+ * faster when more pressure is applied
  * 
  * @author wakandacat, FilledWithDetermination, Crazycat200
  */
 public class ClimbVariableManually extends Command {
-    
+
     protected void initialize() {
         // Turn compressor off
         Robot.gearHandler.setCompressor(false);
@@ -34,7 +35,7 @@ public class ClimbVariableManually extends Command {
         // Turn compressor back on.
         Robot.gearHandler.setCompressor(true);
     }
-    
+
     private double getTriggerValue() {
         return Robot.oi.getOperatorJoystick().getRawAxis(3);
     }

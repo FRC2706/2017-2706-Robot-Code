@@ -92,7 +92,7 @@ public class StraightDriveWithEncoders extends Command {
         Log.d("StraightDrive", "ending");
         Robot.driveTrain.brakeMode(false);
         // Robot.driveTrain.brakeMode(false);
-        
+
         // Disable PID output and stop robot to be safe
         PID.disable();
         Robot.driveTrain.drive(0, 0);

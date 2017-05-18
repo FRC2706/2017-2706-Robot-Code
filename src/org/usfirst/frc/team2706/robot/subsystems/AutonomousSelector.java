@@ -28,6 +28,11 @@ public class AutonomousSelector extends SensorBase implements LiveWindowSendable
 
     private boolean isFree = true;
 
+    /**
+     * Creates AutoSelector with a list of commands to bind to each input
+     * 
+     * @param commands The commands to bind. The zeroth is default, one is the first notch
+     */
     public AutonomousSelector(Command... commands) {
         List<Command> commandList = Arrays.asList(commands);
 
@@ -38,6 +43,11 @@ public class AutonomousSelector extends SensorBase implements LiveWindowSendable
     }
 
 
+    /**
+     * Gets the currently selected command
+     * 
+     * @return The selected command
+     */
     public Command getSelected() {
         int idx = getVoltageAsIndex();
         if (idx >= commands.size())
@@ -62,6 +72,7 @@ public class AutonomousSelector extends SensorBase implements LiveWindowSendable
     }
 
     /**
+<<<<<<< HEAD
      * Delete (free) the analog switch used for the autonomous selector.
      */
     @Override
