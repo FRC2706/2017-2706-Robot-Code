@@ -6,6 +6,7 @@ import org.usfirst.frc.team2706.robot.commands.autonomous.automodes.SideGearCurv
 import org.usfirst.frc.team2706.robot.commands.autonomous.automodes.SideStartSideGear;
 import org.usfirst.frc.team2706.robot.commands.autonomous.automodes.VisionCenterPeg;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.RotateDriveWithGyro;
+import org.usfirst.frc.team2706.robot.commands.autonomous.movements.RotateWithCamera;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithEncoders;
 import org.usfirst.frc.team2706.robot.commands.autonomous.plays.DrivePlaceGear;
 import org.usfirst.frc.team2706.robot.commands.teleop.ArcadeDriveWithJoystick;
@@ -103,7 +104,7 @@ public class Robot extends IterativeRobot {
            /* position 9: Center gear with vision */ new VisionCenterPeg(0.5,0,4),
                   /* position 10: Record n replay */ new RotateDriveWithGyro(0.6,60,25),
           /* position 11: Curve from left to gear */ new SideGearCurve(0.6, 5.0, 9.2, 60, 4, 5, false),
-     /* position 12: Right gear middle hopper pop */ new SideGearCurve(0.6, 5.0, 9.2, 60, 4, 5, true)
+     /* position 12: Right gear middle hopper pop */ new RotateWithCamera()
         );
 
         // Set up the Microsoft LifeCam and start streaming it to the Driver Station
