@@ -72,7 +72,7 @@ public class QuickStraightDriveWithDistanceSensor extends Command {
 
         if (sensorAverage > distance1 && sensorAverage < distance2) {
             // TODO: Use CANTalons to do an actual break
-            // instead of a jolt in the opposite direction
+            //       instead of a jolt in the opposite direction
             if (stopCycles < desiredStopCycles) {
                 double rotateVal = (Robot.driveTrain.normalize(
                                 Robot.driveTrain.getHeading() - Robot.driveTrain.initGyro) * 0.1);

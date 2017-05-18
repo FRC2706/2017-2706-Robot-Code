@@ -72,7 +72,6 @@ public class AutonomousSelector extends SensorBase implements LiveWindowSendable
     }
 
     /**
-<<<<<<< HEAD
      * Delete (free) the analog switch used for the autonomous selector.
      */
     @Override
