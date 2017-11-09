@@ -162,7 +162,21 @@ public class DriveTrain extends Subsystem {
     public void arcadeDrive(double forward, double turn) {
         drive.arcadeDrive(forward, turn, true);
     }
-
+    
+    /**
+     * Increases the accuracy of robot control using COMPICATED FUNCTIONS
+     * @param pushValue the X or Y Axis value from the joystick
+     * @return A more accurate push value to be used for motor speed
+     */
+    private double  driveAccuracy(double pushValue)
+    {
+        if (pushValue >= 0.0) {
+            pushValue = pushValue * pushValue;
+          } else {
+              pushValue = -(pushValue * pushValue);
+          }
+        return pushValue;
+    }
     /**
      * @param joy The Xbox style joystick to use to drive arcade style.
      */
@@ -173,7 +187,7 @@ public class DriveTrain extends Subsystem {
             XAxis *= 0.7;
             YAxis *= 0.7;
         }
-        drive.arcadeDrive(YAxis, XAxis, true);
+        drive.arcadeDrive(driveAccuracy(YAxis), driveAccuracy(XAxis), false);
         
     }
 
