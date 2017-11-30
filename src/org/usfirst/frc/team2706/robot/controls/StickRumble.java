@@ -20,46 +20,73 @@ public class StickRumble extends Command {
     protected double startTime;
     protected double timePassed;
 
-    // Time variables inputted/selected.
+    /**
+     * Time rumbling.
+     */
     public double timeOn;
+    
+    /**
+     * Time not rumbling.
+     */
     public double timeOff;
 
-    // Number of repeats.
+    /**w`
+     * Number of repeats.
+     */
     public int repeatCount;
 
-    // Used to determine if we're done.
+    /**
+     * Used to determine if we're done.
+     */
     public boolean finished;
 
-    // Used to determine if we're on.
+    /**
+     * Used to determine if we're on.
+     */
     public static boolean on = false;
 
-    // More selected things
+    /**
+     * How intense vibrations will be from 0 to 1.0
+     */
     public static double vibrationIntensity;
+    
+    /**
+     * Time between vibrations
+     */
     public static double intervalTime;
+    
+    /**
+     * How many vibrations
+     */
     public static int intervalCount;
 
+    /**
+     * Copy of repeatCount
+     */
     public static int repeatCountCopy;
-    
+
     protected final int selectionOfController;
-    
-    // True when we are going to have an infinite loop.
+
+    /**
+     * True when we are going to have an infinite loop.
+     */
     public static boolean infiniteCount = false;
-    /*
+    /**
      * Used to determine if we are in the interval time period
      */
     public static boolean intervalOn = false;
 
     /**
-     * Function for setting vibration on the controller. Note that a maximum of 4 seconds
-     * is given for it to run.
+     * Function for setting vibration on the controller. Note that a maximum of 4 seconds is given
+     * for it to run.
      * 
      * @param timeOn The time for which the controller will vibrate in seconds
      * @param timeOff The delay time between when the controller is vibrating
      * @param repeatCount The number of times to repeat the rumble on - rumble off pattern.
      * @param intervalTime The time in seconds between the patterns of vibrations.
-     * @param intervalCount The number of times to repeat the pattern sets.
-     * Set this to -1 to keep going indefinitely until you call "StickRumble.end".
-     * PLEASE CALL STICKRUMBLE.END! DO NOT LEAVE THE CONTROLLER VIBRATING ETERNALLY!
+     * @param intervalCount The number of times to repeat the pattern sets. Set this to -1 to keep
+     *        going indefinitely until you call "StickRumble.end". PLEASE CALL STICKRUMBLE.END! DO
+     *        NOT LEAVE THE CONTROLLER VIBRATING ETERNALLY!
      * @param intensity How much the controllers will vibrate.
      * @param whichController Select which controller will vibrate. <p>
      * 0 = both, 1 = driver, 2 = operator.
@@ -83,7 +110,7 @@ public class StickRumble extends Command {
         selectionOfController = whichController;
         finished = false;
     }
-    
+
     public void initialize() {
         startTime = Timer.getFPGATimestamp();
     }
@@ -99,12 +126,12 @@ public class StickRumble extends Command {
                 joystick.setRumble(RumbleType.kRightRumble, vibrationIntensity);
                 joystick.setRumble(RumbleType.kLeftRumble, vibrationIntensity);
             }
-            
+
             if (selectionOfController == 0 || selectionOfController == 2) {
                 operatorJoy.setRumble(RumbleType.kLeftRumble, vibrationIntensity);
                 operatorJoy.setRumble(RumbleType.kRightRumble, vibrationIntensity);
             }
-            
+
         } else {
             joystick.setRumble(RumbleType.kRightRumble, 0.0);
             joystick.setRumble(RumbleType.kLeftRumble, 0.0);
@@ -126,7 +153,7 @@ public class StickRumble extends Command {
             rumbleAll(false);
             startTime += timePassed;
         }
-        
+
         if (intervalOn && intervalTime > 0 && timePassed >= intervalTime) {
             intervalCount -= 1;
             repeatCount = repeatCountCopy; // Reset the repeat count.
@@ -136,17 +163,18 @@ public class StickRumble extends Command {
         }
 
         // Turn on the rumble when it needs to be turned on.
-        if ((timePassed < timeOn || timePassed / (timeOn + timeOff) >= 1) && !on && !intervalOn && repeatCount >= 0) {
+        if ((timePassed < timeOn || timePassed / (timeOn + timeOff) >= 1) && !on && !intervalOn
+                        && repeatCount >= 0) {
             // Need to add to startTime so timePassed is 0 again.
             startTime += timePassed;
             on = true;
-            
+
             // Subtract from this to eventually get to 0.
             repeatCount -= 1;
-            
+
             if (repeatCount >= 0)
                 rumbleAll(true);
-            
+
         }
 
         /*
@@ -168,8 +196,8 @@ public class StickRumble extends Command {
         }
         return finished;
     }
-    
-    
+
+
 
     @Override
     public void interrupted() {

@@ -18,7 +18,7 @@ public class StopAtGearWall extends Command {
 
     private double distance;
 
-    boolean part = true;
+    private boolean part = true;
 
     /**
      * Stops at the wall to pick up a gear
@@ -37,7 +37,7 @@ public class StopAtGearWall extends Command {
         Robot.driveTrain.resetEncoders();
     }
 
-    EncodersNoReturn t;
+    private EncodersNoReturn t;
 
     protected void execute() {
         if (part) {
@@ -45,7 +45,7 @@ public class StopAtGearWall extends Command {
         }
     }
 
-    boolean doneOne = false;
+    private boolean doneOne = false;
 
     /**
      * Gets the distance sensor distance and sees if the encoders should take over
@@ -74,8 +74,7 @@ public class StopAtGearWall extends Command {
         end();
     }
 
-    int i = 0;
-    boolean q = false;
+    private boolean q = false;
 
     @Override
     protected boolean isFinished() {

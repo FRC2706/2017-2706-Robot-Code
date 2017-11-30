@@ -37,10 +37,19 @@ public class DriveTrain extends Subsystem {
     private AverageEncoderPIDSource encoderPIDSource;
     private UltrasonicPIDSource ultrasonicPIDSource;
 
+    /**
+     * Used to determine what angle is desired when using straight drive
+     */
     public double initGyro;
 
     private Command defaultCommand;
+    
+    // The spinny dial on the robot that selects what autonomous mode we are going to do
+    private AutonomousSelector selectorSwitch;
 
+    /**
+     * Sets up all of the sensors and motors used in driving
+     */
     public DriveTrain() {
         super();
         front_left_motor = new CANTalon(RobotMap.MOTOR_FRONT_LEFT);
@@ -93,7 +102,7 @@ public class DriveTrain extends Subsystem {
 
         reset();
 
-
+        selectorSwitch = new AutonomousSelector();
 
         // Let's show everything on the LiveWindow
         LiveWindow.addActuator("Drive Train", "Front Left Motor", front_left_motor);
@@ -105,6 +114,7 @@ public class DriveTrain extends Subsystem {
         LiveWindow.addSensor("Drive Train", "Left Distance Sensor", leftDistanceSensor);
         LiveWindow.addSensor("Drive Train", "Right Distance Sensor", rightDistanceSensor);
         LiveWindow.addSensor("Drive Train", "Gyro", gyro);
+        LiveWindow.addSensor("Drive Train", "Autonomous Selector", selectorSwitch);
     }
 
     /**
@@ -117,6 +127,9 @@ public class DriveTrain extends Subsystem {
         setDefaultCommand(defaultCommand);
     }
 
+    /**
+     * Gets the default command that should run when no other commands are scheduled
+     */
     public Command getDefaultCommand() {
         if (defaultCommand == null) {
             defaultCommand = new ArcadeDriveWithJoystick();
@@ -144,6 +157,7 @@ public class DriveTrain extends Subsystem {
         SmartDashboard.putNumber("Left Distance Sensor", leftDistanceSensor.getRangeInches());
         SmartDashboard.putNumber("Right Distance Sensor", rightDistanceSensor.getRangeInches());
         SmartDashboard.putNumber("Gyro", gyro.getAngle());
+        SmartDashboard.putNumber("Autonomous Selector", selectorSwitch.getVoltageAsIndex());
     }
 
     /**
@@ -174,7 +188,7 @@ public class DriveTrain extends Subsystem {
             YAxis *= 0.7;
         }
         drive.arcadeDrive(YAxis, XAxis, true);
-        
+
     }
 
     /**
@@ -187,19 +201,19 @@ public class DriveTrain extends Subsystem {
     public void headlessDrive(GenericHID joy) {
         Log.d("HeadlessDrive", joy.getRawAxis(5) + "," + joy.getRawAxis(4));
         double raw5 = joy.getRawAxis(5);
-       double raw4 = joy.getRawAxis(4);
+        double raw4 = joy.getRawAxis(4);
         double angle = normalize(Math.toDegrees(Math.atan(raw5 / raw4)));
-        
+
         double speed = (raw5 + raw4) / 2; // hyp
-        if(Math.abs(speed) < 0.1) {
+        if (Math.abs(speed) < 0.1) {
             speed = 0;
             angle = Robot.driveTrain.getHeading();
         }
         Log.d("HeadlessDrive", "Angle: " + angle + ", Speed: " + speed);
         double gyroAngle;
-            gyroAngle = normalize(Robot.driveTrain.getHeading());
+        gyroAngle = normalize(Robot.driveTrain.getHeading());
         Log.d("HeadlessDrive", (angle - gyroAngle * 0.1) * speed);
-        drive.arcadeDrive(-speed,- (angle - gyroAngle * 0.1) * speed,true);
+        drive.arcadeDrive(-speed, -(angle - gyroAngle * 0.1) * speed, true);
     }
 
     /**
@@ -233,6 +247,15 @@ public class DriveTrain extends Subsystem {
         return gyro.getAngle();
     }
 
+    public void setAutonomousCommandList(Command...commands) {
+        selectorSwitch.free();
+        selectorSwitch = new AutonomousSelector(commands);
+    }
+    
+    public Command getAutonomousCommand() {
+        return selectorSwitch.getSelected();
+    }
+    
     /**
      * Resets the displacement of the robot
      */
@@ -308,7 +331,7 @@ public class DriveTrain extends Subsystem {
         // Inverse tangent to take two sides of the triangle and get the angle
         double theta = Math.toDegrees(Math.atan2(opposite, adjacent));
         Log.d("Degree Sensor Angle", theta);
-        
+
         return theta;
     }
 
@@ -319,10 +342,20 @@ public class DriveTrain extends Subsystem {
         return (left_encoder.getDistance() + right_encoder.getDistance()) / 2;
     }
 
+    /**
+     * Gets the distance on the left distance sensor in inches
+     * 
+     * @return Distance in inches
+     */
     public double getLeftDistanceToObstacle() {
         return leftDistanceSensor.getRangeInches();
     }
 
+    /**
+     * Gets the distance on the left distance sensor in inches
+     * 
+     * @return Distance in inches
+     */
     public double getRightDistanceToObstacle() {
         return rightDistanceSensor.getRangeInches();
     }
@@ -336,13 +369,18 @@ public class DriveTrain extends Subsystem {
         } else {
             return right_encoder;
         }
-       
+
     }
 
+    /**
+     * Gets a PIDSource that combines both encoders as one input
+     * 
+     * @return The PIDSource
+     */
     public PIDSource getAverageEncoderPIDSource() {
         return encoderPIDSource;
     }
-    
+
     /**
      * @return The distance to the obstacle detected by the distance sensor.
      */
@@ -350,6 +388,11 @@ public class DriveTrain extends Subsystem {
         return (leftDistanceSensor.getRangeInches() + rightDistanceSensor.getRangeInches()) / 2;
     }
 
+    /**
+     * Gets a PIDSource for the distance sensor using distance in inches for input
+     * 
+     * @return The PIDSource
+     */
     public PIDSource getDistanceSensorPIDSource() {
         return ultrasonicPIDSource;
     }
@@ -408,7 +451,7 @@ public class DriveTrain extends Subsystem {
 
     }
 
-    
+
     class GyroPIDSource implements PIDSource {
 
         private final DriveTrain driveTrain;
@@ -443,6 +486,9 @@ public class DriveTrain extends Subsystem {
         }
     }
 
+    /**
+     * PIDOutput that drives the robot using its four motors
+     */
     public class DrivePIDOutput implements PIDOutput {
 
         private final RobotDrive drive;
@@ -453,6 +499,15 @@ public class DriveTrain extends Subsystem {
 
         private final boolean useCamera;
 
+        /**
+         * Sets up the PIDOutput
+         * 
+         * @param drive The RobotDrive to pass the outputs to
+         * @param useGyroStraightening When true makes sure robot stays at same rotation throughout
+         *        driving
+         * @param useCamera Whether to align using vision data
+         * @param invert Invert driving
+         */
         public DrivePIDOutput(RobotDrive drive, boolean useGyroStraightening, boolean useCamera,
                         boolean invert) {
             this.drive = drive;
@@ -503,11 +558,22 @@ public class DriveTrain extends Subsystem {
             }
         }
 
+        /**
+         * When true inverts driving
+         * 
+         * @param invert Whether to invert or not
+         */
         public void setInvert(boolean invert) {
             this.invert = invert;
         }
     }
 
+    /**
+     * Normalizes an angle to between -180 and 180
+     * 
+     * @param input The angle to normalize
+     * @return The normalized angle
+     */
     public double normalize(double input) {
         double normalizedValue = input;
         while (normalizedValue > 180)

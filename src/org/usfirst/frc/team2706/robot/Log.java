@@ -22,16 +22,22 @@ import edu.wpi.first.wpilibj.tables.ITableListener;
  */
 public class Log {
 
+    /**
+     * The String used to access the NetworkTables logger
+     */
     public static final String LOGGER_TABLE = "logging-level";
-    
+
+    /**
+     * The name of the root logger that all other loggers inherit from
+     */
     public static final String ROOT_LOGGER_NAME = "";
 
     private static final Logger logger = Logger.getLogger(ROOT_LOGGER_NAME);
-    
+
     private static ITableListener updateListener;
-    
+
     private static ByteArrayOutputStream out;
-    
+
     private static final Formatter formatter = new Formatter() {
         @Override
         public String format(LogRecord record) {
@@ -40,12 +46,12 @@ public class Log {
             String S = sdf.format(dt);
 
             return record.getLevel() + " " + S + " " + record.getSourceClassName() + "."
-                            + record.getSourceMethodName() + "() " + record.getLoggerName()
-                            + " " + record.getMessage() + "\n";
+                            + record.getSourceMethodName() + "() " + record.getLoggerName() + " "
+                            + record.getMessage() + "\n";
         }
     };
 
-    public static String getCallerClassName() throws ClassNotFoundException {
+    private static String getCallerClassAndMethodName() throws ClassNotFoundException {
         StackTraceElement[] stElements = Thread.currentThread().getStackTrace();
         return Class.forName(stElements[4].getClassName()).getSimpleName() + "."
                         + stElements[4].getMethodName();
@@ -58,7 +64,7 @@ public class Log {
         ConsoleHandler ch = new ConsoleHandler();
         out = new ByteArrayOutputStream();
         StreamHandler tableOut = new EStreamHandler(out, formatter);
-        
+
         try {
             logger.setUseParentHandlers(false);
             logger.setLevel(Level.ALL);
@@ -68,7 +74,7 @@ public class Log {
             }
 
             ch.setFormatter(formatter);
-            
+
 
             logger.addHandler(ch);
             logger.addHandler(tableOut);
@@ -81,7 +87,7 @@ public class Log {
                 public void run() {
                     ch.flush();
                     ch.close();
-                    
+
                     tableOut.flush();
                     tableOut.close();
                 }
@@ -89,45 +95,47 @@ public class Log {
         } catch (SecurityException e) {
             e.printStackTrace();
         }
-        
+
         updateListener = new ITableListener() {
             @Override
             public void valueChanged(ITable source, String key, Object value, boolean isNew) {
-                if(key.equals("level")) {
-                    Level level = Level.parse(((int)source.getNumber(key, Level.ALL.intValue()))+"");
+                if (key.equals("level")) {
+                    Level level = Level.parse(
+                                    ((int) source.getNumber(key, Level.ALL.intValue())) + "");
                     ch.setLevel(level);
                     tableOut.setLevel(level);
                     logger.setLevel(level);
                 }
             }
         };
-        
+
         NetworkTable.getTable(LOGGER_TABLE).addTableListener(updateListener);
     }
 
+    /**
+     * Push all the logged data to NetworkTables to be received by the driver station
+     */
     public static void updateTableLog() {
         byte[] a = NetworkTable.getTable(LOGGER_TABLE).getRaw("Value", new byte[0]);
         byte[] b = out.toByteArray();
-        
+
         byte[] results = new byte[0];
-        
-        if(a == new byte[0]) {
+
+        if (a == new byte[0]) {
             results = b;
-        }
-        else if(b.length == 0) {
+        } else if (b.length == 0) {
             return;
+        } else {
+            results = new byte[a.length + b.length];
+            System.arraycopy(a, 0, results, 0, a.length);
+            System.arraycopy(b, 0, results, a.length, b.length);
         }
-        else {
-            results = new byte[a.length + b.length]; 
-            System.arraycopy(a, 0, results, 0, a.length); 
-            System.arraycopy(b, 0, results, a.length, b.length); 
-        }
-        
+
         out.reset();
-        
+
         NetworkTable.getTable(LOGGER_TABLE).putRaw("Value", results);
     }
-    
+
     /**
      * Debug log
      * 
@@ -225,7 +233,7 @@ public class Log {
             String[] cm = new String[] {"Unknown", "Unknown"};
 
             try {
-                cm = getCallerClassName().split("\\.");
+                cm = getCallerClassAndMethodName().split("\\.");
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
@@ -237,21 +245,21 @@ public class Log {
             String[] cm = new String[] {"Unknown", "Unknown"};
 
             try {
-                cm = getCallerClassName().split("\\.");
+                cm = getCallerClassAndMethodName().split("\\.");
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
             Logger.getLogger(name.toString()).logp(level, cm[0], cm[1], message.toString());
         }
     }
-    
+
     private static class EStreamHandler extends StreamHandler {
         public EStreamHandler(OutputStream out, Formatter formatter) {
             super(out, formatter);
         }
-        
+
         @Override
-        public synchronized void publish(LogRecord record) {       
+        public synchronized void publish(LogRecord record) {
             if (!isLoggable(record)) {
                 return;
             }
@@ -264,7 +272,7 @@ public class Log {
                 reportError(null, ex, ErrorManager.FORMAT_FAILURE);
                 return;
             }
-            
+
             try {
                 out.write(msg.getBytes());
             } catch (Exception ex) {

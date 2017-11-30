@@ -9,6 +9,9 @@ import org.usfirst.frc.team2706.robot.commands.mechanismcontrol.OpenGearMechanis
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
+/**
+ * Place the gear and then back up after
+ */
 public class DrivePlaceGear extends CommandGroup {
 
     /**
@@ -23,13 +26,13 @@ public class DrivePlaceGear extends CommandGroup {
         this.addSequential(new CloseGearMechanism());
         if (distance != 0) {
             // Adds a movement one after another instead of at the same time
-            this.addSequential(new StraightDriveWithEncoders(speed, distance, 0.1,1),3);
+            this.addSequential(new StraightDriveWithEncoders(speed, distance, 0.1, 1), 3);
         }
         this.addSequential(new StraightDriveWithTime(0.54, 750));
         this.addSequential(new WaitForSensor(10));
         this.addSequential(new OpenGearMechanism());
         this.addSequential(new StraightDriveWithTime(0.7, 500));
-        this.addSequential(new StraightDriveWithEncoders(-0.7, -reverseDistance, 5,1));
+        this.addSequential(new StraightDriveWithEncoders(-0.7, -reverseDistance, 5, 1));
         this.addSequential(new CloseGearMechanism());
     }
 }

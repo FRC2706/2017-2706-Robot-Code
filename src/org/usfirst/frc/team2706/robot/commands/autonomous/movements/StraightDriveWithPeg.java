@@ -30,8 +30,7 @@ public class StraightDriveWithPeg extends Command {
      * @param distance The encoder distance to travel
      * @param error The range that the robot is happy ending the command in
      */
-    public StraightDriveWithPeg(double speed, double distance, double error,
-                    int minDoneCycles) {
+    public StraightDriveWithPeg(double speed, double distance, double error, int minDoneCycles) {
         requires(Robot.driveTrain);
 
         this.speed = speed;
@@ -74,11 +73,15 @@ public class StraightDriveWithPeg extends Command {
         PID.enable();
     }
 
+
     private int doneTicks;
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-       return Robot.gearHandler.pegDetected();
+        if (Robot.gearHandler.pegDetected())
+            doneTicks++;
+
+        return doneTicks >= minDoneCycles;
     }
 
     // Called once after isFinished returns true

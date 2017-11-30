@@ -10,17 +10,18 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-/** 
- * Coordinates commands for the Gear Handler Arm mechanisms. 
+/**
+ * Coordinates commands for the Gear Handler Arm mechanisms.
  * 
  * @author wakandacat, FilledWithDetermination, Crazycat200
  */
 public class GearHandler extends Subsystem {
-    
 
-    private DoubleSolenoid solenoid = new DoubleSolenoid(RobotMap.SOLENOID_FORWARD_CHANNEL, RobotMap.SOLENOID_REVERSE_CHANNEL);
+
+    private DoubleSolenoid solenoid = new DoubleSolenoid(RobotMap.SOLENOID_FORWARD_CHANNEL,
+                    RobotMap.SOLENOID_REVERSE_CHANNEL);
     protected Compressor compressor = new Compressor();
-    
+
     public static final int ARMS_CLOSED_NO_GEAR = 0;
     public static final int ARMS_CLOSED_WITH_GEAR = 1;
     public static final int ARMS_CLOSED_PEG_IN_WITH_GEAR = 2;
@@ -29,7 +30,7 @@ public class GearHandler extends Subsystem {
     public static final int ARMS_OPEN_WITH_GEAR = 5;
     public static final int ARMS_OPEN_PEG_IN_NO_GEAR = 6;
     public static final int ARMS_CLOSED_PEG_IN_NO_GEAR = 7;
-    
+
     public int gearHandlerState() {
         int state = ARMS_CLOSED_NO_GEAR;
         if (checkArmOpen()) {
@@ -64,7 +65,7 @@ public class GearHandler extends Subsystem {
         }
         return state;
     }
-    
+
     /*
      * some interesting things about the sensor... (measured in flash card lines)
      *  (right on top of sensor = line 1)
@@ -92,7 +93,7 @@ public class GearHandler extends Subsystem {
      */
     private AnalogInput irGearSensor = new AnalogInput(RobotMap.INFRARED_SENSOR_GEAR_ANALOG);
     private static final double GEAR_CAPTURED = 0.5;
-    
+
 
     private AnalogInput irPegSensor = new AnalogInput(RobotMap.INFRARED_SENSOR_PEG_ANALOG);
     private static final double PEG_DETECTED = 0.3;    
@@ -101,29 +102,39 @@ public class GearHandler extends Subsystem {
     private DigitalInput limitSwitchLeft = new DigitalInput(RobotMap.LIMIT_SWITCH_LEFT_CHANNEL);
     private DigitalInput limitSwitchRight = new DigitalInput(RobotMap.LIMIT_SWITCH_RIGHT_CHANNEL);
 
-   
+
     // Let's use this to keep track of whether the arm is closed :)
     private boolean closed = true;
+
     public void initDefaultCommand() {}
-    
+
+    /**
+     * Opens the gear handler arm
+     */
     public void openArm() {
         Log.d("Gear Handler", "Opening Gear Handler");
-        
+
         solenoid.set(DoubleSolenoid.Value.kForward);
 
         // Check to see if arm is open (see bottom of code)
         closed = checkArmOpen();
     }
-    
+
+    /**
+     * Closes the gear handler arm
+     */
     public void closeArm() {
         Log.d("Gear Handler", "Opening Gear Handler");
-        
-        solenoid.set(DoubleSolenoid.Value.kReverse); 
+
+        solenoid.set(DoubleSolenoid.Value.kReverse);
 
         // Check to see if arm is open (see bottom of code)
-        closed = checkArmOpen();   
+        closed = checkArmOpen();
     }
-    
+
+    /**
+     * Toggles whether the gear handler arm is open or not
+     */
     public void toggleArm() {
         if (closed) {
             openArm();
@@ -131,7 +142,12 @@ public class GearHandler extends Subsystem {
             closeArm();
         }
     }
-    
+
+    /**
+     * Uses the IR sensor to detect whether the robot has a gear
+     * 
+     * @return Whether the robot has a gear or not
+     */
     public boolean gearCaptured() {
         if (irGearSensor.getVoltage() >= GEAR_CAPTURED) {
             return true;
@@ -140,26 +156,42 @@ public class GearHandler extends Subsystem {
     }
 
 
+    /**
+     * Uses the IR sensor to detect whether the peg is in the robot
+     * 
+     * @return Whether the peg is in the robot or not
+     */
     public boolean pegDetected() {
         if (irPegSensor.getVoltage() >= PEG_DETECTED) {
             return true;
         }
         return false;
-    }    
+    }
 
-        // TODO 
-    // Uses limit switch to help see if arm is open
+    /**
+     * Uses limit switch to help see if arm is open (Currently a TODO)
+     * 
+     * @return Whether the arm is working or not
+     */
     public boolean checkArmOpen() {
         if (!limitSwitchRight.get()) {
             return true;
         }
         return false;
     }
-    
+
+    /**
+     * Turn compressor on and off
+     * 
+     * @param compressorState Whether compressor is on or not
+     */
     public void setCompressor(boolean compressorState) {
         compressor.setClosedLoopControl(compressorState);
     }
 
+    /**
+     * Logs gear handler information to SmartDashboard
+     */
     public void log() {
         SmartDashboard.putNumber("Peg Sensor", irPegSensor.getVoltage());
         SmartDashboard.putNumber("Gear Sensor", irGearSensor.getVoltage());

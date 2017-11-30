@@ -11,17 +11,29 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class DriveWhileWaiting extends Command {
+    
+    /**
+     * The speed to drive at
+     */
     public final double speed;
 
+    /**
+     * Drives while waiting to have peg
+     * 
+     * @param speed The speed to drive at
+     */
     public DriveWhileWaiting(double speed) {
         this.speed = speed;
     }
+
     protected void initialize() {
         Robot.driveTrain.reset();
     }
+
     protected void execute() {
         if (!Robot.gearHandler.pegDetected()) {
-            Robot.driveTrain.arcadeDrive(-speed, 0);
+            Robot.driveTrain.arcadeDrive(-speed,
+                            Robot.driveTrain.normalize(-Robot.driveTrain.getHeading()) / 10);
         }
     }
 

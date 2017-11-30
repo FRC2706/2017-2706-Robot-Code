@@ -7,6 +7,9 @@ import org.usfirst.frc.team2706.robot.commands.mechanismcontrol.CloseGearMechani
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
+/**
+ * Gets center gear, then heads over to the other team's launch area
+ */
 public class CenterToLaunch extends CommandGroup {
 
     /**

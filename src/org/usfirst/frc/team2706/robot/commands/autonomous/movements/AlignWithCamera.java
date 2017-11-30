@@ -87,7 +87,7 @@ public class AlignWithCamera extends Command {
 
     public boolean done;
 
-    class CommandTimerTask extends TimerTask {
+    private class CommandTimerTask extends TimerTask {
 
         public void run() {
             done = true;

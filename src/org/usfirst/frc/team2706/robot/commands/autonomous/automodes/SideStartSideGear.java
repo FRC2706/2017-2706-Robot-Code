@@ -1,7 +1,6 @@
 package org.usfirst.frc.team2706.robot.commands.autonomous.automodes;
 
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.DriveWhileWaiting;
-import org.usfirst.frc.team2706.robot.commands.autonomous.movements.QuickRotate;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.RotateDriveWithGyro;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithCamera;
 import org.usfirst.frc.team2706.robot.commands.autonomous.movements.StraightDriveWithEncoders;
@@ -11,6 +10,9 @@ import org.usfirst.frc.team2706.robot.commands.mechanismcontrol.CloseGearMechani
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
+/**
+ * Start at the side of the field, grab the side gear and head on out to the launch pad
+ */
 public class SideStartSideGear extends CommandGroup {
 
     /**
