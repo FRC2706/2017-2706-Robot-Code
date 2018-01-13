@@ -11,9 +11,12 @@ public class EquationCreator {
      * @param x amount right (any unit)
      * @param y amount up(any unit)
      * @param theta ending angle(degrees)
+     * @param rightInvert instead of making the values negative and maybe breaking the graph, just
+     *        invert the graph
      * @return the cubic equation that it creates
      */
-    public static CubicEquation MakeCubicEquation(double x, double y, double theta) {
+    public static CubicEquation MakeCubicEquation(double x, double y, double theta,
+                    boolean rightInvert) {
 
         // Makes a new coordinate points and rotates it into the bottom right quadrant
         Coordinates c = new Coordinates(x, y);
@@ -43,8 +46,12 @@ public class EquationCreator {
         // Figures out your final a and b value that is the coefficient
         double a = (eq1y - mTan) / (eq1a - eq2a);
         double b = ((eq1y - (eq1a * a)) / eq1b);
+        if (rightInvert) {
+            return new CubicEquation(a, b, 0, 0);
+        } else {
+            // Creates a new cubicequation with the values to be returned.
+            return new CubicEquation(-a, -b, 0, 0);
+        }
 
-        // Creates a new cubicequation with the values to be returned.
-        return new CubicEquation(-a, -b, 0, 0);
     }
 }

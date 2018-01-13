@@ -12,6 +12,11 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class ClimbManually extends Command {
 
+    public void initialize() {
+        // Turn compressor off for climb.
+        Robot.gearHandler.setCompressor(false);
+    }
+
     protected void execute() {
         Robot.climber.climb();
     }
@@ -25,5 +30,7 @@ public class ClimbManually extends Command {
 
     protected void end() {
         Robot.climber.stop();
+        // Turn compressor back on.
+        Robot.gearHandler.setCompressor(true);
     }
 }

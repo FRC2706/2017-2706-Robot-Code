@@ -7,87 +7,91 @@ import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
- * This mostly works, but use the QuickRotate command instead. PID control using gyro heading is
- * slower and needs tuning of P,I,D parameters.
- * 
- * Note that the gyro heading is now absolute and not relative, so angle is a target heading and not
- * a relative turn angle.
+ * Have the robot drive certain distance
  */
-public class RotateDriveWithGyro extends Command {
+public class StraightDriveWithPeg extends Command {
 
     private final double speed;
 
-    private final double angle;
+    private final double distance;
+
+    private final double error;
 
     private PIDController PID;
 
     private final int minDoneCycles;
 
-    private final double P = 0.0575, I = 0.02, D = 0.15, F = 0;
+    private final double P = 7.5, I = 2.0, D = 25, F = 0;
 
     /**
      * Drive at a specific speed for a certain amount of time
      * 
      * @param speed Speed in range [-1,1]
-     * @param angle The angle to rotate to
+     * @param distance The encoder distance to travel
+     * @param error The range that the robot is happy ending the command in
      */
-    public RotateDriveWithGyro(double speed, double angle, int minDonecycles) {
+    public StraightDriveWithPeg(double speed, double distance, double error, int minDoneCycles) {
         requires(Robot.driveTrain);
 
         this.speed = speed;
 
-        this.angle = angle;
+        this.distance = distance;
 
-        this.minDoneCycles = minDonecycles;
+        this.error = error / 12.0;
 
-        PID = new PIDController(P, I, D, F, Robot.driveTrain.getGyroPIDSource(false),
-                        Robot.driveTrain.getDrivePIDOutput(false, false, true));
+        this.minDoneCycles = minDoneCycles;
+
+        PID = new PIDController(P, I, D, F, Robot.driveTrain.getAverageEncoderPIDSource(),
+                        Robot.driveTrain.getDrivePIDOutput(true, false, false));
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
         Robot.driveTrain.reset();
 
-
-
-        PID.setInputRange(-360.0, 360.0);
+        Robot.driveTrain.brakeMode(true);
 
         // Make input infinite
         PID.setContinuous();
+
+        // Set output speed range
         if (speed > 0) {
-            // Set output speed range
             PID.setOutputRange(-speed, speed);
         } else {
             PID.setOutputRange(speed, -speed);
         }
-        // Will accept within 1 degrees of target
-        PID.setAbsoluteTolerance(1);
 
-        PID.setSetpoint(angle);
+        Robot.driveTrain.initGyro = Robot.driveTrain.getHeading();
+
+        PID.setSetpoint(distance);
+
+
+        // Will accept within 5 inch of target
+        PID.setAbsoluteTolerance(error);
 
         // Start going to location
         PID.enable();
     }
 
+
     private int doneTicks;
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        if (PID.onTarget())
+        if (Robot.gearHandler.pegDetected())
             doneTicks++;
-        else
-            doneTicks = 0;
 
         return doneTicks >= minDoneCycles;
     }
 
     // Called once after isFinished returns true
     protected void end() {
+        // Robot.driveTrain.brakeMode(false);
         // Disable PID output and stop robot to be safe
         PID.disable();
-        Log.d("RotateDriveWithGyro", "Ended");
-
         Robot.driveTrain.drive(0, 0);
+
+        Log.d("StraightDriveWithPeg", "Ended");
     }
 
     // Called when another command which requires one or more of the same

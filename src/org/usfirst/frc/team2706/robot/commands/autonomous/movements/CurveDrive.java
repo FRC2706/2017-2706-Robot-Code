@@ -29,6 +29,8 @@ public class CurveDrive extends Command {
     // If you're not resetting before driving you need to remember where you started
     private double initHeading;
 
+    private final boolean isRight;
+
     /**
      * Drives to a specified point and ends at a specified angle.
      * 
@@ -37,18 +39,19 @@ public class CurveDrive extends Command {
      * @param endCurve Ending angle (-90 to 90 degrees, but only useful at -80 to 80)
      * @param speed Base speed the robot drives (-1.0 to 1.0)
      */
-    public CurveDrive(double xFeet, double yFeet, double endCurve, double speed) {
+    public CurveDrive(double xFeet, double yFeet, double endCurve, double speed, boolean isRight) {
         requires(Robot.driveTrain);
 
         this.xFeet = xFeet;
         this.yFeet = yFeet;
         this.endCurve = endCurve;
         this.speed = speed;
+        this.isRight = isRight;
     }
 
     protected void initialize() {
         // Creates the cubic equation that the robot follows
-        eq = EquationCreator.MakeCubicEquation(xFeet, yFeet, endCurve);
+        eq = EquationCreator.MakeCubicEquation(xFeet, yFeet, endCurve, isRight);
 
         // Resets the gyro and encoders
         Robot.driveTrain.reset();
@@ -112,6 +115,18 @@ public class CurveDrive extends Command {
         }
         // Tank Drives according to the above factors
         Robot.driveTrain.drive(-leftSpeed, -rightSpeed);
+    }
+
+    public void followCurveArcade() {
+        // Figures out the angle that you are currently on
+        double tangent = (3 * eq.a * Math.pow(yPos, 2)) + (2 * eq.b * yPos);
+        tangent = Math.toDegrees(Math.atan(tangent));
+
+        // Figures out how far you should rotate based on offset and gyro pos
+        double rotateVal = tangent - (Robot.driveTrain.getHeading() - initHeading);
+        rotateVal /= 10;
+        // Tank Drives according to the above factors
+        Robot.driveTrain.arcadeDrive(speed, rotateVal);
     }
 
     private double xPos = 0;

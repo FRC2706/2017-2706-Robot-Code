@@ -1,5 +1,6 @@
 package org.usfirst.frc.team2706.robot.subsystems;
 
+import org.usfirst.frc.team2706.robot.Log;
 import org.usfirst.frc.team2706.robot.Robot;
 import org.usfirst.frc.team2706.robot.RobotMap;
 
@@ -38,6 +39,9 @@ public class Climber extends Subsystem {
     
     private Encoder encoder = new Encoder(RobotMap.CLIMBER_ENCODER_A, RobotMap.CLIMBER_ENCODER_B);
 
+    /**
+     * Sets up climber with encoder
+     */
     public Climber() {
         encoder.setDistancePerPulse(RobotMap.CLIMBER_ENCODER_DPP);
         encoder.reset();
@@ -97,21 +101,71 @@ public class Climber extends Subsystem {
         return hittingTouchpad;
     }
     
+    /**
+     * Gets the climber encoder distance in feet
+     * 
+     * @return The encoder distance
+     */
     public double climberDistance() {
         return encoder.getDistance();
         
     }
+    
+    /**
+     * Reset climber encoder 
+     */
     public void resetClimberDistance() {
         encoder.reset();
     }
     
     public void initDefaultCommand() {}
 
+    /**
+     * Starts the climber motor at 1/2 speed
+     */
     public void climb() {
         motor.set(0.5);
+        debugOutput();
     }
 
+    /**
+     * Stops the climber motor
+     */
     public void stop() {
         motor.set(0.0);
+    }
+    
+    /**
+     * Climb at a specified speed
+     * 
+     * @param speed The speed to climb at
+     */
+    public void setClimberSpeed(double speed) {
+        if (speed <= 0) {
+            speed = 0;
+        } else if (speed >= 1) {
+            speed = 1;
+        }
+        motor.set(speed);
+        debugOutput();
+    }
+    
+    /**
+     * Gets the speed of the motor
+     * 
+     * @return The motor speed
+     */
+    public double getSpeed() {
+        return (motor.get());
+    }
+    
+    /**
+     * Prints debug information about the climber
+     */
+    public void debugOutput() {
+        Log.d("Climber", "vc=" + verifyingClimb + " speed=" + motor.get() + " pCurr=" + 
+                        pastCurrent + " cCurr=" + motor.getOutputCurrent() + " pLAZ=" + pastLinearAccelZ +
+                        " cLAZ=" + Robot.driveTrain.getGyro().getWorldLinearAccelZ() + " pitch=" +
+                        Robot.driveTrain.getGyro().getPitch() + " enc=" + encoder.getDistance());
     }
 }

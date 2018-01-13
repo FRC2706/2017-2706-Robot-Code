@@ -4,6 +4,9 @@ import org.usfirst.frc.team2706.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
 
+/**
+ * Straightens against the wall using distance sensors
+ */
 public class StraightenWithDistanceSensor extends Command {
 
     private final double minSpeed;
