@@ -83,7 +83,7 @@ public class RobotMap {
     public static final double ENCODER_RIGHT_DPP = getConstant("ENCODER_RIGHT_DPP");
 
 
-    private static final boolean[] INVERT_JOYSTICK_X_VALS = {false, false, false};
+    private static final boolean[] INVERT_JOYSTICK_X_VALS = {true, true, true};
     public static final boolean INVERT_JOYSTICK_X = getConstant("INVERT_JOYSTICK_X");
 
     private static final boolean[] INVERT_JOYSTICK_Y_VALS = {false, false, false};
@@ -163,7 +163,7 @@ public class RobotMap {
      * Prints which RobotMap is being used
      */
     public static void log() {
-        Log.d("RobotMap", "RobotMap ID is " + ROBOT_ID_LOC);
+        Log.d("RobotMap", "RobotMap ID is " + ROBOT_ID);
     }
 
     private static final String ROBOT_ID_LOC = "/home/lvuser/robot-type.conf";

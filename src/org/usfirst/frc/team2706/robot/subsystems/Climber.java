@@ -4,7 +4,7 @@ import org.usfirst.frc.team2706.robot.Log;
 import org.usfirst.frc.team2706.robot.Robot;
 import org.usfirst.frc.team2706.robot.RobotMap;
 
-import com.ctre.CANTalon;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -35,7 +35,7 @@ public class Climber extends Subsystem {
     // This is the value of the normal acceleration
     private float pastLinearAccelZ = 0.0f;
 
-    private CANTalon motor = new CANTalon(RobotMap.CLIMBER_MOTOR);
+    private WPI_TalonSRX motor = new WPI_TalonSRX(RobotMap.CLIMBER_MOTOR);
     
     private Encoder encoder = new Encoder(RobotMap.CLIMBER_ENCODER_A, RobotMap.CLIMBER_ENCODER_B);
 
