@@ -13,31 +13,28 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import java.util.logging.StreamHandler;
 
-import edu.wpi.first.wpilibj.networktables.NetworkTable;
-import edu.wpi.first.wpilibj.tables.ITable;
-import edu.wpi.first.wpilibj.tables.ITableListener;
+import edu.wpi.first.networktables.EntryListenerFlags;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.NetworkTableValue;
+import edu.wpi.first.networktables.TableEntryListener;
 
 /**
  * Logs to DriverStation at levels debug, info, warning, error
  */
 public class Log {
 
-    /**
-     * The String used to access the NetworkTables logger
-     */
     public static final String LOGGER_TABLE = "logging-level";
-
-    /**
-     * The name of the root logger that all other loggers inherit from
-     */
+    
     public static final String ROOT_LOGGER_NAME = "";
 
     private static final Logger logger = Logger.getLogger(ROOT_LOGGER_NAME);
-
-    private static ITableListener updateListener;
-
+    
+    private static TableEntryListener updateListener;
+    
     private static ByteArrayOutputStream out;
-
+    
     private static final Formatter formatter = new Formatter() {
         @Override
         public String format(LogRecord record) {
@@ -46,12 +43,12 @@ public class Log {
             String S = sdf.format(dt);
 
             return record.getLevel() + " " + S + " " + record.getSourceClassName() + "."
-                            + record.getSourceMethodName() + "() " + record.getLoggerName() + " "
-                            + record.getMessage() + "\n";
+                            + record.getSourceMethodName() + "() " + record.getLoggerName()
+                            + " " + record.getMessage() + "\n";
         }
     };
 
-    private static String getCallerClassAndMethodName() throws ClassNotFoundException {
+    public static String getCallerClassName() throws ClassNotFoundException {
         StackTraceElement[] stElements = Thread.currentThread().getStackTrace();
         return Class.forName(stElements[4].getClassName()).getSimpleName() + "."
                         + stElements[4].getMethodName();
@@ -64,7 +61,7 @@ public class Log {
         ConsoleHandler ch = new ConsoleHandler();
         out = new ByteArrayOutputStream();
         StreamHandler tableOut = new EStreamHandler(out, formatter);
-
+        
         try {
             logger.setUseParentHandlers(false);
             logger.setLevel(Level.ALL);
@@ -74,7 +71,7 @@ public class Log {
             }
 
             ch.setFormatter(formatter);
-
+            
 
             logger.addHandler(ch);
             logger.addHandler(tableOut);
@@ -87,7 +84,7 @@ public class Log {
                 public void run() {
                     ch.flush();
                     ch.close();
-
+                    
                     tableOut.flush();
                     tableOut.close();
                 }
@@ -95,47 +92,46 @@ public class Log {
         } catch (SecurityException e) {
             e.printStackTrace();
         }
+        
+        updateListener = new TableEntryListener() {
 
-        updateListener = new ITableListener() {
             @Override
-            public void valueChanged(ITable source, String key, Object value, boolean isNew) {
-                if (key.equals("level")) {
-                    Level level = Level.parse(
-                                    ((int) source.getNumber(key, Level.ALL.intValue())) + "");
-                    ch.setLevel(level);
-                    tableOut.setLevel(level);
-                    logger.setLevel(level);
-                }
+            public void valueChanged(NetworkTable source, String key,
+                            NetworkTableEntry entry, NetworkTableValue value, int flags) {
+                Level level = Level.parse(((int)entry.getNumber(Level.ALL.intValue()))+"");
+                ch.setLevel(level);
+                tableOut.setLevel(level);
+                logger.setLevel(level);
+                
             }
         };
-
-        NetworkTable.getTable(LOGGER_TABLE).addTableListener(updateListener);
+        
+        NetworkTableInstance.getDefault().getTable(LOGGER_TABLE).addEntryListener("level", updateListener, EntryListenerFlags.kUpdate);
     }
 
-    /**
-     * Push all the logged data to NetworkTables to be received by the driver station
-     */
     public static void updateTableLog() {
-        byte[] a = NetworkTable.getTable(LOGGER_TABLE).getRaw("Value", new byte[0]);
+        byte[] a = NetworkTableInstance.getDefault().getTable(LOGGER_TABLE).getEntry("Value").getRaw(new byte[0]);
         byte[] b = out.toByteArray();
-
+        
         byte[] results = new byte[0];
-
-        if (a == new byte[0]) {
+        
+        if(a == new byte[0]) {
             results = b;
-        } else if (b.length == 0) {
-            return;
-        } else {
-            results = new byte[a.length + b.length];
-            System.arraycopy(a, 0, results, 0, a.length);
-            System.arraycopy(b, 0, results, a.length, b.length);
         }
-
+        else if(b.length == 0) {
+            return;
+        }
+        else {
+            results = new byte[a.length + b.length]; 
+            System.arraycopy(a, 0, results, 0, a.length); 
+            System.arraycopy(b, 0, results, a.length, b.length); 
+        }
+        
         out.reset();
-
-        NetworkTable.getTable(LOGGER_TABLE).putRaw("Value", results);
+        
+        NetworkTableInstance.getDefault().getTable(LOGGER_TABLE).getEntry("Value").setRaw(results);
     }
-
+    
     /**
      * Debug log
      * 
@@ -233,7 +229,7 @@ public class Log {
             String[] cm = new String[] {"Unknown", "Unknown"};
 
             try {
-                cm = getCallerClassAndMethodName().split("\\.");
+                cm = getCallerClassName().split("\\.");
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
@@ -245,21 +241,21 @@ public class Log {
             String[] cm = new String[] {"Unknown", "Unknown"};
 
             try {
-                cm = getCallerClassAndMethodName().split("\\.");
+                cm = getCallerClassName().split("\\.");
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
             Logger.getLogger(name.toString()).logp(level, cm[0], cm[1], message.toString());
         }
     }
-
+    
     private static class EStreamHandler extends StreamHandler {
         public EStreamHandler(OutputStream out, Formatter formatter) {
             super(out, formatter);
         }
-
+        
         @Override
-        public synchronized void publish(LogRecord record) {
+        public synchronized void publish(LogRecord record) {       
             if (!isLoggable(record)) {
                 return;
             }
@@ -272,7 +268,7 @@ public class Log {
                 reportError(null, ex, ErrorManager.FORMAT_FAILURE);
                 return;
             }
-
+            
             try {
                 out.write(msg.getBytes());
             } catch (Exception ex) {

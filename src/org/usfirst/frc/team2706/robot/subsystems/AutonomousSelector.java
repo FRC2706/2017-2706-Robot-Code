@@ -1,47 +1,58 @@
 package org.usfirst.frc.team2706.robot.subsystems;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.usfirst.frc.team2706.robot.RobotMap;
 
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.SensorBase;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.livewindow.LiveWindowSendable;
-import edu.wpi.first.wpilibj.tables.ITable;
+import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 
 /**
  * Controls the 12 switch dial on the robot to select an autonomous mode. The autonomous modes on
  * each of the switches are defined in Robot.java
  */
-public class AutonomousSelector extends SensorBase implements LiveWindowSendable {
+public class AutonomousSelector extends SensorBase implements Sendable {
 
+    public static final int NUM_INDICES = 13;
+    
     private static final Range[] voltages = {   new Range(0, 2.5), new Range(2.5, 2.75),
                                                 new Range(2.75, 3.1), new Range(3.1, 3.5), new Range(3.5, 3.75),
                                                 new Range(3.75, 3.95), new Range(3.95, 4.1), new Range(4.1, 4.2),
                                                 new Range(4.2, 4.3), new Range(4.3, 4.4), new Range(4.4, 4.5),
                                                 new Range(4.5, 4.6), new Range(4.6, 5)};
 
-    private final List<Command> commands;
+    private final Command[] commands;
     private final AnalogInput selector;
-
+    
     private boolean isFree = true;
+    private int numCommands = 0;
 
     /**
      * Creates AutoSelector with a list of commands to bind to each input
      * 
      * @param commands The commands to bind. The zeroth is default, one is the first notch
      */
-    public AutonomousSelector(Command... commands) {
-        List<Command> commandList = Arrays.asList(commands);
-
-        this.commands = commandList;
+    public AutonomousSelector(Command...commands) {
+        this.commands = new Command[NUM_INDICES];
         this.selector = new AnalogInput(RobotMap.SELECTOR_CHANNEL);
 
         isFree = false;
+        setCommands(commands);
     }
 
+    public void setCommands(Command...commands) {
+        for(int i = 0; i < NUM_INDICES; i++) {
+            if(i < commands.length) {
+                this.commands[i] = commands[i];
+            }
+            else {
+                this.commands[i] = null;
+            }
+        }
+        
+        numCommands = Math.min(commands.length, NUM_INDICES);
+    }
 
     /**
      * Gets the currently selected command
@@ -50,10 +61,10 @@ public class AutonomousSelector extends SensorBase implements LiveWindowSendable
      */
     public Command getSelected() {
         int idx = getVoltageAsIndex();
-        if (idx >= commands.size())
+        if (idx >= numCommands)
             idx = 0;
 
-        return commands.get(idx);
+        return commands[idx];
     }
 
     public int getVoltageAsIndex() {
@@ -81,50 +92,12 @@ public class AutonomousSelector extends SensorBase implements LiveWindowSendable
         }
     }
 
-    /**
-     * Live Window code, only does anything if live window is activated.
-     */
     @Override
-    public String getSmartDashboardType() {
-        return "Analog Input";
+    public void initSendable(SendableBuilder builder) {
+        builder.setSmartDashboardType("Selector Switch");
+        builder.addDoubleProperty("Voltage", selector::getAverageVoltage, null);
+        builder.addDoubleProperty("Index", this::getVoltageAsIndex, null);
     }
-
-    private ITable m_table;
-
-    @Override
-    public void initTable(ITable subtable) {
-        m_table = subtable;
-        updateTable();
-    }
-
-    @Override
-    public void updateTable() {
-        if (isFree) {
-            return;
-        }
-
-        if (m_table != null) {
-            m_table.putNumber("Voltage", selector.getAverageVoltage());
-            m_table.putNumber("Index", getVoltageAsIndex());
-        }
-    }
-
-    @Override
-    public ITable getTable() {
-        return m_table;
-    }
-
-    /**
-     * Analog Channels don't have to do anything special when entering the LiveWindow. {@inheritDoc}
-     */
-    @Override
-    public void startLiveWindowMode() {}
-
-    /**
-     * Analog Channels don't have to do anything special when exiting the LiveWindow. {@inheritDoc}
-     */
-    @Override
-    public void stopLiveWindowMode() {}
     
     private static class Range {
 

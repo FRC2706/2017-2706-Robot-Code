@@ -11,7 +11,6 @@ import org.usfirst.frc.team2706.robot.commands.autonomous.plays.DrivePlaceGear;
 import org.usfirst.frc.team2706.robot.commands.teleop.ArcadeDriveWithJoystick;
 import org.usfirst.frc.team2706.robot.commands.teleop.RecordJoystick;
 import org.usfirst.frc.team2706.robot.controls.StickRumble;
-import org.usfirst.frc.team2706.robot.subsystems.AutonomousSelector;
 import org.usfirst.frc.team2706.robot.subsystems.Bling;
 import org.usfirst.frc.team2706.robot.subsystems.Camera;
 import org.usfirst.frc.team2706.robot.subsystems.Climber;
@@ -23,7 +22,6 @@ import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -39,10 +37,7 @@ public class Robot extends IterativeRobot {
 
     // The robot's main drive train
     public static DriveTrain driveTrain;
-
-    // The spinny dial on the robot that selects what autonomous mode we are going to do
-    public static AutonomousSelector hardwareChooser;
-
+    
     // The gear handler arm
     public static GearHandler gearHandler;
 
@@ -139,9 +134,6 @@ public class Robot extends IterativeRobot {
     public void autonomousInit() {
         driveTrain.reset();
 
-        // Great for safety just in case you set the wrong one in practice ;)
-        Log.i("Autonomous Selector", "Running " + hardwareChooser.getSelected() + "...");
-
         autonomousCommand = driveTrain.getAutonomousCommand();
 
         Robot.driveTrain.brakeMode(true);
@@ -192,9 +184,7 @@ public class Robot extends IterativeRobot {
     /**
      * This function is called periodically during test mode
      */
-    public void testPeriodic() {
-        LiveWindow.run();
-    }
+    public void testPeriodic() {}
 
     private void log() {
         driveTrain.log();

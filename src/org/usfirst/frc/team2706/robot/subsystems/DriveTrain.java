@@ -5,7 +5,8 @@ import org.usfirst.frc.team2706.robot.Robot;
 import org.usfirst.frc.team2706.robot.RobotMap;
 import org.usfirst.frc.team2706.robot.commands.teleop.ArcadeDriveWithJoystick;
 
-import com.ctre.CANTalon;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.Encoder;
@@ -13,12 +14,12 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
-import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -26,8 +27,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * These include four drive motors, a left and right encoder and a gyro.
  */
 public class DriveTrain extends Subsystem {
-    private CANTalon front_left_motor, back_left_motor, front_right_motor, back_right_motor;
-    private RobotDrive drive;
+    private WPI_TalonSRX front_left_motor, back_left_motor, front_right_motor, back_right_motor;
+    private DifferentialDrive drive;
     private Encoder left_encoder, right_encoder;
     private Ultrasonic leftDistanceSensor, rightDistanceSensor;
     private AHRS gyro;
@@ -52,18 +53,18 @@ public class DriveTrain extends Subsystem {
      */
     public DriveTrain() {
         super();
-        front_left_motor = new CANTalon(RobotMap.MOTOR_FRONT_LEFT);
-        back_left_motor = new CANTalon(RobotMap.MOTOR_REAR_LEFT);
-        front_right_motor = new CANTalon(RobotMap.MOTOR_FRONT_RIGHT);
-        back_right_motor = new CANTalon(RobotMap.MOTOR_REAR_RIGHT);
+        front_left_motor = new WPI_TalonSRX(RobotMap.MOTOR_FRONT_LEFT);
+        back_left_motor = new WPI_TalonSRX(RobotMap.MOTOR_REAR_LEFT);
+        front_right_motor = new WPI_TalonSRX(RobotMap.MOTOR_FRONT_RIGHT);
+        back_right_motor = new WPI_TalonSRX(RobotMap.MOTOR_REAR_RIGHT);
 
         front_left_motor.setInverted(RobotMap.MOTOR_FRONT_LEFT_INVERTED);
         back_left_motor.setInverted(RobotMap.MOTOR_REAR_LEFT_INVERTED);
         front_right_motor.setInverted(RobotMap.MOTOR_FRONT_RIGHT_INVERTED);
         back_right_motor.setInverted(RobotMap.MOTOR_REAR_RIGHT_INVERTED);
 
-        drive = new RobotDrive(front_left_motor, back_left_motor, front_right_motor,
-                        back_right_motor);
+        drive = new DifferentialDrive(new SpeedControllerGroup(front_left_motor, back_left_motor), new SpeedControllerGroup(front_right_motor,
+                        back_right_motor));
 
         left_encoder = new Encoder(RobotMap.ENCODER_LEFT_A, RobotMap.ENCODER_LEFT_B);
         right_encoder = new Encoder(RobotMap.ENCODER_RIGHT_A, RobotMap.ENCODER_RIGHT_B);
@@ -105,16 +106,16 @@ public class DriveTrain extends Subsystem {
         selectorSwitch = new AutonomousSelector();
 
         // Let's show everything on the LiveWindow
-        LiveWindow.addActuator("Drive Train", "Front Left Motor", front_left_motor);
-        LiveWindow.addActuator("Drive Train", "Back Left Motor", back_left_motor);
-        LiveWindow.addActuator("Drive Train", "Front Right Motor", front_right_motor);
-        LiveWindow.addActuator("Drive Train", "Back Right Motor", back_right_motor);
-        LiveWindow.addSensor("Drive Train", "Left Encoder", left_encoder);
-        LiveWindow.addSensor("Drive Train", "Right Encoder", right_encoder);
-        LiveWindow.addSensor("Drive Train", "Left Distance Sensor", leftDistanceSensor);
-        LiveWindow.addSensor("Drive Train", "Right Distance Sensor", rightDistanceSensor);
-        LiveWindow.addSensor("Drive Train", "Gyro", gyro);
-        LiveWindow.addSensor("Drive Train", "Autonomous Selector", selectorSwitch);
+        front_left_motor.setName("DriveTrain", "Front Left Motor");
+        back_left_motor.setName("DriveTrain", "Back Left Motor");
+        front_right_motor.setName("DriveTrain", "Front Right Motor");
+        back_right_motor.setName("DriveTrain", "Back Right Motor");
+        left_encoder.setName("Drive Train", "Left Encoder");
+        right_encoder.setName("Drive Train", "Right Encoder");
+        leftDistanceSensor.setName("Drive Train", "Left Distance Sensor");
+        rightDistanceSensor.setName("Drive Train", "Right Distance Sensor");
+        gyro.setName("Drive Train", "Gyro");
+        selectorSwitch.setName("Drive Train", "Autonomous Selector");
     }
 
     /**
@@ -248,8 +249,7 @@ public class DriveTrain extends Subsystem {
     }
 
     public void setAutonomousCommandList(Command...commands) {
-        selectorSwitch.free();
-        selectorSwitch = new AutonomousSelector(commands);
+        selectorSwitch.setCommands(commands);
     }
     
     public Command getAutonomousCommand() {
@@ -291,10 +291,10 @@ public class DriveTrain extends Subsystem {
      * @param on Set to brake when true and coast when false
      */
     public void brakeMode(boolean on) {
-        front_left_motor.enableBrakeMode(on);
-        back_left_motor.enableBrakeMode(on);
-        front_right_motor.enableBrakeMode(on);
-        back_right_motor.enableBrakeMode(on);
+        front_left_motor.setNeutralMode(on ? NeutralMode.Brake : NeutralMode.Coast);
+        back_left_motor.setNeutralMode(on ? NeutralMode.Brake : NeutralMode.Coast);
+        front_right_motor.setNeutralMode(on ? NeutralMode.Brake : NeutralMode.Coast);
+        back_right_motor.setNeutralMode(on ? NeutralMode.Brake : NeutralMode.Coast);
     }
 
     /**
@@ -491,7 +491,7 @@ public class DriveTrain extends Subsystem {
      */
     public class DrivePIDOutput implements PIDOutput {
 
-        private final RobotDrive drive;
+        private final DifferentialDrive drive;
 
         private boolean invert;
 
@@ -508,7 +508,7 @@ public class DriveTrain extends Subsystem {
          * @param useCamera Whether to align using vision data
          * @param invert Invert driving
          */
-        public DrivePIDOutput(RobotDrive drive, boolean useGyroStraightening, boolean useCamera,
+        public DrivePIDOutput(DifferentialDrive drive, boolean useGyroStraightening, boolean useCamera,
                         boolean invert) {
             this.drive = drive;
             this.useGyroStraightening = useGyroStraightening;
@@ -517,8 +517,7 @@ public class DriveTrain extends Subsystem {
         }
 
         @Override
-        public void pidWrite(double output) {
-
+        public void pidWrite(double output) {            
             double rotateVal;
             if (useCamera) {
                 // Checks if target is found, cuts off the edges, and then creates a rotation value
@@ -552,9 +551,9 @@ public class DriveTrain extends Subsystem {
                     drive.arcadeDrive(-output, -rotateVal);
                 }
             else if (invert) {
-                drive.setLeftRightMotorOutputs(-output, output);
+                drive.tankDrive(-output, output, false);
             } else {
-                drive.setLeftRightMotorOutputs(output, output);
+                drive.tankDrive(output, output, false);
             }
         }
 
